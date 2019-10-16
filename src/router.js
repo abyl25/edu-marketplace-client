@@ -4,8 +4,26 @@ import Home from './views/Home.vue'
 import Login from '@/views/Login';
 import SignUp from '@/views/SignUp';
 import Body from "@/components/Main";
+// import CourseList from "@/components/CourseList";
+import store from './store';
 
 Vue.use(Router);
+
+const ifNotAuthenticated = (to, from, next) => {
+    if (!store.getters.isAuthenticated) {
+        next();
+        return
+    }
+    next('/');
+};
+
+const ifAuthenticated = (to, from, next) => {
+    if (store.getters.isAuthenticated) {
+        next();
+        return
+    }
+    next('/login');
+};
 
 const router = new Router({
   mode: 'history',
@@ -23,9 +41,10 @@ const router = new Router({
       path: '/home',
       name: 'home',
       component: Home,
-      meta: {
-        requiresAuth: true
-      }
+      beforeEnter: ifAuthenticated,
+      // meta: {
+      //   requiresAuth: true
+      // }
     },
     {
       path: '/about',
@@ -42,6 +61,7 @@ const router = new Router({
       path: '/login',
       name: 'Login',
       component: Login,
+      beforeEnter: ifNotAuthenticated,
       meta: {
         guest: true
       }
@@ -54,39 +74,16 @@ const router = new Router({
         guest: true
       }
     },
+    // {
+    //   path: '/courses/:category/:subcategory',
+    //   name: 'Courses',
+    //   component: CourseList,
+    //   meta: {
+    //       guest: true
+    //   }
+    // },
   ]
 });
 
-router.beforeEach((to, from, next) => {
-    if(to.matched.some(record => record.meta.requiresAuth)) {
-        if (localStorage.getItem('token') == null) {
-            next({
-                path: '/login',
-                params: { nextUrl: to.fullPath }
-            })
-        } else {
-            let user = JSON.parse(localStorage.getItem('user'))
-            if(to.matched.some(record => record.meta.is_admin)) {
-                if(user.is_admin === 1){
-                    next()
-                }
-                else{
-                    next({ name: 'home'})
-                }
-            }else {
-                next()
-            }
-        }
-    } else if(to.matched.some(record => record.meta.guest)) {
-        if(localStorage.getItem('token') == null){
-            next()
-        }
-        else{
-            next({ name: 'home'})
-        }
-    } else {
-        next()
-    }
-});
 
 export default router;

@@ -1,31 +1,32 @@
 <template>
   <div id="app">
-    <Header />
+    <Header2 />  <!-- v-bind:values='passValues()' -->
     <router-view/>
   </div>
 </template>
 
-<style>
-* {
-    margin: 0;
-    padding: 0;
-}
-
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  /*margin-top: 60px;*/
-}
-</style>
 <script>
-  import Header from "@/components/layout/Header";
+  import Header2  from "@/components/layout/Header2";
 
   export default {
     components: {
-      Header
+      Header2
     }
   }
 </script>
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+    /*margin-top: 60px;*/
+  }
+</style>

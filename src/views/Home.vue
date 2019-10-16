@@ -1,8 +1,7 @@
 <template>
   <div class="home">
     <HelloWorld msg="Welcome to Dashboard"/>
-    <h4>{{ username }}</h4>
-    <button @click="logout">Logout</button>
+<!--    <button @click="logout">Logout</button>-->
   </div>
 </template>
 
@@ -21,12 +20,7 @@
       }
     },
     methods: {
-      logout: function() {
-        console.log("logout clicked"); // eslint-disable-line
-        // localStorage.removeItem("token");
-        localStorage.clear();
-        this.$router.push('login');
-      }
+
     }
   }
 </script>

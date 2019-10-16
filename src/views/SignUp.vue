@@ -53,7 +53,7 @@
             console.log(res); // eslint-disable-line
             if (res.status === 200) {
               localStorage.setItem("token", res.data.token);
-              localStorage.setItem("userName", res.data.userName);  // localStorage.setItem("user", JSON.stringify(res.data.user));
+              localStorage.setItem("username", res.data.userName);  // localStorage.setItem("user", JSON.stringify(res.data.user));
               this.$router.push("home");
             }
           })
