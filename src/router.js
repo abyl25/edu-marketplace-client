@@ -3,8 +3,9 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Login from '@/views/Login';
 import SignUp from '@/views/SignUp';
+import AccountConfirmation from '@/views/AccountConfirmation';
 import Body from "@/components/Main";
-// import CourseList from "@/components/CourseList";
+import CourseList from './views/CourseList';
 import store from './store';
 
 Vue.use(Router);
@@ -74,16 +75,21 @@ const router = new Router({
         guest: true
       }
     },
-    // {
-    //   path: '/courses/:category/:subcategory',
-    //   name: 'Courses',
-    //   component: CourseList,
-    //   meta: {
-    //       guest: true
-    //   }
-    // },
+    {
+      path: '/confirm',
+      name: 'AccountConfirmation',
+      component: AccountConfirmation,
+
+    },
+    {
+      path: '/courses/:category/:subcategory',
+      name: 'Courses',
+      component: CourseList,
+      meta: {
+          guest: true
+      }
+    },
   ]
 });
-
 
 export default router;

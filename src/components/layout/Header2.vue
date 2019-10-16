@@ -76,8 +76,8 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['isAuthenticated', 'authStatus', 'username']),
-    },
+        ...mapGetters(['isAuthenticated', 'authStatus', 'username'])
+    }
 }
 </script>
 
@@ -90,7 +90,7 @@ export default {
 
     header{
         padding: 0 100px;
-        background: #EC9F42; /* #6CD867 #FF5733 */ 
+        background: #EC9F42; /* #6CD867 #FF5733 */
         width: 100%;
         height: 60px;
         box-sizing: border-box;
@@ -120,7 +120,7 @@ export default {
     }
 
     .header-category{
-        margin-right: 100px; 
+        margin-right: 100px;
         height: 100%;
         position: relative;
     }
@@ -348,7 +348,7 @@ export default {
             width: 100%;
             height: calc(100vh-50px);
             background: #333;
-            top: 60px; 
+            top: 60px;
             left: -100%;
             transition: 0.5s;
             justify-content: center;
@@ -366,4 +366,7 @@ export default {
             border-bottom: 1px solid #ffffff;
         }
     }
+
+
+
 </style>

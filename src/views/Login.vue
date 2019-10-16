@@ -36,7 +36,7 @@
         errors: {}
       }
     },
-    methods: {  // abylay.tastanbekov
+    methods: {
       login(e) {
         e.preventDefault();
         console.log("login clicked"); // eslint-disable-line
@@ -46,7 +46,7 @@
           userType: this.userType
         };
         this.$store.dispatch(AUTH_LOGIN, credentials).then(() => {
-          this.$router.push('/home')
+          this.$router.push('home');
         })
       }
     }

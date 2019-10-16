@@ -1,0 +1,141 @@
+<template>
+    <div class="course">
+        <a href="#">
+            <div class="course-cardcontainer">
+                <div class="course-card-imagecontainer"><img class="course-image" src="" width="240" height="135"></div>
+                <div class="course-card-content">
+                    <div class="course-card-content-title">
+                        <!-- <h4>Build Responsive Real World Websites with HTML5 and CSS3</h4> -->
+                        <h4>{{course.title}}</h4>
+                    </div>
+                    <div class="course-card-content-duration">
+                        <span class="course-card-content-duration-lecture">75 Lectures</span>
+                        <span class="course-card-content-duration-hours">12.5 hours</span>
+                        <span class="course-card-content-duration-level">{{course.level}}</span>
+                    </div>
+                    <div class="course-card-content-description">
+                        <span>
+                            <!-- The easiest way to learn modern web design, HTML5 and CSS3 step-by-step from scratch. Design and code a huge project. -->
+                            {{course.subtitle}}
+                        </span>
+                        <span class="course-autor"> | {{course.instructor.firstName + " " + course.instructor.lastName}} </span>
+                    </div>
+                    <div class="course-card-content-price-rating">
+                        <div class="course-price-container">
+                            <span class="course-price">
+                                {{course.price}}$
+                            </span>
+                        </div>
+                        <div class="course-rating-container">
+                            <div class="course-rating">
+                                <div><span class="star-rating">4.8</span></div>
+                                <span class="number-of-raters">(1399 raters)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div> 
+</template>
+
+<script>
+export default {
+    name: "CourseItem",
+    props: ["course"]
+}
+</script>
+
+<style scoped>
+
+    a {
+        text-decoration: none;
+        color:black;
+    }
+
+    /* .allcoursecontainer {
+        display: block;
+        width: 80%;
+        padding-left: 20px;
+    } */
+
+    .course {
+        position: relative;
+    }
+
+    .course:hover .course-cardcontainer {
+        background-color: #d0d1d1;
+    }
+
+    .course a {
+        display: block;
+    }
+
+    .course-cardcontainer {
+        text-align: left;
+        display: flex;
+        position: relative;
+        border-bottom: 1px solid #f2f3f5;
+        padding: 15px 0px 8px 8px;
+    }
+
+    .course-card-imagecontainer {
+        width: 210px;
+        height: auto;
+        margin-bottom: 16px;
+    }
+
+    .course-image {
+        box-shadow: 0 0 0 1px #e8e8eB;
+        object-fit: cover;
+        width: 100%;
+        height: 100%;
+    }
+
+    .course-card-content {
+        position: relative;
+        padding: 0 16px;
+        flex: 1;
+        min-width: 1px;
+    }
+
+    .course-card-content-title, .course-card-content-duration, .course-card-content-description {
+        max-width: 440px;
+    }
+
+    .course-card-content-duration {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .course-card-content-duration-lecture, .course-card-content-duration-hours, .course-card-content-duration-level {
+        margin-right: 10px;
+        margin-left: 0;
+    }
+
+    .course-card-content-description {
+        font-size: 13px;
+        color: #686f7a;
+    }
+
+    .course-card-content-price-rating {
+        top: 0;
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        bottom: 15px;
+        right: 20px;
+        text-align: right;
+    }
+
+    .course-rating-container {
+        margin-bottom: 0;
+        margin-top: 16px;
+    }
+
+    .course-rating {
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+</style>
