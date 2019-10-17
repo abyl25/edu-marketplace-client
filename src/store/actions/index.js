@@ -12,3 +12,7 @@ export const USER_REQUEST = 'USER_REQUEST';
 export const USER_SUCCESS = 'USER_SUCCESS';
 export const USER_ERROR = 'USER_ERROR';
 
+export const COURSES_REQUEST = 'COURSES_REQUEST';
+export const COURSES_SUCCESS = 'COURSES_SUCCESS';
+export const COURSES_ERROR = 'COURSES_ERROR';
+

@@ -1,16 +1,16 @@
 <template>
   <div id="app">
-    <Header2 />  <!-- v-bind:values='passValues()' -->
+    <Header/>  <!-- v-bind:values='passValues()' -->
     <router-view/>
   </div>
 </template>
 
 <script>
-  import Header2  from "@/components/layout/Header2";
+  import Header  from "@/components/layout/Header";
 
   export default {
     components: {
-      Header2
+      Header
     }
   }
 </script>

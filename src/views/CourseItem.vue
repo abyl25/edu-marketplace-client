@@ -3,7 +3,7 @@
         <a href="#">
             <div class="course-cardcontainer">
                 <div class="course-card-imagecontainer">
-                    <img class="course-image" src="../assets/1.jpg" width="240" height="135">
+                    <img class="course-image" src="../assets/1.png" width="240" height="135">
                 </div>
                 <div class="course-card-content">
                     <div class="course-card-content-title">

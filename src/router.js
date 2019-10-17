@@ -4,7 +4,7 @@ import Home from './views/Home.vue'
 import Login from '@/views/Login';
 import SignUp from '@/views/SignUp';
 import AccountConfirmation from '@/views/AccountConfirmation';
-import Body from "@/components/Main";
+import CarouselContainer from "@/components/carousel/CarouselContainer";
 import CourseList from './views/CourseList';
 import store from './store';
 
@@ -32,8 +32,8 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'Body',
-      component: Body,
+      name: 'CarouselContainer',
+      component: CarouselContainer,
       meta: {
           guest: true
       }
