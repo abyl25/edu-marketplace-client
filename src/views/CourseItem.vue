@@ -2,23 +2,25 @@
     <div class="course">
         <a href="#">
             <div class="course-cardcontainer">
-                <div class="course-card-imagecontainer"><img class="course-image" src="" width="240" height="135"></div>
+                <div class="course-card-imagecontainer">
+                    <img class="course-image" src="../assets/1.jpg" width="240" height="135">
+                </div>
                 <div class="course-card-content">
                     <div class="course-card-content-title">
                         <!-- <h4>Build Responsive Real World Websites with HTML5 and CSS3</h4> -->
-                        <h4>{{course.title}}</h4>
+                        <h4>{{ course.title }}</h4>
                     </div>
                     <div class="course-card-content-duration">
                         <span class="course-card-content-duration-lecture">75 Lectures</span>
                         <span class="course-card-content-duration-hours">12.5 hours</span>
-                        <span class="course-card-content-duration-level">{{course.level}}</span>
+                        <span class="course-card-content-duration-level">{{ course.level }}</span>
                     </div>
                     <div class="course-card-content-description">
                         <span>
                             <!-- The easiest way to learn modern web design, HTML5 and CSS3 step-by-step from scratch. Design and code a huge project. -->
-                            {{course.subtitle}}
+                            {{ course.subtitle }}
                         </span>
-                        <span class="course-autor"> | {{course.instructor.firstName + " " + course.instructor.lastName}} </span>
+                        <span class="course-autor"> | {{ course.instructor.firstName + " " + course.instructor.lastName }} </span>
                     </div>
                     <div class="course-card-content-price-rating">
                         <div class="course-price-container">

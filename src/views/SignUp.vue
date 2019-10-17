@@ -6,6 +6,11 @@
     <div v-if="!this.signupSuccess">
       <p>Let's create a new account !</p>
       <form @submit="signUp">
+        <ul class="errors" v-if="errors">
+          <li v-for="error in errors">
+            {{ error }}
+          </li>
+        </ul>
         <input type="text" v-model="firstName" placeholder="First name" required><br>
         <input type="text" v-model="lastName" placeholder="Last name" required><br>
         <input type="text" v-model="email" placeholder="Email" required><br>
@@ -25,7 +30,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapState } from 'vuex';
+  import { mapGetters } from 'vuex';
   import { AUTH_SIGNUP } from '../store/actions';
 
   export default {
@@ -37,7 +42,8 @@
         email: '',
         userName: '',
         password: '',
-        userType: ''
+        userType: '',
+        errors: {}
       }
     },
     methods: {
@@ -54,6 +60,8 @@
         };
         this.$store.dispatch(AUTH_SIGNUP, credentials).then(() => {
           // this.$router.push('/')
+        }).catch(err => {
+          this.errors = err.response.data;
         });
       }
     },

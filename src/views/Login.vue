@@ -47,7 +47,9 @@
         };
         this.$store.dispatch(AUTH_LOGIN, credentials).then(() => {
           this.$router.push('home');
-        })
+        }).catch(err => {
+          this.errors = err.response.data;
+        });
       }
     }
   }

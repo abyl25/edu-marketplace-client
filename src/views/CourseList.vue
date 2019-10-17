@@ -1,5 +1,11 @@
 <template>
     <div class="course-container">
+        <div v-if="fetched && courses.length === 0">
+            <p>No courses</p>
+        </div>
+        <div v-if="message">
+            <p>{{ message }}</p>
+        </div>
         <div v-bind:key="course.id" v-for = "course in courses">
             <CourseItem v-bind:course="course"/>
         </div>
@@ -17,35 +23,70 @@ export default {
     },
     data() {
         return {
-            courses: []
+            courses: [],
+            fetched: false,
+            message: ''
+        }
+    },
+    methods: {
+        getCoursesByCategory(category) {
+            axios.get('/api/courses/category/' + category)
+                .then(res => {
+                    console.log(res.data);
+                    this.courses = res.data;
+                    this.fetched = true;
+                })
+                .catch(err => {
+                    console.log(err);
+                    console.log(err.response.data);
+                    if (err.response.status === 404) {
+                        this.message = err.response.data;
+                    }
+                });
+        },
+        getCoursesBySubCategory(category, subcategory) {
+            axios.get('/api/courses/category/' + category + '/' + subcategory)
+                .then(res => {
+                    console.log(res.data);
+                    this.courses = res.data;
+                    this.fetched = true;
+                })
+                .catch(err => {
+                    console.log(err);
+                    console.log(err.response.data);
+                    if (err.response.status === 404) {
+                        this.message = err.response.data;
+                    }
+                });
+        }
+    },
+    watch: {
+        $route(to, from) {
+            let { category, subcategory } = to.params;
+            if (subcategory === undefined) {
+                this.getCoursesByCategory(category);
+            } else {
+                this.getCoursesBySubCategory(category, subcategory);
+            }
         }
     },
     created() {
-        console.log(this.$route.params.cat);
-        console.log(this.$route.params.subcat);
-        axios.get('http://localhost:8081/api/courses')
-            .then(res => {
-                console.log(res.data);
-                this.courses = res.data
-            })
-            .catch(err => console.log(err));
-    },
-    // updated() {
-    //     console.log(this.$route.params.cat);
-    //     console.log(this.$route.params.subcat);
-    // },
-    // beforeUpdate() {
-    //     console.log(this.$route.params.cat);
-    //     console.log(this.$route.params.subcat);
-    // }
+        let { category, subcategory } = this.$route.params;
+        if (subcategory === undefined) {
+            this.getCoursesByCategory(category);
+        } else {
+            this.getCoursesBySubCategory(category, subcategory);
+        }
+    }
 
 }
 </script>
 
 <style scoped>
     .course-container {
-        padding-top: 10px; 
-        padding-left: 10%;
+        margin: 30px auto;
+        /*padding-top: 10px; */
+        /*padding-left: 10%;*/
         width: 80%;
     }
 </style>

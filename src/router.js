@@ -82,9 +82,21 @@ const router = new Router({
 
     },
     {
+      path: '/courses/:category',
+      name: 'CoursesCat',
+      component: CourseList,
+    },
+    {
       path: '/courses/:category/:subcategory',
       name: 'Courses',
       component: CourseList,
+      // children: [
+      //   {
+      //     path: '/:subcategory',
+      //     name: 'subcategoryCourseList',
+      //     component: CourseList
+      //   }
+      // ],
       meta: {
           guest: true
       }

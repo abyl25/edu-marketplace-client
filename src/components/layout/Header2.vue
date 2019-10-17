@@ -10,7 +10,7 @@
                         <li class="cat-development"><router-link to="/courses/development">Development</router-link>
                             <ul class="subcat-development">
                                 <li><router-link to="/courses/development/web-development">Web Development</router-link></li>
-                                <li><router-link to="/courses/development/mobile-apps">Mobile App</router-link></li>
+                                <li><router-link to="/courses/development/mobile-development">Mobile App</router-link></li>
                                 <li><router-link to="/courses/development/programming-languages">Programming Language</router-link></li>
                                 <li><router-link to="/courses/development/databases">Databases</router-link></li>
                             </ul>
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import { AUTH_LOGOUT } from '../../store/actions';
 
 export default {
@@ -153,9 +153,10 @@ export default {
         display: none;
         top: -5px;
         right: 0;
-        transform: translate(101%,0);
+        transform: translate(100%,0);
         position: absolute;
         text-align: left;
+        border-left: 2px solid #FFFFFF;
         background: #8E8A84;
     }
 
