@@ -64,36 +64,29 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { AUTH_LOGOUT } from '../../store/actions';
+import { AUTH_LOGOUT, COURSES_REQUEST } from '../../store/actions';
 import axios from 'axios';
 
 export default {
     name: "Header",
     data() {
         return {
-            courses: [],
+            // courses: [],
             searchText: ''
         }
     },
     methods: {
+        toggle(){
+            document.getElementById("navbar").classList.toggle('active');
+        },
         logout() {
             console.log("logout clicked"); // eslint-disable-line
             this.$store.dispatch(AUTH_LOGOUT).then(() => this.$router.push('/login'));
         },
         searchCourses(e) {
             e.preventDefault();
-            console.log('search clicked!');
-            console.log('search text: ' + this.searchText);
-            // axios.get('/api/courses/search?q=' + this.searchText)
-            //     .then(res => {
-            //         this.courses = res.data;
-            //     })
-            //     .catch(err => {
-            //         console.log(err);
-            //     })
-        },
-        toggle(){
-            document.getElementById("navbar").classList.toggle('active');
+            // console.log('search text: ' + this.searchText);
+            this.$router.push({ path: '/courses/search', query: { q: this.searchText } });
         }
     },
     computed: {

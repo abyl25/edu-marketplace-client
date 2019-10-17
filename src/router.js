@@ -6,6 +6,7 @@ import SignUp from '@/views/SignUp';
 import AccountConfirmation from '@/views/AccountConfirmation';
 import CarouselContainer from "@/components/carousel/CarouselContainer";
 import CourseList from './views/CourseList';
+import SearchCourse from "@/views/SearchCourse";
 import store from './store';
 
 Vue.use(Router);
@@ -82,6 +83,11 @@ const router = new Router({
 
     },
     {
+      path: '/courses/search',
+      name: 'SearchCourse',
+      component: SearchCourse,
+    },
+    {
       path: '/courses/:category',
       name: 'CoursesCat',
       component: CourseList,
@@ -90,17 +96,11 @@ const router = new Router({
       path: '/courses/:category/:subcategory',
       name: 'Courses',
       component: CourseList,
-      // children: [
-      //   {
-      //     path: '/:subcategory',
-      //     name: 'subcategoryCourseList',
-      //     component: CourseList
-      //   }
-      // ],
       meta: {
           guest: true
       }
     },
+
   ]
 });
 
