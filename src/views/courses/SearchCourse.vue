@@ -15,7 +15,7 @@
 <script>
     import CourseItem from './CourseItem';
     import { mapGetters } from 'vuex';
-    import { COURSES_REQUEST } from '../store/actions';
+    import { COURSES_REQUEST } from '../../store/actions';
 
     export default {
         name: "SearchCourse",

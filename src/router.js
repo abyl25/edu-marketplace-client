@@ -1,13 +1,15 @@
 import Vue from 'vue'
-import Router from 'vue-router'
-import Home from './views/Home.vue'
-import Login from '@/views/Login';
-import SignUp from '@/views/SignUp';
-import AccountConfirmation from '@/views/AccountConfirmation';
-import CarouselContainer from "@/components/carousel/CarouselContainer";
-import CourseList from './views/CourseList';
-import SearchCourse from "@/views/SearchCourse";
+import Router from 'vue-router';
 import store from './store';
+import Home from './views/Home.vue';
+import Login from '@/views/auth/Login';
+import SignUp from '@/views/auth/SignUp';
+import AccountConfirmation from '@/views/auth/AccountConfirmation';
+import CarouselContainer from "@/components/carousel/CarouselContainer";
+import CourseList from './views/courses/CourseList';
+import SearchCourse from "@/views/courses/SearchCourse";
+import InstructorCourses from "@/views/instructor/InstructorCourses";
+import CreateCourse from "@/views/instructor/CreateCourse";
 
 Vue.use(Router);
 
@@ -100,7 +102,16 @@ const router = new Router({
           guest: true
       }
     },
-
+    {
+      path: '/instructor/courses',
+      name: 'InstructorCourses',
+      component: InstructorCourses
+    },
+    {
+      path: '/course/create',
+      name: 'CreateCourse',
+      component: CreateCourse
+    }
   ]
 });
 

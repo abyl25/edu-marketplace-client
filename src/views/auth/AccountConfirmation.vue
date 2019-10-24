@@ -7,7 +7,7 @@
 
 <script>
     import { mapGetters } from 'vuex';
-    import { ACCOUNT_CONFIRMATION } from '../store/actions';
+    import { ACCOUNT_CONFIRMATION } from '../../store/actions';
 
     export default {
         name: "AccountConfirmation",
