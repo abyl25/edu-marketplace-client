@@ -4,8 +4,8 @@ import axios from 'axios';
 const state = {
     confirmed: false,
     signupSuccess: false,
-    username: localStorage.getItem('username') || '',
     token: localStorage.getItem('token') || '',
+    user: JSON.parse(localStorage.getItem('user')),
     status: '',
     hasLoadedOnce: false
 };
@@ -13,7 +13,7 @@ const state = {
 const getters = {
     confirmed: state => state.confirmed,
     isAuthenticated: state => !!state.token,
-    username: state => state.username,
+    user: state => state.user,
     authStatus: state => state.status,
     signupSuccess: state => state.signupSuccess
 };
@@ -26,11 +26,9 @@ const actions = {
                 .then(res => {
                     console.log(res.data); // eslint-disable-line no-console
                     localStorage.setItem('token', res.data.token);
-                    localStorage.setItem('username', res.data.userName);
-                    // Here set the header of your ajax library to the token value. // example with axios
+                    localStorage.setItem('user', JSON.stringify(res.data.user));
                     axios.defaults.headers.common['Authorization'] = res.data.token;
                     commit(LOGIN_SUCCESS, res);
-                    // dispatch(USER_REQUEST);
                     resolve(res);
                 })
                 .catch(err => {
@@ -59,6 +57,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             commit(AUTH_LOGOUT);
             localStorage.clear();
+            delete axios.defaults.headers.common['Authorization'];
             resolve();
         });
     },
@@ -87,8 +86,8 @@ const mutations = {
     },
     [LOGIN_SUCCESS]: (state, res) => {
         state.status = 'Login Success';
-        state.username = res.data.userName;
         state.token = res.data.token;
+        state.user = res.data.user;
         state.hasLoadedOnce = true;
     },
     [SIGNUP_SUCCESS]: (state) => {
@@ -106,7 +105,7 @@ const mutations = {
         state.status = 'Confirming your account...'
     },
     [ACCOUNT_CONFIRMATION_SUCCESS]: (state) => {
-        state.status = 'Account Confirmed! Redirecting to login page ...';
+        state.status = 'Your account confirmed! You can log in now';
         state.confirmed = true;
     },
     [ACCOUNT_CONFIRMATION_ERROR]: (state) => {

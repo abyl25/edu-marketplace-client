@@ -1,6 +1,7 @@
 <template>
   <div class="login">
     <h3>Sign In</h3>
+    <p v-if="confirmError" class="confirm-error">{{ confirmError }}</p>
     <form @submit="login">
       <input type="text" v-model="userName" placeholder="Username" ><br>
       <p v-if="usernameError" class="error">{{ usernameError }}</p>
@@ -32,7 +33,8 @@
         password: '',
         userType: '',
         usernameError: '',
-        passwordError: ''
+        passwordError: '',
+        confirmError: ''
       }
     },
     methods: {
@@ -50,7 +52,9 @@
           this.passwordError = '';
           let data = err.response.data;
           console.log(data);
-
+          if (data === 'You haven\'t confirmed your account yet. Please, do it by an email we have sent you') {
+            this.confirmError = data;
+          }
           if (data === 'Username not found') {
             this.usernameError = data;
           } else if (data === 'Invalid username or password') {
@@ -96,13 +100,15 @@
     text-decoration: underline;
     cursor: pointer;
   }
-
   .user-type {
     margin-top: 10px;
   }
-
   .error {
     color: red;
     font-size: 13px;
+  }
+  .confirm-error {
+    margin: 10px 0;
+    color: red;
   }
 </style>

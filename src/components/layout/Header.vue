@@ -54,7 +54,7 @@
                 </template>
                 <template v-if="isAuthenticated">
 <!--                    <li><router-link to="#">{{ values.username }}</router-link></li>-->
-                    <li><span class="username">{{ username }}</span></li>
+                    <li><span class="username">{{ user.userName }}</span></li>
                     <li><p class="logout-btn" @click="logout">Log out</p></li>
                 </template>
             </ul>
@@ -65,8 +65,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import { AUTH_LOGOUT, COURSES_REQUEST } from '../../store/actions';
-import axios from 'axios';
+import { AUTH_LOGOUT } from '../../store/actions';
 
 export default {
     name: "Header",
@@ -81,17 +80,18 @@ export default {
             document.getElementById("navbar").classList.toggle('active');
         },
         logout() {
-            console.log("logout clicked"); // eslint-disable-line
             this.$store.dispatch(AUTH_LOGOUT).then(() => this.$router.push('/login'));
         },
         searchCourses(e) {
             e.preventDefault();
             // console.log('search text: ' + this.searchText);
-            this.$router.push({ path: '/courses/search', query: { q: this.searchText } });
+            if (this.searchText) {
+                this.$router.push({ path: '/courses/search', query: { q: this.searchText } });
+            }
         }
     },
     computed: {
-        ...mapGetters(['isAuthenticated', 'authStatus', 'username'])
+        ...mapGetters(['isAuthenticated', 'authStatus', 'user'])
     }
 }
 </script>
