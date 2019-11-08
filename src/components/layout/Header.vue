@@ -47,7 +47,7 @@
             <ul>
                 <li><router-link to="/about">About</router-link></li>
                 <li><router-link to="/cart">Cart</router-link></li>
-                <li><router-link to="/instructor/courses">Instructor</router-link></li>
+<!--                <li><router-link to="/instructor/courses">Instructor</router-link></li>-->
                 <template v-if="!isAuthenticated">
                     <li><router-link to="/login">Sign in</router-link></li>
                     <li><router-link to="/signup">Sign up</router-link></li>
