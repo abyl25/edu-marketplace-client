@@ -15,6 +15,7 @@
       Header
     },
     created() {
+      // console.log(process.env.VUE_APP_API);
       axios.interceptors.response.use(resp => resp, err => {
         return new Promise(function (resolve, reject) {
           if (err.response.status === 401) {

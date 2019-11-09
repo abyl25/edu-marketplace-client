@@ -6,7 +6,7 @@
         <div v-if="message">
             <p>{{ message }}</p>
         </div>
-        <div v-bind:key="course.id" v-for = "course in courses">
+        <div v-bind:key="course.id" v-for="course in courses">
             <CourseItem v-bind:course="course"/>
         </div>
     </div>

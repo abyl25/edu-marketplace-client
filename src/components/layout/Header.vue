@@ -54,7 +54,8 @@
                 </template>
                 <template v-if="isAuthenticated">
 <!--                    <li><router-link to="#">{{ values.username }}</router-link></li>-->
-                    <li><span class="username">{{ user.userName }}</span></li>
+<!--                    <li><span class="username">{{ user.userName }}</span></li>-->
+                    <li><router-link to="/home">{{ user.userName }}</router-link></li>
                     <li><p class="logout-btn" @click="logout">Log out</p></li>
                 </template>
             </ul>
@@ -103,7 +104,7 @@ export default {
         font-family: sans-serif;
     }
 
-    header{
+    header {
         padding: 0 100px;
         background: #EC9F42; /* #6CD867 #FF5733 */
         width: 100%;
@@ -114,7 +115,7 @@ export default {
         align-items: center;
     }
 
-    .Logo{
+    .Logo {
         align-items: center;
         display: flex;
         font-weight: bold;
@@ -125,14 +126,14 @@ export default {
         filter: brightness(0) invert(1);
     }
 
-    .header-left{
+    .header-left {
         display: flex;
         justify-content: start;
         align-items: center;
         height: 60px;
     }
 
-    .header-category{
+    .header-category {
         margin-right: 100px;
         height: 100%;
         position: relative;
@@ -143,7 +144,7 @@ export default {
         list-style: none;
     }
 
-    .header-category a{
+    .header-category a {
         height: 50px;
         line-height: 50px;
         color: #fff;
@@ -151,7 +152,7 @@ export default {
         font-weight: bold;
     }
     
-    .dropdownmenu-1{
+    .dropdownmenu-1 {
         z-index: 100;
         display: none;
         list-style: none;
@@ -162,7 +163,7 @@ export default {
         width: 250px;
     }
 
-    .subcat-development, .subcat-business, .subcat-design{
+    .subcat-development, .subcat-business, .subcat-design {
         display: none;
         top: -5px;
         right: 0;
@@ -173,30 +174,29 @@ export default {
         background: #8E8A84;
     }
 
-    .dropdownmenu-1 li{
+    .dropdownmenu-1 li {
         position: relative;
         padding: 5px 10px;
         border-bottom: 2px solid #ffffff;
     }
 
-    .dropdownmenu-1 li a{
+    .dropdownmenu-1 li a {
         font-weight: normal;
         color: #FFF;
     }
 
-    .header-category:hover .dropdownmenu-1, .cat-development:hover .subcat-development, .cat-business:hover .subcat-business, .cat-design:hover .subcat-design{
+    .header-category:hover .dropdownmenu-1, .cat-development:hover .subcat-development, .cat-business:hover .subcat-business, .cat-design:hover .subcat-design {
         display: block;
     }
 
-
-    .header-search-box{
+    .header-search-box {
         margin-left: 20px;
         background: #FFF;
         display: flex;
         align-items: center;
     }
 
-    .search-txt{
+    .search-txt {
         border: none;
         background: none;
         outline: none;
@@ -204,10 +204,10 @@ export default {
         color: #585858;
         font-size: 16px;
         line-height: 30px;
-        width: 500px;
+        width: 80%;
     }
 
-    .search-btn{
+    .search-btn {
         color: #EC9F42;
         width: 30px;
         height: 30px;

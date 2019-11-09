@@ -8,8 +8,9 @@ import AccountConfirmation from '@/views/auth/AccountConfirmation';
 import CarouselContainer from "@/components/carousel/CarouselContainer";
 import CourseList from './views/courses/CourseList';
 import SearchCourse from "@/views/courses/SearchCourse";
-import InstructorCourses from "@/views/instructor/InstructorCourses";
-import CreateCourse from "@/views/instructor/CreateCourse";
+// import InstructorCourses from "@/views/instructor/InstructorCourses";
+// import CreateCourse from "@/views/instructor/CreateCourse";
+import AddCourse from "@/views/instructor/AddCourse";
 
 Vue.use(Router);
 
@@ -45,7 +46,7 @@ const router = new Router({
       path: '/home',
       name: 'home',
       component: Home,
-      beforeEnter: ifAuthenticated,
+      // beforeEnter: ifAuthenticated,
       // meta: {
       //   requiresAuth: true
       // }
@@ -103,15 +104,20 @@ const router = new Router({
       }
     },
     {
-      path: '/instructor/courses',
-      name: 'InstructorCourses',
-      component: InstructorCourses
-    },
-    {
-      path: '/course/create',
-      name: 'CreateCourse',
-      component: CreateCourse
+      path: '/addcourse',
+      name: 'AddCourse',
+      component: AddCourse
     }
+    // {
+    //   path: '/instructor/courses',
+    //   name: 'InstructorCourses',
+    //   component: InstructorCourses
+    // },
+    // {
+    //   path: '/course/create',
+    //   name: 'CreateCourse',
+    //   component: CreateCourse
+    // }
   ]
 });
 
