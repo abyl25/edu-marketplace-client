@@ -7,23 +7,10 @@
 
 <script>
   import Header  from "@/components/layout/Header";
-  import { AUTH_LOGOUT } from './store/actions';
-  import axios from 'axios';
 
   export default {
     components: {
       Header
-    },
-    created() {
-      // console.log(process.env.VUE_APP_API);
-      axios.interceptors.response.use(resp => resp, err => {
-        return new Promise(function (resolve, reject) {
-          if (err.response.status === 401) {
-            this.$store.dispatch(AUTH_LOGOUT);
-          }
-          return reject(err);
-        });
-      });
     }
   }
 </script>

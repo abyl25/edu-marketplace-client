@@ -4,7 +4,7 @@
             <h2>Instructor Courses</h2>
         </div>
         <div class="courses-form-header">
-            <router-link to="/addcourse">
+            <router-link to="/instructor/course/create">
                 <button class="add-course-btn">New Course</button>
             </router-link>
             <form class="courses-search-form" @submit="searchCourses">
@@ -17,39 +17,49 @@
         </div>
         <div class="instructor-courses-list">
             <div v-bind:key="course.id" v-for="course in courses">
-                <InstructorCourseItem v-bind:course="course"/>
+                <ICourseListItem v-bind:course="course"/>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-  import InstructorCourseItem from "@/views/instructor/InstructorCourseItem";
+  import axios from 'axios';
+  import { mapGetters } from 'vuex';
+  import ICourseListItem from "@/views/instructor/ICourseListItem";
 
   export default {
     name: 'home',
     components: {
-        InstructorCourseItem
+        ICourseListItem
     },
     data() {
       return {
-        username: localStorage.getItem("username"),
-        courses: [{
-          id: 1,
-          title: 'Course 1',
-          text: 'Some text'
-        },
-        {
-          id: 2,
-          title: 'Course 2',
-          text: 'Some text'
-        }]
+        courses: []
       }
+    },
+    created() {
+      this.getInstructorCourses();
     },
     methods: {
       searchCourses(e) {
         e.preventDefault();
+      },
+      getInstructorCourses() {
+        const instructorID = this.user.id;
+        const config = {
+          headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
+        };
+        axios.get(`/api/instructor/${instructorID}/courses`, config)
+          .then(res => {
+            console.log(res.data);
+            this.courses = res.data;
+          })
+          .catch(err => console.log(err))
       }
+    },
+    computed: {
+      ...mapGetters(['user'])
     }
   }
 </script>

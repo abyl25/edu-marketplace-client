@@ -88,7 +88,7 @@
   import { mapGetters } from 'vuex';
 
   export default {
-    name: 'AddCourse',
+    name: 'CreateCourse',
     components: {
     },
     data() {

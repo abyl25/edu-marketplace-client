@@ -24,6 +24,7 @@
 
 <script>
   import { AUTH_LOGIN } from '../../store/actions';
+  import { mapGetters } from 'vuex';
 
   export default {
     name: 'Login',
@@ -46,7 +47,13 @@
           userType: this.userType
         };
         this.$store.dispatch(AUTH_LOGIN, credentials).then(() => {
-          this.$router.push('home');
+          let role = this.user.roles[0];
+          if(role.name === 'Instructor') {
+            console.log('user is Instructor');
+            this.$router.push('/instructor/home');
+          } else if(role.name === 'Student') {
+            this.$router.push('/student/home');
+          }
         }).catch(err => {
           this.usernameError = '';
           this.passwordError = '';
@@ -70,7 +77,11 @@
           }
         });
       }
+    },
+    computed: {
+      ...mapGetters(['user'])
     }
+
   }
 </script>
 

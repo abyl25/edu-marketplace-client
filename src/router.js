@@ -1,16 +1,17 @@
 import Vue from 'vue'
 import Router from 'vue-router';
 import store from './store';
-import Home from './views/Home.vue';
+import Home from '@/views/instructor/Home.vue';
+import StudentHome from "@/views/student/StudentHome";
 import Login from '@/views/auth/Login';
 import SignUp from '@/views/auth/SignUp';
 import AccountConfirmation from '@/views/auth/AccountConfirmation';
 import CarouselContainer from "@/components/carousel/CarouselContainer";
-import CourseList from './views/courses/CourseList';
+import CourseList from '@/views/courses/CourseList';
 import SearchCourse from "@/views/courses/SearchCourse";
-// import InstructorCourses from "@/views/instructor/InstructorCourses";
-// import CreateCourse from "@/views/instructor/CreateCourse";
-import AddCourse from "@/views/instructor/AddCourse";
+import CreateCourse from "@/views/instructor/CreateCourse";
+import InstructorCourse from "@/views/instructor/InstructorCourse";
+import CourseGoal from "@/views/instructor/CourseGoal";
 
 Vue.use(Router);
 
@@ -43,21 +44,9 @@ const router = new Router({
       }
     },
     {
-      path: '/home',
-      name: 'home',
-      component: Home,
-      // beforeEnter: ifAuthenticated,
-      // meta: {
-      //   requiresAuth: true
-      // }
-    },
-    {
       path: '/about',
       name: 'About',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue'),
+      component: () => import('./views/About.vue'),
       meta: {
         guest: true
       }
@@ -83,7 +72,6 @@ const router = new Router({
       path: '/confirm',
       name: 'AccountConfirmation',
       component: AccountConfirmation,
-
     },
     {
       path: '/courses/search',
@@ -104,20 +92,37 @@ const router = new Router({
       }
     },
     {
-      path: '/addcourse',
-      name: 'AddCourse',
-      component: AddCourse
+      path: '/instructor/home',
+      name: 'Home',
+      component: Home,
+      // beforeEnter: ifAuthenticated,
+    },
+    {
+      path: '/instructor/course/create',
+      name: 'CreateCourse',
+      component: CreateCourse,
+    },
+    {
+      path: '/instructor/course/:id',
+      component: InstructorCourse,
+      children: [
+        // {
+        //   path: '',
+        //   component: InstructorCourse
+        // },
+        {
+          path: 'goals',
+          component: CourseGoal
+        }
+      ]
+    },
+    {
+      path: '/student/home',
+      name: 'StudentHome',
+      component: StudentHome,
+      // beforeEnter: ifAuthenticated,
     }
-    // {
-    //   path: '/instructor/courses',
-    //   name: 'InstructorCourses',
-    //   component: InstructorCourses
-    // },
-    // {
-    //   path: '/course/create',
-    //   name: 'CreateCourse',
-    //   component: CreateCourse
-    // }
+
   ]
 });
 

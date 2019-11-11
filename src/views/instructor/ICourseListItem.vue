@@ -1,10 +1,10 @@
 <template>
     <div class="course-item">
         <img src="../../assets/1.png" alt="" width="200" height="120">
-        <router-link to="/courses/1">
+        <router-link :to="{ path: '/instructor/course/' + course.id }">
             <div class="course-card-right">
                 <h3 class="title">{{ course.title }}</h3>
-                <p>{{ course.text }}</p>
+<!--                <p>{{ course.text }}</p>-->
             </div>
         </router-link>
     </div>
@@ -12,7 +12,7 @@
 
 <script>
     export default {
-        name: "InstructorCourseItem",
+        name: "ICourseListItem",
         props: ["course"]
     }
 </script>
