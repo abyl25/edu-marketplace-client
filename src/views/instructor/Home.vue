@@ -46,20 +46,22 @@
         e.preventDefault();
       },
       getInstructorCourses() {
-        const instructorID = this.user.id;
         const config = {
           headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
         };
-        axios.get(`/api/instructor/${instructorID}/courses`, config)
-          .then(res => {
-            console.log(res.data);
-            this.courses = res.data;
-          })
-          .catch(err => console.log(err))
+        if(this.isAuthenticated) {
+          const instructorID = this.user.id;
+          axios.get(`/api/instructor/${instructorID}/courses`, config)
+            .then(res => {
+                console.log(res.data);
+                this.courses = res.data;
+            })
+            .catch(err => console.log(err))
+        }
       }
     },
     computed: {
-      ...mapGetters(['user'])
+      ...mapGetters(['user', 'isAuthenticated'])
     }
   }
 </script>

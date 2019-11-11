@@ -1,0 +1,73 @@
+<template>
+    <div class="course-manage-container">
+        <div class="sidebar">
+            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id }" class="sidebar-el">
+                <i class="fa fa-fw fa-home"></i> Course info
+            </router-link>
+            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/goals' }" class="sidebar-el">
+                <i class="fa fa-fw fa-wrench"></i> Course target
+            </router-link>
+            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/curriculum' }" class="sidebar-el">
+                <i class="fa fa-fw fa-user"></i> Curriculum
+            </router-link>
+        </div>
+        <div class="main-content">
+            <router-view></router-view>
+        </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "ICourseManage",
+        data() {
+            return {
+
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .course-manage-container {
+        display: flex;
+        padding: 40px 30px;
+        background-color: #edf2f5;
+    }
+
+    .sidebar {
+        flex-basis: 250px;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        background-color: #fff;
+        overflow:hidden;
+    }
+
+    .sidebar-el {
+        border-bottom: 2px solid #ddede1;
+        /*border-radius: 3px;*/
+        padding: 20px 25px;
+        text-decoration: none;
+        text-align: left;
+        color: #6d736f;
+        font-size: 17px;
+    }
+    /*.sidebar-el:focus {*/
+    /*    background-color: #a3c2bd;  !* #8E8A84; #ec5252; *!*/
+    /*}*/
+
+    .active {
+        background-color: #a3c2bd;
+    }
+
+    .main-content {
+        flex: 1;
+        border: 1px solid transparent;
+        border-radius: 3px;
+        background-color: #cfe3df; /* #b5ffe9; */
+        overflow:hidden;
+    }
+
+</style>

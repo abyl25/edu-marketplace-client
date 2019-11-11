@@ -10,8 +10,10 @@ import CarouselContainer from "@/components/carousel/CarouselContainer";
 import CourseList from '@/views/courses/CourseList';
 import SearchCourse from "@/views/courses/SearchCourse";
 import CreateCourse from "@/views/instructor/CreateCourse";
-import InstructorCourse from "@/views/instructor/InstructorCourse";
+import ICourseManage from "@/views/instructor/ICourseManage";
+import ICourseInfo from "@/views/instructor/ICourseInfo";
 import CourseGoal from "@/views/instructor/CourseGoal";
+import IcourseCurriculum from "@/views/instructor/IcourseCurriculum";
 
 Vue.use(Router);
 
@@ -104,15 +106,19 @@ const router = new Router({
     },
     {
       path: '/instructor/course/:id',
-      component: InstructorCourse,
+      component: ICourseManage,
       children: [
-        // {
-        //   path: '',
-        //   component: InstructorCourse
-        // },
+        {
+          path: '',
+          component: ICourseInfo
+        },
         {
           path: 'goals',
           component: CourseGoal
+        },
+        {
+          path: 'curriculum',
+          component: IcourseCurriculum
         }
       ]
     },
