@@ -71,7 +71,7 @@
         methods: {
             addAnswerInput(e) {
                 const el = this.goalInputs[this.goalInputs.length-1];
-                if(el.name) {
+                if (el.name) {
                     const id = e.target.id;
                     if (id == 1) {
                         this.goalInputs.push({ name: '' });

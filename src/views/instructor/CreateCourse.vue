@@ -85,6 +85,7 @@
 <script>
   import axios from 'axios';
   import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+  import { INSTR_COURSE_CREATE_REQUEST } from "@/store/actions";
   import { mapGetters } from 'vuex';
 
   export default {
@@ -112,7 +113,7 @@
     methods: {
       addCourse(e) {
         e.preventDefault();
-        const course = {
+        const newCourse = {
           instructorId: this.user.id,
           title: this.title,
           subtitle: this.subtitle,
@@ -123,15 +124,24 @@
           category: this.subcategory,
           topic: this.topic
         };
-        console.log(course); // eslint-disable-line
+        console.log(newCourse);
+        // this.$store.dispatch(INSTR_COURSE_CREATE_REQUEST, newCourse)
+        //   .then(res => {
+        //     console.log(res.data);
+        //     this.$router.push('/instructor/home');
+        //   })
+        //   .catch(err => console.log(err));
         const config = {
           headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
         };
-        // axios.post('/api/courses', course, config)
-        //     .then(res => {
-        //         console.log(res.data); // eslint-disable-line
-        //     }).catch(err => console.log(err)); // eslint-disable-line
-
+        axios.post(`/api/courses`, newCourse, config)
+          .then(res => {
+            console.log(res.data);
+          })
+          .catch(err => {
+            console.log(err);
+            console.log(err.response.data);
+          });
       }
     },
     computed: {

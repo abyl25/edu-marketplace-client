@@ -1,7 +1,7 @@
 <template>
     <div class="course-manage-container">
         <div class="sidebar">
-            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id }" class="sidebar-el">
+            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/main' }" class="sidebar-el">
                 <i class="fa fa-fw fa-home"></i> Course info
             </router-link>
             <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/goals' }" class="sidebar-el">
@@ -20,11 +20,6 @@
 <script>
     export default {
         name: "ICourseManage",
-        data() {
-            return {
-
-            }
-        }
     }
 </script>
 

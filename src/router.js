@@ -108,8 +108,12 @@ const router = new Router({
       path: '/instructor/course/:id',
       component: ICourseManage,
       children: [
+        // {
+        //   path: '',
+        //   component:
+        // },
         {
-          path: '',
+          path: 'main',
           component: ICourseInfo
         },
         {

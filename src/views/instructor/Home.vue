@@ -16,7 +16,7 @@
             <button class="add-course-btn">Filter</button>
         </div>
         <div class="instructor-courses-list">
-            <div v-bind:key="course.id" v-for="course in courses">
+            <div v-bind:key="course.id" v-for="course in this.instrCourses">
                 <ICourseListItem v-bind:course="course"/>
             </div>
         </div>
@@ -24,9 +24,9 @@
 </template>
 
 <script>
-  import axios from 'axios';
   import { mapGetters } from 'vuex';
   import ICourseListItem from "@/views/instructor/ICourseListItem";
+  import { INSTR_COURSES_REQUEST } from "@/store/actions";
 
   export default {
     name: 'home',
@@ -46,22 +46,14 @@
         e.preventDefault();
       },
       getInstructorCourses() {
-        const config = {
-          headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-        };
-        if(this.isAuthenticated) {
-          const instructorID = this.user.id;
-          axios.get(`/api/instructor/${instructorID}/courses`, config)
-            .then(res => {
-                console.log(res.data);
-                this.courses = res.data;
-            })
-            .catch(err => console.log(err))
-        }
+        const instructorID = this.user.id;
+        this.$store.dispatch(INSTR_COURSES_REQUEST, instructorID)
+          .then(res => console.log(res.data))
+          .catch(err => console.log(err));
       }
     },
     computed: {
-      ...mapGetters(['user', 'isAuthenticated'])
+      ...mapGetters(['user', 'isAuthenticated', 'instrCourses'])
     }
   }
 </script>
