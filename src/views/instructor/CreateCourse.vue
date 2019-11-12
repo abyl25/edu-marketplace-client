@@ -125,22 +125,14 @@
           topic: this.topic
         };
         console.log(newCourse);
-        // this.$store.dispatch(INSTR_COURSE_CREATE_REQUEST, newCourse)
-        //   .then(res => {
-        //     console.log(res.data);
-        //     this.$router.push('/instructor/home');
-        //   })
-        //   .catch(err => console.log(err));
-        const config = {
-          headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-        };
-        axios.post(`/api/courses`, newCourse, config)
+        this.$store.dispatch(INSTR_COURSE_CREATE_REQUEST, newCourse)
           .then(res => {
             console.log(res.data);
+            this.$router.push('/instructor/home');
           })
           .catch(err => {
-            console.log(err);
-            console.log(err.response.data);
+              console.log(err);
+              console.log(err.response.data);
           });
       }
     },
@@ -222,15 +214,6 @@
 
     input[type=submit]:hover {
         background-color: #45a049;
-    }
-
-    /*.ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {*/
-    /*    margin-bottom: 20px;*/
-    /*}*/
-
-    .ck-content .todo-list li {
-        /*margin-bottom: 5px;*/
-        padding-left: 20px;
     }
 
 </style>

@@ -12,11 +12,9 @@
                 <div class="editor">
                     <ckeditor :editor="editor" v-model="course.description" :config="editorConfig"></ckeditor>
                 </div>
-                <label for="price">Price</label>
-                <input type="number" id="price" v-model="course.price" placeholder="Price" autocomplete="off">
 
-                <div class="langlev">
-                    <div class="lang">
+                <div class="select-wrapper"> <!--  select-wrapper  -->
+                    <div class="select-left">  <!--  select-left  -->
                         <label for="language">Language</label>
                         <select id="language" v-model="course.language" name="language">
                             <option value="select" selected>--Select--</option>
@@ -25,7 +23,7 @@
                             <option value="English">English</option>
                         </select>
                     </div>
-                    <div class="lev">
+                    <div class="select-right"> <!--  select-right  -->
                         <label for="level">Level</label>
                         <select id="level" v-model="course.level" name="level">
                             <option value="select">--Select--</option>
@@ -36,8 +34,8 @@
                     </div>
                 </div>
 
-                <div class="catsubcat">
-                    <div class="cat">
+                <div class="select-wrapper">
+                    <div class="select-left">
                         <label for="category">Category</label>
                         <select id="category" v-model="course.category.parent.name" name="category">
                             <option value="select">--Select--</option>
@@ -47,7 +45,7 @@
                         </select>
                     </div>
 
-                    <div class="subcat">
+                    <div class="select-right">
                         <label for="subcategory">Subcategory</label>
                         <select id="subcategory" v-model="course.category.name" name="subcategory">
                             <option value="select">--Select--</option>
@@ -66,14 +64,20 @@
                         </select>
                     </div>
                 </div>
-                <div class="topic">
-                    <label for="topic">Topic</label>
-                    <select id="topic" v-model="course.topic.name" name="topic">
-                        <option value="select">--Select--</option>
-                        <option value="React">React</option>
-                        <option value="Vue.JS">Vue.JS</option>
-                        <option value="Angular">Angular</option>
-                    </select>
+                <div class="select-wrapper">
+                    <div class="select-left">
+                        <label for="topic">Topic</label>
+                        <select id="topic" v-model="course.topic.name" name="topic">
+                            <option value="select">--Select--</option>
+                            <option value="React">React</option>
+                            <option value="Vue.JS">Vue.JS</option>
+                            <option value="Angular">Angular</option>
+                        </select>
+                    </div>
+                    <div class="select-right">
+                        <label for="price">Price</label>
+                        <input type="number" id="price" v-model="course.price" placeholder="Price" autocomplete="off">
+                    </div>
                 </div>
                 <input type="submit" value="Edit">
             </form>
@@ -153,41 +157,27 @@
     .container {
         display: flex;
         justify-content: center;
-        margin: 30px 0;
+        /*margin: 30px 0;*/
     }
 
     .add-form {
-        width: 60%;
+        width: 70%;
         border-radius: 5px;
         padding: 20px;
         background-color: #f2f2f2;
     }
 
-    .langlev {
+    .select-wrapper {
         display: flex;
         justify-content: space-between;
     }
 
-    .lang {
+    .select-left {
         flex: 1;
         margin-right: 80px;
     }
 
-    .lev {
-        flex: 1;
-    }
-
-    .catsubcat {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .cat {
-        flex: 1;
-        margin-right: 80px;
-    }
-
-    .subcat {
+    .select-right {
         flex: 1;
     }
 

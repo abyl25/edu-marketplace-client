@@ -1,5 +1,10 @@
 <template>
     <div class="course-manage-container">
+        <div class="back-link-wrapper">
+            <router-link :to="{ path: '/instructor/home' }" class="back-link">
+                <i class="fas fa-chevron-left" style="color: red"></i> Home
+            </router-link>
+        </div>
         <div class="sidebar">
             <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/main' }" class="sidebar-el">
                 <i class="fa fa-fw fa-home"></i> Course info
@@ -26,7 +31,7 @@
 <style scoped>
     .course-manage-container {
         display: flex;
-        padding: 40px 30px;
+        padding: 50px 30px;
         background-color: #edf2f5;
     }
 
@@ -63,6 +68,18 @@
         border-radius: 3px;
         background-color: #cfe3df; /* #b5ffe9; */
         overflow:hidden;
+    }
+
+    .back-link-wrapper {
+        /*border: 1px solid #000;*/
+        position: absolute;
+        top: 75px;
+    }
+    .back-link {
+        /*padding: 5px 10px;*/
+        text-decoration: none;
+        color: #6d736f;
+        font-size: 18px;
     }
 
 </style>
