@@ -10,10 +10,13 @@
                 <i class="fa fa-fw fa-home"></i> Course info
             </router-link>
             <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/target' }" class="sidebar-el">
-                <i class="fa fa-fw fa-wrench"></i> Course target
+                <img src="../../assets/icons8-goal2-23-6d736f.png" alt="" style="vertical-align: middle"> Course target
             </router-link>
             <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/curriculum' }" class="sidebar-el">
-                <i class="fa fa-fw fa-user"></i> Curriculum
+                <img src="../../assets/icons8-table-of-content-24.png" alt="" style="vertical-align: middle"> Curriculum
+            </router-link>
+            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/settings' }" class="sidebar-el">
+                <i class="fa fa-fw fa-wrench"></i> Settings
             </router-link>
         </div>
         <div class="main-content">
@@ -34,22 +37,23 @@
 <style scoped>
     .course-manage-container {
         display: flex;
-        padding: 50px 30px;
-        background-color: #edf2f5;
+        padding: 50px 70px 50px 50px;
+        background-color: #f7f9fa;   /*  #f5f6f7;  #edf2f5;   */
     }
 
     .sidebar {
-        flex-basis: 250px;
+        flex-basis: 280px;
         display: flex;
         flex-direction: column;
-        border: 1px solid transparent;
+        border: 1px solid #ddede1;
         border-radius: 3px;
-        background-color: #fff;  /*  #edf2f5;  */
+        background-color: #f5f6f7;
+        /*background-color: #29303b;  !* #fff;  #edf2f5;  *!*/
         overflow:hidden;
     }
 
     .sidebar-el {
-        border-bottom: 2px solid #ddede1;
+        border-bottom: 1px solid #ddede1;
         /*border-radius: 3px;*/
         padding: 20px 25px;
         text-decoration: none;
@@ -69,7 +73,9 @@
         flex: 1;
         border: 1px solid transparent;
         border-radius: 3px;
-        background-color: #cfe3df; /* #b5ffe9; */
+        background-color:  #fff;
+        /*background-color: #cfe3df; !* #b5ffe9; *!*/
+        box-shadow: 0 2px 8px 2px rgba(20,23,28,.15);
         overflow:hidden;
     }
 

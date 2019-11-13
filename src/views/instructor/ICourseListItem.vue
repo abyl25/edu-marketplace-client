@@ -24,7 +24,7 @@
         border-radius: 2px;
         margin: 30px 0;
         /*flex-basis: 200px;*/
-        width: 65%;
+        width: 80%;
     }
 
     .course-item a {
@@ -32,6 +32,7 @@
         flex: 1;
         text-align: left;
         text-decoration: none;
+        background-color: #f5f6f7;
         color: #2c3e50;
     }
 

@@ -61,8 +61,9 @@
 <style scoped>
     .container {
         font-family: open sans,helvetica neue,Helvetica,Arial,sans-serif;
-        padding: 40px 50px;
-        background-color: #edf2f5;
+        padding: 40px 90px;
+        /*background-color: #f0f3f5; !*  #edf2f5; #dadfe3;  *!*/
+        background-color: #fff;  /*  #f5f6f7  */
     }
 
     .courses-header {
@@ -74,7 +75,7 @@
         display: flex;
         align-items: center;
         /*width: 60%;*/
-        margin-bottom: 20px;
+        margin-bottom: 40px;
     }
 
     .add-course-btn {

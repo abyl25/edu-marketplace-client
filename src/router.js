@@ -13,7 +13,8 @@ import CreateCourse from "@/views/instructor/CreateCourse";
 import ICourseManage from "@/views/instructor/ICourseManage";
 import ICourseInfo from "@/views/instructor/ICourseInfo";
 import CourseTarget from "@/views/instructor/CourseTarget";
-import IcourseCurriculum from "@/views/instructor/IcourseCurriculum";
+import ICourseCurriculum from "@/views/instructor/IcourseCurriculum";
+import ICourseSetting from "@/views/instructor/ICourseSetting";
 
 Vue.use(Router);
 
@@ -122,7 +123,11 @@ const router = new Router({
         },
         {
           path: 'curriculum',
-          component: IcourseCurriculum
+          component: ICourseCurriculum
+        },
+        {
+          path: 'settings',
+          component: ICourseSetting
         }
       ]
     },

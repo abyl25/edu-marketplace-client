@@ -153,6 +153,7 @@ const actions = {
             } else if ('goalName' in payload) {
                 url = `/api/courses/${payload.courseId}/goal/${payload.goalName}`;
             }
+            console.log(url);
             axios.delete(url, config)
                 .then(res => {
                     commit(INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, res);

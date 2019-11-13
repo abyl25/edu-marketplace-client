@@ -157,16 +157,16 @@
     .container {
         display: flex;
         justify-content: center;
+        padding: 40px 0;
         /*margin: 30px 0;*/
         /*background-color: #fff;*/
     }
 
     .add-form {
-        width: 70%;
-        border: 1px solid transparent;
-        border-radius: 5px;
-        padding: 20px 40px;
-        background-color: #fff;  /*  #f2f2f2  */
+        width: 80%;
+        /*border: 1px solid transparent;*/
+        /*border-radius: 5px;*/
+        /*background-color: #fff;  !*  #f2f2f2  *!*/
     }
 
     .select-wrapper {

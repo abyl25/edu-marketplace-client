@@ -8,7 +8,7 @@
             <form @submit="saveCourseTarget">
                 <div class="form-group">
                     <p>What will students learn in your course?</p>
-                    <div v-for="(input,k) in goalInputs" :key="k" style="height: 46px;">
+                    <div class="input-wrapper" v-for="(input,k) in goalInputs" :key="k" style="height: 46px;">
                         <input type="text" class="form-input" placeholder="Course goals" v-model="input.name">
                         <span class="remove-btn" @click="removeGoal($event, k, input.name)">
                             <i class="far fa-trash-alt fa-lg" v-show="k || (!k && goalInputs.length > 1)"></i>
@@ -21,7 +21,7 @@
 
                 <div class="form-group">
                     <p>What are course requirements?</p>
-                    <div id="dd" v-for="(input,k) in reqInputs" :key="k" style="height: 46px;">
+                    <div class="input-wrapper" v-for="(input,k) in reqInputs" :key="k" style="height: 46px;">
                         <input type="text" class="form-input" placeholder="Course reqs" v-model="input.name">
                         <span class="remove-btn" @click="removeReq($event, k, input.name)">
                             <i class="far fa-trash-alt fa-lg" v-show="k || (!k && goalInputs.length > 1)"></i>
@@ -54,7 +54,7 @@
 
 <script>
     import {
-        INSTR_COURSE_TARGET_REQUEST, INSTR_CREATE_COURSE_TARGET_REQUEST, INSTR_DELETE_COURSE_REQ_REQUEST
+        INSTR_COURSE_TARGET_REQUEST, INSTR_CREATE_COURSE_TARGET_REQUEST, INSTR_DELETE_COURSE_REQ_GOAL_REQUEST
     } from "@/store/actions";
     import { mapGetters } from "vuex";
 
@@ -116,25 +116,29 @@
             },
             removeGoal(e, index, goalName) {
                 this.goalInputs.splice(index, 1);
-                const payload = {
-                    courseId: this.$route.params.id,
-                    goalName: goalName
-                };
-                console.log(payload);
-                this.$store.dispatch(INSTR_DELETE_COURSE_REQ_REQUEST, payload)
-                    .then(res => console.log(res.data))
-                    .catch(err => { console.log(err); console.log(err.response.data); });
+                if (goalName) {
+                    const payload = {
+                        courseId: this.$route.params.id,
+                        goalName: goalName
+                    };
+                    console.log(payload);
+                    this.$store.dispatch(INSTR_DELETE_COURSE_REQ_GOAL_REQUEST, payload)
+                        .then(res => console.log(res.data))
+                        .catch(err => { console.log(err); console.log(err.response.data); });
+                }
             },
             removeReq(e, index, reqName) {
                 this.reqInputs.splice(index, 1);
-                const payload = {
-                    courseId: this.$route.params.id,
-                    reqName: reqName
-                };
-                console.log(payload);
-                this.$store.dispatch(INSTR_DELETE_COURSE_REQ_REQUEST, payload)
-                    .then(res => console.log(res.data))
-                    .catch(err => { console.log(err); console.log(err.response.data); });
+                if (reqName) {
+                    const payload = {
+                        courseId: this.$route.params.id,
+                        reqName: reqName
+                    };
+                    console.log(payload);
+                    this.$store.dispatch(INSTR_DELETE_COURSE_REQ_GOAL_REQUEST, payload)
+                        .then(res => console.log(res.data))
+                        .catch(err => { console.log(err); console.log(err.response.data); });
+                }
             },
             saveCourseTarget(e) {
                 e.preventDefault();
@@ -166,14 +170,14 @@
     .app-content {
         /*font-family: open sans,helvetica neue,Helvetica,Arial,sans-serif;*/
         font-family: Helvetica, sans-serif;
-        background-color: #cfe3df;
+        background-color: #fff; /*  #cfe3df;   */
         text-align: left;
         padding-bottom: 30px;
     }
 
     .sub-header {
         padding: 20px 50px;
-        border-bottom: 1px solid #fff;  /*  #dedfe0   */
+        border-bottom: 1px solid #dedfe0;  /* #fff; #dedfe0   */
     }
 
     .title {
@@ -186,14 +190,19 @@
     }
 
     .form-group {
-        margin: 30px 0;
+        width: 100%;
+        margin: 35px 0;
+    }
+
+    .input-wrapper {
+        margin: 10px 0;
     }
 
     .form-input {
         /*border: 1px solid #babfbe;*/
         border: 1px solid #cacbcc;
         border-radius: 3px;
-        width: 80%;
+        width: 90%;
         margin-top: 5px;
         padding: 10px 12px;
         font-size: 16px;
@@ -205,7 +214,7 @@
         border: 1px solid #686f7a;
         border-radius: 2px;
         margin-top: 10px;
-        padding: 5px 7px;
+        padding: 7px 10px;
         color: #007791;
         font-size: 15px;
         font-weight: 600;
@@ -218,7 +227,7 @@
         border: none;
         border-radius: 2px;
         margin-top: 5px;
-        padding: 12px 30px;
+        padding: 12px 40px;
         background-color: #4CAF50;
         color: #fff;
         font-size: 17px;
@@ -231,7 +240,7 @@
     }
 
     .remove-btn {
-        margin-left: 8px;
+        margin-left: 10px;
     }
 
     .remove-btn:hover {

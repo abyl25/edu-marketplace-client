@@ -45,7 +45,11 @@
         </div>
         <nav id="navbar">
             <ul>
-                <li><router-link to="/cart">Cart</router-link></li>
+                <li>
+                    <router-link to="/cart" class="cart-link">
+                        <img src="../../assets/icons8-shopping-cart-35-white.png">
+                    </router-link>
+                </li>
                 <template v-if="!isAuthenticated">
                     <li><router-link to="/login">Sign in</router-link></li>
                     <li><router-link to="/signup">Sign up</router-link></li>
@@ -95,6 +99,11 @@ export default {
 </script>
 
 <style scoped>
+    .cart-link {
+        display: flex;
+        align-items: center;
+    }
+
     *{
         margin: 0;
         padding: 0;
@@ -103,7 +112,8 @@ export default {
 
     header {
         padding: 0 20px;
-        background: #EC9F42; /* #6CD867 #FF5733 */
+        /*background: #EC9F42; !* #6CD867;  #FF5733;  #39CCCC;  #001f3f; #0b98de; *!;  github: #24292e;  #686d6e; */
+        background-color: #737778;  /*     #29303b;   */
         width: 100%;
         height: 60px;
         box-sizing: border-box;
@@ -237,7 +247,7 @@ export default {
         height: 100%;
     }
 
-    header nav ul li a, .username, .logout-btn {
+    header nav ul li a, header nav ul li p {
         display: block;
         /*height: 100%;*/
         line-height: 50px;
@@ -245,6 +255,10 @@ export default {
         color: #fff;
         cursor: pointer;
         text-decoration: none;
+    }
+
+    .logout-btn {
+        padding: 0 10px;
     }
 
     header nav ul li:hover {
