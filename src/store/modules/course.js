@@ -1,6 +1,7 @@
 import { COURSES_REQUEST, COURSES_SUCCESS, COURSES_ERROR, INSTR_COURSES_REQUEST, INSTR_COURSE_REQUEST, INSTR_COURSES_SUCCESS,
     INSTR_COURSE_SUCCESS, INSTR_COURSES_ERROR, INSTR_COURSE_UPDATE_REQUEST, INSTR_COURSE_UPDATE_SUCCESS, INSTR_COURSE_UPDATE_ERROR,
-    INSTR_COURSE_CREATE_REQUEST, INSTR_COURSE_CREATE_SUCCESS, INSTR_COURSE_CREATE_ERROR } from '../actions';
+    INSTR_COURSE_CREATE_REQUEST, INSTR_COURSE_CREATE_SUCCESS, INSTR_COURSE_CREATE_ERROR, INSTR_CREATE_COURSE_TARGET_REQUEST,
+    INSTR_CREATE_COURSE_TARGET_SUCCESS, INSTR_CREATE_COURSE_TARGET_ERROR} from '../actions';
 import axios from 'axios';
 
 const state = {
@@ -113,11 +114,31 @@ const actions = {
                     reject(err);
                 });
         });
-    }
+    },
+    [INSTR_CREATE_COURSE_TARGET_REQUEST]: ({commit}, target) => {
+        return new Promise((resolve, reject) => {
+            commit(INSTR_CREATE_COURSE_TARGET_REQUEST);
+            const config = {
+                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
+            };
+            axios.post(`/api/courses/target`, target, config)
+                .then(res => {
+                    // console.log(res.data);
+                    commit(INSTR_CREATE_COURSE_TARGET_SUCCESS, res);
+                    resolve(res);
+                })
+                .catch(err => {
+                    // console.log(err);
+                    commit(INSTR_CREATE_COURSE_TARGET_ERROR);
+                    reject(err);
+                });
+        });
+    },
 
 };
 
 const mutations = {
+    // General Courses
     [COURSES_REQUEST]: (state) => {
         state.status = 'Fetching courses...';
     },
@@ -128,6 +149,7 @@ const mutations = {
     [COURSES_ERROR]: (state) => {
         state.status = 'Fetch Error';
     },
+    // Instructor Courses
     [INSTR_COURSES_REQUEST]: (state) => {
         state.status = 'Instructor Courses Fetch Request';
     },
@@ -145,6 +167,7 @@ const mutations = {
         state.status = 'Instructor Course Fetch Success';
         state.instructorCourse = res.data;
     },
+    // Instructor Course Creation
     [INSTR_COURSE_CREATE_REQUEST]: (state) => {
         state.status = 'Instructor Course Create Request';
     },
@@ -155,6 +178,7 @@ const mutations = {
     [INSTR_COURSE_CREATE_ERROR]: (state) => {
         state.status = 'Instructor Course Create Error';
     },
+    // Instructor Course Update
     [INSTR_COURSE_UPDATE_REQUEST]: (state) => {
         state.status = 'Instructor Course Update Request';
     },
@@ -164,7 +188,17 @@ const mutations = {
     },
     [INSTR_COURSE_UPDATE_ERROR]: (state) => {
         state.status = 'Instructor Course Update Error';
-    }
+    },
+    // Instructor Course Target
+    [INSTR_CREATE_COURSE_TARGET_REQUEST]: (state) => {
+        state.status = 'Instructor Course Target Request';
+    },
+    [INSTR_CREATE_COURSE_TARGET_SUCCESS]: (state) => {
+        state.status = 'Instructor Course Target Success';
+    },
+    [INSTR_CREATE_COURSE_TARGET_ERROR]: (state) => {
+        state.status = 'Instructor Course Target Error';
+    },
 
 };
 

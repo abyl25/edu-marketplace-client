@@ -32,18 +32,18 @@
                     </button>
                 </div>
 
-                <div class="form-group">
-                    <p>Who are your target students?</p>
-                    <div v-for="(input,k) in studentInputs" :key="k" style="height: 46px;">
-                        <input type="text" class="form-input" placeholder="Course students" v-model="input.name">
-                        <span class="remove-btn" @click="removeStudent($event, k)">
-                            <i class="far fa-trash-alt fa-lg" v-show="k || (!k && goalInputs.length > 1)"></i>
-                        </span>
-                    </div>
-                    <button type="button" id="3" class="btn" @click="addAnswerInput">
-                        <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer
-                    </button>
-                </div>
+<!--                <div class="form-group">-->
+<!--                    <p>Who are your target students?</p>-->
+<!--                    <div v-for="(input,k) in studentInputs" :key="k" style="height: 46px;">-->
+<!--                        <input type="text" class="form-input" placeholder="Course students" v-model="input.name">-->
+<!--                        <span class="remove-btn" @click="removeStudent($event, k)">-->
+<!--                            <i class="far fa-trash-alt fa-lg" v-show="k || (!k && goalInputs.length > 1)"></i>-->
+<!--                        </span>-->
+<!--                    </div>-->
+<!--                    <button type="button" id="3" class="btn" @click="addAnswerInput">-->
+<!--                        <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer-->
+<!--                    </button>-->
+<!--                </div>-->
 
                 <button type="submit" class="save-btn">Save</button>
             </form>
@@ -53,6 +53,8 @@
 </template>
 
 <script>
+    import { INSTR_CREATE_COURSE_TARGET_REQUEST } from "@/store/actions";
+
     export default {
         name: "CourseGoal",
         data() {
@@ -70,15 +72,16 @@
         },
         methods: {
             addAnswerInput(e) {
-                const el = this.goalInputs[this.goalInputs.length-1];
-                if (el.name) {
-                    const id = e.target.id;
-                    if (id == 1) {
+                const id = e.target.id;
+                if (id == 1) {
+                    const el = this.goalInputs[this.goalInputs.length-1];
+                    if (el.name) {
                         this.goalInputs.push({ name: '' });
-                    } else if (id == 2) {
+                    }
+                } else if (id == 2) {
+                    const el = this.reqInputs[this.reqInputs.length-1];
+                    if (el.name) {
                         this.reqInputs.push({ name: '' });
-                    } else if (id == 3) {
-                        this.studentInputs.push({ name: '' });
                     }
                 }
             },
@@ -93,7 +96,29 @@
             },
             saveCourseTarget(e) {
                 e.preventDefault();
+                const goals = this.goalInputs.map(i => i.name).filter(r => r !== '');
+                console.log(goals);
+                const reqs = this.reqInputs.map(i => i.name).filter(r => r !== '');
+                console.log(reqs);
 
+                if (goals.length === 0 || reqs.length === 0) {
+                    alert('Goals or requirements are empty');
+                    return;
+                }
+                const payload = {
+                    courseId: this.$route.params.id,  // this.instrCourse.id
+                    reqs,
+                    goals
+                };
+                console.log(payload);
+                this.$store.dispatch(INSTR_CREATE_COURSE_TARGET_REQUEST, payload)
+                    .then(res => {
+                        console.log(res.data);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        console.log(err.response.data);
+                    });
             }
         }
     }

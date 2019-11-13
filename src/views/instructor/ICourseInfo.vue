@@ -158,13 +158,15 @@
         display: flex;
         justify-content: center;
         /*margin: 30px 0;*/
+        /*background-color: #fff;*/
     }
 
     .add-form {
         width: 70%;
+        border: 1px solid transparent;
         border-radius: 5px;
-        padding: 20px;
-        background-color: #f2f2f2;
+        padding: 20px 40px;
+        background-color: #fff;  /*  #f2f2f2  */
     }
 
     .select-wrapper {

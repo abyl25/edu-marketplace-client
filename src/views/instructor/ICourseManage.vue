@@ -41,7 +41,7 @@
         flex-direction: column;
         border: 1px solid transparent;
         border-radius: 3px;
-        background-color: #fff;
+        background-color: #fff;  /*  #edf2f5;  */
         overflow:hidden;
     }
 
