@@ -10,7 +10,7 @@
                     <p>What will students learn in your course?</p>
                     <div v-for="(input,k) in goalInputs" :key="k" style="height: 46px;">
                         <input type="text" class="form-input" placeholder="Course goals" v-model="input.name">
-                        <span class="remove-btn" @click="removeGoal($event, k)">
+                        <span class="remove-btn" @click="removeGoal($event, k, input.name)">
                             <i class="far fa-trash-alt fa-lg" v-show="k || (!k && goalInputs.length > 1)"></i>
                         </span>
                     </div>
@@ -23,7 +23,7 @@
                     <p>What are course requirements?</p>
                     <div id="dd" v-for="(input,k) in reqInputs" :key="k" style="height: 46px;">
                         <input type="text" class="form-input" placeholder="Course reqs" v-model="input.name">
-                        <span class="remove-btn" @click="removeReq($event, k)">
+                        <span class="remove-btn" @click="removeReq($event, k, input.name)">
                             <i class="far fa-trash-alt fa-lg" v-show="k || (!k && goalInputs.length > 1)"></i>
                         </span>
                     </div>
@@ -53,10 +53,13 @@
 </template>
 
 <script>
-    import { INSTR_CREATE_COURSE_TARGET_REQUEST } from "@/store/actions";
+    import {
+        INSTR_COURSE_TARGET_REQUEST, INSTR_CREATE_COURSE_TARGET_REQUEST, INSTR_DELETE_COURSE_REQ_REQUEST
+    } from "@/store/actions";
+    import { mapGetters } from "vuex";
 
     export default {
-        name: "CourseGoal",
+        name: "CourseTarget",
         data() {
             return {
                 goalInputs: [{
@@ -64,13 +67,39 @@
                 }],
                 reqInputs: [{
                     name: ''
-                }],
-                studentInputs: [{
-                    name: ''
                 }]
             }
         },
+        created() {
+            console.log('CourseTarget created');
+            this.getCourseTarget();
+        },
         methods: {
+            getCourseTarget() {
+                const payload = {
+                    courseId: this.$route.params.id
+                };
+                this.$store.dispatch(INSTR_COURSE_TARGET_REQUEST, payload)
+                    .then(res => {
+                        console.log(res.data);
+                        if(res.data.target.reqs.length !== 0) {
+                            this.populateInputs(res.data.target);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        console.log(err.response.data);
+                    });
+            },
+            clearInputs() {
+                this.goalInputs.length = 0;
+                this.reqInputs.length = 0;
+            },
+            populateInputs(target) {
+                this.clearInputs();
+                target.goals.forEach(i => this.goalInputs.push({ name: i.name }));
+                target.reqs.forEach(i => this.reqInputs.push({ name: i.name }));
+            },
             addAnswerInput(e) {
                 const id = e.target.id;
                 if (id == 1) {
@@ -85,41 +114,50 @@
                     }
                 }
             },
-            removeGoal(e, index) {
+            removeGoal(e, index, goalName) {
                 this.goalInputs.splice(index, 1);
+                const payload = {
+                    courseId: this.$route.params.id,
+                    goalName: goalName
+                };
+                console.log(payload);
+                this.$store.dispatch(INSTR_DELETE_COURSE_REQ_REQUEST, payload)
+                    .then(res => console.log(res.data))
+                    .catch(err => { console.log(err); console.log(err.response.data); });
             },
-            removeReq(e, index) {
+            removeReq(e, index, reqName) {
                 this.reqInputs.splice(index, 1);
-            },
-            removeStudent(e, index) {
-                this.studentInputs.splice(index, 1);
+                const payload = {
+                    courseId: this.$route.params.id,
+                    reqName: reqName
+                };
+                console.log(payload);
+                this.$store.dispatch(INSTR_DELETE_COURSE_REQ_REQUEST, payload)
+                    .then(res => console.log(res.data))
+                    .catch(err => { console.log(err); console.log(err.response.data); });
             },
             saveCourseTarget(e) {
                 e.preventDefault();
                 const goals = this.goalInputs.map(i => i.name).filter(r => r !== '');
-                console.log(goals);
                 const reqs = this.reqInputs.map(i => i.name).filter(r => r !== '');
-                console.log(reqs);
 
                 if (goals.length === 0 || reqs.length === 0) {
                     alert('Goals or requirements are empty');
                     return;
                 }
                 const payload = {
-                    courseId: this.$route.params.id,  // this.instrCourse.id
+                    courseId: this.$route.params.id,
                     reqs,
                     goals
                 };
                 console.log(payload);
                 this.$store.dispatch(INSTR_CREATE_COURSE_TARGET_REQUEST, payload)
-                    .then(res => {
-                        console.log(res.data);
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        console.log(err.response.data);
-                    });
+                    .then(res => console.log(res.data))
+                    .catch(err => { console.log(err); console.log(err.response.data); });
             }
+        },
+        computed: {
+            ...mapGetters(['instrCourse'])
         }
     }
 </script>

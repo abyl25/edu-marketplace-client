@@ -12,7 +12,7 @@ import SearchCourse from "@/views/courses/SearchCourse";
 import CreateCourse from "@/views/instructor/CreateCourse";
 import ICourseManage from "@/views/instructor/ICourseManage";
 import ICourseInfo from "@/views/instructor/ICourseInfo";
-import CourseGoal from "@/views/instructor/CourseGoal";
+import CourseTarget from "@/views/instructor/CourseTarget";
 import IcourseCurriculum from "@/views/instructor/IcourseCurriculum";
 
 Vue.use(Router);
@@ -117,8 +117,8 @@ const router = new Router({
           component: ICourseInfo
         },
         {
-          path: 'goals',
-          component: CourseGoal
+          path: 'target',
+          component: CourseTarget
         },
         {
           path: 'curriculum',

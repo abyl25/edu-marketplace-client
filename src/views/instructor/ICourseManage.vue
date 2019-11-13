@@ -9,7 +9,7 @@
             <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/main' }" class="sidebar-el">
                 <i class="fa fa-fw fa-home"></i> Course info
             </router-link>
-            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/goals' }" class="sidebar-el">
+            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/target' }" class="sidebar-el">
                 <i class="fa fa-fw fa-wrench"></i> Course target
             </router-link>
             <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/curriculum' }" class="sidebar-el">
@@ -25,6 +25,9 @@
 <script>
     export default {
         name: "ICourseManage",
+        created() {
+            console.log('ICourseManage created');
+        }
     }
 </script>
 

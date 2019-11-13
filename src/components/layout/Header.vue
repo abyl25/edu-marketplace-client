@@ -45,17 +45,14 @@
         </div>
         <nav id="navbar">
             <ul>
-                <li><router-link to="/about">About</router-link></li>
                 <li><router-link to="/cart">Cart</router-link></li>
-<!--                <li><router-link to="/instructor/courses">Instructor</router-link></li>-->
                 <template v-if="!isAuthenticated">
                     <li><router-link to="/login">Sign in</router-link></li>
                     <li><router-link to="/signup">Sign up</router-link></li>
                 </template>
                 <template v-if="isAuthenticated">
-<!--                    <li><router-link to="#">{{ values.username }}</router-link></li>-->
 <!--                    <li><span class="username">{{ user.userName }}</span></li>-->
-                    <li><router-link to="/home">{{ user.userName }}</router-link></li>
+                    <li><router-link :to="{ path: this.homePage }">{{ user.userName }}</router-link></li>
                     <li><p class="logout-btn" @click="logout">Log out</p></li>
                 </template>
             </ul>
@@ -92,7 +89,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['isAuthenticated', 'authStatus', 'user'])
+        ...mapGetters(['isAuthenticated', 'authStatus', 'user', 'isInstructor', 'homePage'])
     }
 }
 </script>
@@ -105,7 +102,7 @@ export default {
     }
 
     header {
-        padding: 0 100px;
+        padding: 0 20px;
         background: #EC9F42; /* #6CD867 #FF5733 */
         width: 100%;
         height: 60px;
@@ -204,7 +201,7 @@ export default {
         color: #585858;
         font-size: 16px;
         line-height: 30px;
-        width: 80%;
+        width: 100%;
     }
 
     .search-btn {
@@ -220,21 +217,29 @@ export default {
 
     header nav {
         display: flex;
+        align-items: center;
+        height: 50px;
     }
 
     header nav ul {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
         margin: 0;
         padding: 0;
-        display: flex;
     }
 
     header nav ul li {
-        List-style: none;
+        display: flex;
+        align-items: center;
+        list-style: none;
+        height: 100%;
     }
 
     header nav ul li a, .username, .logout-btn {
         display: block;
-        height: 50px;
+        /*height: 100%;*/
         line-height: 50px;
         padding: 0 20px;
         color: #fff;
@@ -256,36 +261,6 @@ export default {
         display: none;
     }
 
-    /*@media (max-width: 1400px) {*/
-    /*    .search-txt{*/
-    /*        transition: 0.5s;*/
-    /*        width: 300px;*/
-    /*    }*/
-    /*    .header-category{*/
-    /*        transition: 0.5s;*/
-    /*        margin-right: 50px;*/
-    /*    }*/
-    /*    header nav ul li a{*/
-    /*        transition: 0.5s;*/
-    /*        padding: 0 15px;*/
-    /*    }*/
-    /*}*/
-
-    /*@media (min-width: 1400px) {*/
-    /*    .search-txt{*/
-    /*        transition: 0.5s;*/
-    /*        width: 500px;*/
-    /*    }*/
-    /*    .header-category{*/
-    /*        transition: 0.5s;*/
-    /*        margin-right: 100px; */
-    /*    }*/
-    /*    header nav ul li a{*/
-    /*        transition: 0.5s;*/
-    /*        padding: 0 20px;*/
-    /*    }*/
-    /*}*/
-
     @media (max-width: 1200px) {
         .search-txt{
             transition: 0.5s;
@@ -304,7 +279,7 @@ export default {
     @media (min-width: 1200px) {
         .search-txt{
             transition: 0.5s;
-            width: 400px;
+            width: 500px;
         }
         .header-category{
             transition: 0.5s;
@@ -319,7 +294,8 @@ export default {
     @media (max-width: 1040px) {
         .search-txt{
             transition: 0.5s;
-            width: 150px;
+            width: 300px;
+            /*flex-basis: 90%;*/
         }
         .header-category{
             transition: 0.5s;
@@ -332,15 +308,17 @@ export default {
     }
 
     @media (min-width: 1040px) {
-        .search-txt{
+        .search-txt {
             transition: 0.5s;
-            width: 300px;
+            width: 370px;
+            /*flex-basis: 90%;*/
         }
-        .header-category{
+        .header-category {
             transition: 0.5s;
             margin-right: 50px;
         }
-        header nav ul li a{
+        header nav ul li a {
+            display: block;
             transition: 0.5s;
             padding: 0 10px;
         }

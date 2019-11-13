@@ -11,11 +11,25 @@ const state = {
 };
 
 const getters = {
+    authStatus: state => state.status,
+    signupSuccess: state => state.signupSuccess,
     confirmed: state => state.confirmed,
     isAuthenticated: state => !!state.token,
     user: state => state.user,
-    authStatus: state => state.status,
-    signupSuccess: state => state.signupSuccess
+    // roles: state => state.user.roles,
+    // roleName: state => state.roles[0].name,
+    isInstructor: state => state.user.roles[0].name === 'Instructor',
+    homePage: state => {
+        let url = '';
+        if (state.user.roles[0].name === 'Instructor') {
+            url = '/instructor/home';
+        } else if (state.user.roles[0].name === 'Student') {
+            url = '/student/home';
+        } else if (state.user.roles[0].name === 'Admin') {
+            url = '/admin/home';
+        }
+        return url;
+    }
 };
 
 const actions = {
