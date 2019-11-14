@@ -11,7 +11,8 @@
                     <div class="input-wrapper" v-for="(input,k) in goalInputs" :key="k" style="height: 46px;">
                         <input type="text" class="form-input" placeholder="Course goals" v-model="input.name">
                         <span class="remove-btn" @click="removeGoal($event, k, input.name)">
-                            <i class="far fa-trash-alt fa-lg" v-show="k || (!k && goalInputs.length > 1)"></i>
+                            <i class="far fa-trash-alt fa-lg"></i>
+                            <!--  v-show="k || (!k && goalInputs.length > 1)"  -->
                         </span>
                     </div>
                     <button type="button" id="1" class="btn" @click="addAnswerInput">
@@ -24,7 +25,8 @@
                     <div class="input-wrapper" v-for="(input,k) in reqInputs" :key="k" style="height: 46px;">
                         <input type="text" class="form-input" placeholder="Course reqs" v-model="input.name">
                         <span class="remove-btn" @click="removeReq($event, k, input.name)">
-                            <i class="far fa-trash-alt fa-lg" v-show="k || (!k && goalInputs.length > 1)"></i>
+                            <i class="far fa-trash-alt fa-lg" ></i>
+                            <!--  v-show="k || (!k && goalInputs.length > 1)"  -->
                         </span>
                     </div>
                     <button type="button" id="2" class="btn" @click="addAnswerInput">
@@ -82,7 +84,7 @@
                 this.$store.dispatch(INSTR_COURSE_TARGET_REQUEST, payload)
                     .then(res => {
                         console.log(res.data);
-                        if(res.data.target.reqs.length !== 0) {
+                        if(res.data.target.reqs.length !== 0 || res.data.target.goals.length !== 0) {
                             this.populateInputs(res.data.target);
                         }
                     })
@@ -115,7 +117,13 @@
                 }
             },
             removeGoal(e, index, goalName) {
+                if (index === 0 && goalName === '') {
+                    return;
+                }
                 this.goalInputs.splice(index, 1);
+                if (index === 0 && goalName !== '') {
+                    this.goalInputs.push({ name: '' });
+                }
                 if (goalName) {
                     const payload = {
                         courseId: this.$route.params.id,
@@ -128,13 +136,18 @@
                 }
             },
             removeReq(e, index, reqName) {
+                if (index === 0 && reqName === '') {
+                    return;
+                }
                 this.reqInputs.splice(index, 1);
+                if (index === 0 && reqName !== '') {
+                    this.reqInputs.push({ name: '' });
+                }
                 if (reqName) {
                     const payload = {
                         courseId: this.$route.params.id,
                         reqName: reqName
                     };
-                    console.log(payload);
                     this.$store.dispatch(INSTR_DELETE_COURSE_REQ_GOAL_REQUEST, payload)
                         .then(res => console.log(res.data))
                         .catch(err => { console.log(err); console.log(err.response.data); });

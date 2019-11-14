@@ -16,7 +16,7 @@
                 <img src="../../assets/icons8-table-of-content-24.png" alt="" style="vertical-align: middle"> Curriculum
             </router-link>
             <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/settings' }" class="sidebar-el">
-                <i class="fa fa-fw fa-wrench"></i> Settings
+                <img src="../../assets/icons8-gear-25.png" alt="" style="vertical-align: middle"> Settings
             </router-link>
         </div>
         <div class="main-content">

@@ -8,6 +8,7 @@ import SignUp from '@/views/auth/SignUp';
 import AccountConfirmation from '@/views/auth/AccountConfirmation';
 import CarouselContainer from "@/components/carousel/CarouselContainer";
 import CourseList from '@/views/courses/CourseList';
+import CourseDetails from "@/views/courses/CourseDetails";
 import SearchCourse from "@/views/courses/SearchCourse";
 import CreateCourse from "@/views/instructor/CreateCourse";
 import ICourseManage from "@/views/instructor/ICourseManage";
@@ -15,6 +16,7 @@ import ICourseInfo from "@/views/instructor/ICourseInfo";
 import CourseTarget from "@/views/instructor/CourseTarget";
 import ICourseCurriculum from "@/views/instructor/IcourseCurriculum";
 import ICourseSetting from "@/views/instructor/ICourseSetting";
+import Cart from "@/views/student/Cart";
 
 Vue.use(Router);
 
@@ -95,6 +97,11 @@ const router = new Router({
       }
     },
     {
+      path: '/course/:id',
+      name: 'CourseDetails',
+      component: CourseDetails,
+    },
+    {
       path: '/instructor/home',
       name: 'Home',
       component: Home,
@@ -136,6 +143,11 @@ const router = new Router({
       name: 'StudentHome',
       component: StudentHome,
       // beforeEnter: ifAuthenticated,
+    },
+    {
+      path: '/cart',
+      name: 'Cart',
+      component: Cart,
     }
 
   ]

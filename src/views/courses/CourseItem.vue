@@ -1,6 +1,6 @@
 <template>
     <div class="course">
-        <a href="#">
+        <router-link class="course-link" :to="{ path: '/course/' + course.id }">
             <div class="course-cardcontainer">
                 <div class="course-card-imagecontainer">
                     <img class="course-image" src="../../assets/1.png" width="240" height="135">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
             </div>
-        </a>
+        </router-link>
     </div> 
 </template>
 
@@ -49,10 +49,9 @@ export default {
 </script>
 
 <style scoped>
-
     a {
         text-decoration: none;
-        color:black;
+        color: black;
     }
 
     /* .allcoursecontainer {
@@ -63,6 +62,7 @@ export default {
 
     .course {
         position: relative;
+        /*padding: 20px 0;*/
     }
 
     .course:hover .course-cardcontainer {
@@ -71,6 +71,8 @@ export default {
 
     .course a {
         display: block;
+        /*padding: 20px 0;*/
+        margin: 20px 0;
     }
 
     .course-cardcontainer {
@@ -78,12 +80,12 @@ export default {
         display: flex;
         position: relative;
         border-bottom: 1px solid #f2f3f5;
-        padding: 15px 0px 8px 8px;
+        padding: 15px 0 8px 8px;
     }
 
     .course-card-imagecontainer {
         width: 210px;
-        height: auto;
+        height: 100px;
         margin-bottom: 16px;
     }
 

@@ -1,4 +1,4 @@
-import { COURSES_REQUEST, COURSES_SUCCESS, COURSES_ERROR, INSTR_COURSES_REQUEST, INSTR_COURSE_REQUEST, INSTR_COURSES_SUCCESS,
+import { COURSE_REQUEST, COURSE_SUCCESS, COURSE_ERROR, COURSES_REQUEST, COURSES_SUCCESS, COURSES_ERROR, INSTR_COURSES_REQUEST, INSTR_COURSE_REQUEST, INSTR_COURSES_SUCCESS,
     INSTR_COURSE_SUCCESS, INSTR_COURSES_ERROR, INSTR_COURSE_UPDATE_REQUEST, INSTR_COURSE_UPDATE_SUCCESS, INSTR_COURSE_UPDATE_ERROR,
     INSTR_COURSE_CREATE_REQUEST, INSTR_COURSE_CREATE_SUCCESS, INSTR_COURSE_CREATE_ERROR, INSTR_CREATE_COURSE_TARGET_REQUEST,
     INSTR_CREATE_COURSE_TARGET_SUCCESS, INSTR_CREATE_COURSE_TARGET_ERROR, INSTR_COURSE_TARGET_REQUEST, INSTR_COURSE_TARGET_SUCCESS,
@@ -17,6 +17,7 @@ const state = {
 
 const getters = {
     courses: state => state.courses,
+    // course: (state, courseId) => state.courses.filter(c => c.id == courseId),
     instrCourses: state => state.instructorCourses,
     instrCourse: state => state.instructorCourse,
     courseStatus: state => state.status,
@@ -35,6 +36,21 @@ const actions = {
                 })
                 .catch(err => {
                     commit(COURSES_ERROR);
+                    reject(err);
+                });
+        });
+    },
+    [COURSE_REQUEST]: ({commit}, courseId) => {
+        return new Promise((resolve, reject) => {
+            commit(COURSE_REQUEST);
+            // commit(COURSE_SUCCESS, courseId);
+            axios.get('/api/courses/' + courseId)
+                .then(res => {
+                    commit(COURSE_SUCCESS, res);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(COURSE_ERROR);
                     reject(err);
                 });
         });
@@ -153,7 +169,6 @@ const actions = {
             } else if ('goalName' in payload) {
                 url = `/api/courses/${payload.courseId}/goal/${payload.goalName}`;
             }
-            console.log(url);
             axios.delete(url, config)
                 .then(res => {
                     commit(INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, res);
@@ -179,6 +194,17 @@ const mutations = {
     },
     [COURSES_ERROR]: (state) => {
         state.status = 'Fetch Error';
+    },
+    // Course Details
+    [COURSE_REQUEST]: (state) => {
+        state.status = 'Course Fetch Request';
+    },
+    [COURSE_SUCCESS]: (state, res) => {
+        state.status = 'Course Fetch Success';
+        // state.courses = res.data;
+    },
+    [COURSE_ERROR]: (state) => {
+        state.status = 'Course Fetch Error';
     },
     // Instructor Courses
     [INSTR_COURSES_REQUEST]: (state) => {

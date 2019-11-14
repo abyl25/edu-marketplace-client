@@ -4,7 +4,7 @@
         <router-link :to="{ path: '/instructor/course/' + course.id + '/main' }">
             <div class="course-card-right">
                 <h3 class="title">{{ course.title }}</h3>
-<!--                <p>{{ course.text }}</p>-->
+                <p style="margin-top: 10px">{{ course.subtitle }}</p>
             </div>
         </router-link>
     </div>

@@ -5,17 +5,8 @@
     <form @submit="login">
       <input type="text" v-model="userName" placeholder="Username" ><br>
       <p v-if="usernameError" class="error">{{ usernameError }}</p>
-
       <input type="password" v-model="password" placeholder="Password" ><br>
       <p v-if="passwordError" class="error">{{ passwordError }}</p>
-
-      <div class="user-type">
-        <label for="usertype">User type</label> &nbsp;
-        <select id="usertype" name="usertype" v-model="userType" >
-          <option value="2">Instructor</option>
-          <option value="3">Student</option>
-        </select> <br>
-      </div>
       <input type="submit" class="signin-btn" value="Sign In">
       <p class="acc">You don't have an account ? You can <router-link to="/signup">Create one</router-link></p>
     </form>
