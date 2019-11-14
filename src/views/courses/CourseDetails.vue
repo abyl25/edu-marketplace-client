@@ -13,7 +13,7 @@
                     <h2>Price: ${{ this.course.price }}</h2>
                 </div>
                 <div class="b1">
-                    <button class="addtocart">Add to cart</button>
+                    <button class="addtocart" @click="addToCart">Add to cart</button>
                 </div>
                 <div class="b2">
                     <button class="buynow">Buy now</button>
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { COURSE_REQUEST } from "@/store/actions";
+import { ADD_COURSE_TO_CART_REQUEST, COURSE_REQUEST } from "@/store/actions";
 import { mapGetters } from "vuex";
 
 export default {
@@ -78,10 +78,22 @@ export default {
                     this.course = res.data;
                 })
                 .catch(err => { console.log(err); console.log(err.response.data); });
+        },
+        addToCart() {
+            const payload = {
+                userId: this.user.id,
+                courseId: this.$route.params.id
+            };
+            this.$store.dispatch(ADD_COURSE_TO_CART_REQUEST, payload)
+                .then(res => {
+                    console.log(res.data);
+                    // this.course = res.data;
+                })
+                .catch(err => { console.log(err); console.log(err.response.data); });
         }
     },
     computed: {
-        ...mapGetters(['courses'])
+        ...mapGetters(['user', 'courses'])
     }
 }
 </script>

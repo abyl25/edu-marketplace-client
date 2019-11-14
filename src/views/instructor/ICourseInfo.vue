@@ -37,7 +37,7 @@
                 <div class="select-wrapper">
                     <div class="select-left">
                         <label for="category">Category</label>
-                        <select id="category" v-model="course.category.parent.name" name="category">
+                        <select id="category" name="category" v-model="course.category.parent.name" @change="onCategorySelectChange($event)">
                             <option value="select">--Select--</option>
                             <option value="Development">Development</option>
                             <option value="Business">Business</option>
@@ -47,7 +47,8 @@
 
                     <div class="select-right">
                         <label for="subcategory">Subcategory</label>
-                        <select id="subcategory" v-model="course.category.name" name="subcategory">
+                        <select id="subcategory" name="subcategory" v-model="course.category.name" >
+<!--                            <option v-bind:key="sc.id" v-for="sc in course.category" :value="sc">{{ sc }}</option>-->
                             <option value="select">--Select--</option>
                             <option value="Web Development">Web Development</option>
                             <option value="Mobile App">Mobile App</option>
@@ -67,7 +68,7 @@
                 <div class="select-wrapper">
                     <div class="select-left">
                         <label for="topic">Topic</label>
-                        <select id="topic" v-model="course.topic.name" name="topic">
+                        <select id="topic" name="topic" v-model="course.topic.name">
                             <option value="select">--Select--</option>
                             <option value="React">React</option>
                             <option value="Vue.JS">Vue.JS</option>
@@ -98,22 +99,43 @@
                 editorData: '',
                 editorConfig: {},
                 course: {},
+                categories: {
+                    Development: ['Web Development', 'Mobile App', 'Programming Language', 'Databases'],
+                    Business: ['Finance', 'Management', 'Strategy', 'Project Management'],
+                    Design: ['Web Design', 'Graphic Design', 'Game Design', 'Fashion']
+                }
             }
         },
         created() {
             console.log('ICourseInfo created');
-            const payload = {
-                instructorID: this.user.id,
-                courseId: this.$route.params.id
-            };
-            this.$store.dispatch(INSTR_COURSE_REQUEST, payload)
-                .then(res => {
-                    console.log(res.data);
-                    this.course = res.data;
-                })
-                .catch(err => console.log(err));
+            this.getInstructorCourse();
         },
         methods: {
+            onCategorySelectChange(e) {
+                // const selectedCategory = e.target.value;
+                // const cat = this.categories;
+                // let subcat = [];
+                // for (let key in cat) {
+                //     if (cat.hasOwnProperty(selectedCategory)) {
+                //         subcat = cat[selectedCategory];
+                //         break;
+                //     }
+                // }
+                // console.log(subcat);
+                // this.course.category = subcat;
+            },
+            getInstructorCourse() {
+                const payload = {
+                    instructorID: this.user.id,
+                    courseId: this.$route.params.id
+                };
+                this.$store.dispatch(INSTR_COURSE_REQUEST, payload)
+                    .then(res => {
+                        console.log(res.data);
+                        this.course = res.data;
+                    })
+                    .catch(err => console.log(err));
+            },
             editCourse(e) {
                 e.preventDefault();
                 const updateCourse = {

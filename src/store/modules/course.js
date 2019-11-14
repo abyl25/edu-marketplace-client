@@ -1,8 +1,9 @@
 import { COURSE_REQUEST, COURSE_SUCCESS, COURSE_ERROR, COURSES_REQUEST, COURSES_SUCCESS, COURSES_ERROR, INSTR_COURSES_REQUEST, INSTR_COURSE_REQUEST, INSTR_COURSES_SUCCESS,
     INSTR_COURSE_SUCCESS, INSTR_COURSES_ERROR, INSTR_COURSE_UPDATE_REQUEST, INSTR_COURSE_UPDATE_SUCCESS, INSTR_COURSE_UPDATE_ERROR,
-    INSTR_COURSE_CREATE_REQUEST, INSTR_COURSE_CREATE_SUCCESS, INSTR_COURSE_CREATE_ERROR, INSTR_CREATE_COURSE_TARGET_REQUEST,
-    INSTR_CREATE_COURSE_TARGET_SUCCESS, INSTR_CREATE_COURSE_TARGET_ERROR, INSTR_COURSE_TARGET_REQUEST, INSTR_COURSE_TARGET_SUCCESS,
-    INSTR_COURSE_TARGET_ERROR, INSTR_DELETE_COURSE_REQ_GOAL_REQUEST, INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, INSTR_DELETE_COURSE_REQ_GOAL_ERROR
+    INSTR_COURSE_CREATE_REQUEST, INSTR_COURSE_CREATE_SUCCESS, INSTR_COURSE_CREATE_ERROR, INSTR_CREATE_COURSE_TARGET_REQUEST, INSTR_CREATE_COURSE_TARGET_SUCCESS,
+    INSTR_CREATE_COURSE_TARGET_ERROR, INSTR_COURSE_TARGET_REQUEST, INSTR_COURSE_TARGET_SUCCESS, INSTR_COURSE_TARGET_ERROR, INSTR_DELETE_COURSE_REQ_GOAL_REQUEST,
+    INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, INSTR_DELETE_COURSE_REQ_GOAL_ERROR, CART_COURSES_REQUEST, CART_COURSES_SUCCESS, CART_COURSES_ERROR,
+    ADD_COURSE_TO_CART_REQUEST, ADD_COURSE_TO_CART_SUCCESS, ADD_COURSE_TO_CART_ERROR,
 } from '../actions';
 import axios from 'axios';
 
@@ -180,7 +181,40 @@ const actions = {
                 });
         });
     },
-
+    [ADD_COURSE_TO_CART_REQUEST]: ({commit}, payload) => {
+        return new Promise((resolve, reject) => {
+            commit(ADD_COURSE_TO_CART_REQUEST);
+            const config = {
+                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
+            };
+            axios.post(`/api/user/${payload.userId}/cart/${payload.courseId}`, config)
+                .then(res => {
+                    commit(ADD_COURSE_TO_CART_SUCCESS, res);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(ADD_COURSE_TO_CART_ERROR);
+                    reject(err);
+                });
+        });
+    },
+    [CART_COURSES_REQUEST]: ({commit}, payload) => {
+        return new Promise((resolve, reject) => {
+            commit(CART_COURSES_REQUEST);
+            const config = {
+                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
+            };
+            axios.get(`/api/user/${payload.userId}/cart`, config)
+                .then(res => {
+                    commit(CART_COURSES_SUCCESS, res);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(CART_COURSES_ERROR);
+                    reject(err);
+                });
+        });
+    },
 };
 
 const mutations = {
@@ -275,6 +309,26 @@ const mutations = {
     },
     [INSTR_DELETE_COURSE_REQ_GOAL_ERROR]: (state) => {
         state.status = 'Instructor Delete Course Req Goal Error';
+    },
+    // Get Cart Courses
+    [CART_COURSES_REQUEST]: (state) => {
+        state.status = 'Cart Courses Request';
+    },
+    [CART_COURSES_SUCCESS]: (state) => {
+        state.status = 'Cart Courses Success';
+    },
+    [CART_COURSES_ERROR]: (state) => {
+        state.status = 'Cart Courses Error';
+    },
+    // Add Course To Cart
+    [ADD_COURSE_TO_CART_REQUEST]: (state) => {
+        state.status = 'Add Course To Cart Request';
+    },
+    [ADD_COURSE_TO_CART_SUCCESS]: (state) => {
+        state.status = 'Add Course To Cart Success';
+    },
+    [ADD_COURSE_TO_CART_ERROR]: (state) => {
+        state.status = 'Add Course To Cart Error';
     },
 
 };
