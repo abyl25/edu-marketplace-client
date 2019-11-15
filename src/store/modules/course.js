@@ -181,7 +181,7 @@ const actions = {
                 });
         });
     },
-    [ADD_COURSE_TO_CART_REQUEST]: ({commit}, payload) => {
+    [ADD_COURSE_TO_CART_REQUEST]: ({commit, rootState}, payload) => {
         return new Promise((resolve, reject) => {
             commit(ADD_COURSE_TO_CART_REQUEST);
             const config = {
@@ -189,7 +189,11 @@ const actions = {
             };
             axios.post(`/api/user/${payload.userId}/cart/${payload.courseId}`, config)
                 .then(res => {
-                    commit(ADD_COURSE_TO_CART_SUCCESS, res);
+                    const mutationPayload = {
+                        auth: rootState.auth,
+                        data: res.data
+                    };
+                    commit(ADD_COURSE_TO_CART_SUCCESS, mutationPayload);
                     resolve(res);
                 })
                 .catch(err => {
@@ -324,8 +328,10 @@ const mutations = {
     [ADD_COURSE_TO_CART_REQUEST]: (state) => {
         state.status = 'Add Course To Cart Request';
     },
-    [ADD_COURSE_TO_CART_SUCCESS]: (state) => {
+    [ADD_COURSE_TO_CART_SUCCESS]: (state, {auth, data}) => {
         state.status = 'Add Course To Cart Success';
+        auth.user.cart.cartItems.push(data);
+        localStorage.setItem('user', JSON.stringify(auth.user));
     },
     [ADD_COURSE_TO_CART_ERROR]: (state) => {
         state.status = 'Add Course To Cart Error';

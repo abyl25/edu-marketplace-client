@@ -13,7 +13,8 @@
                     <h2>Price: ${{ this.course.price }}</h2>
                 </div>
                 <div class="b1">
-                    <button class="addtocart" @click="addToCart">Add to cart</button>
+                    <button v-if="!alreadyAddedToCart" class="addtocart" @click="addToCart">Add to cart</button>
+                    <router-link to="/cart" v-else class="addtocart">Go to cart</router-link>
                 </div>
                 <div class="b2">
                     <button class="buynow">Buy now</button>
@@ -61,23 +62,39 @@ export default {
     name: "CourseDetails",
     data() {
         return {
-            course: {}
+            course: {},
+            alreadyAddedToCart: false
         }
     },
-    created() {
-        this.getCourseDetails();
+    async created() {
+        await this.getCourseDetails();
+        this.checkIfAlreadyAddedToCart();
     },
     methods: {
+        checkIfAlreadyAddedToCart() {
+            console.log(this.user.cart);
+            const exists = this.user.cart.cartItems.filter(i => i.course.id === this.course.id).length > 0;
+            console.log(exists);
+            if (exists) {
+                this.alreadyAddedToCart = true;
+            }
+        },
         getCourseDetails() {
-            const courseId = this.$route.params.id;
-            // this.course = this.courses.filter(c => c.id == courseId);
-            // console.log(this.course);
-            this.$store.dispatch(COURSE_REQUEST, courseId)
-                .then(res => {
-                    console.log(res.data);
-                    this.course = res.data;
-                })
-                .catch(err => { console.log(err); console.log(err.response.data); });
+            return new Promise((resolve, reject) => {
+                const courseId = this.$route.params.id;
+                // this.course = this.courses.filter(c => c.id == courseId);
+                this.$store.dispatch(COURSE_REQUEST, courseId)
+                    .then(res => {
+                        console.log(res.data);
+                        this.course = res.data;
+                        resolve(res);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        console.log(err.response.data);
+                        reject(err);
+                    });
+            });
         },
         addToCart() {
             const payload = {
@@ -87,7 +104,7 @@ export default {
             this.$store.dispatch(ADD_COURSE_TO_CART_REQUEST, payload)
                 .then(res => {
                     console.log(res.data);
-                    // this.course = res.data;
+                    this.alreadyAddedToCart = true;
                 })
                 .catch(err => { console.log(err); console.log(err.response.data); });
         }
