@@ -7,7 +7,6 @@
                 </div>
                 <div class="course-card-content">
                     <div class="course-card-content-title">
-                        <!-- <h4>Build Responsive Real World Websites with HTML5 and CSS3</h4> -->
                         <h4>{{ course.title }}</h4>
                     </div>
                     <div class="course-card-content-duration">
@@ -17,7 +16,6 @@
                     </div>
                     <div class="course-card-content-description">
                         <span>
-                            <!-- The easiest way to learn modern web design, HTML5 and CSS3 step-by-step from scratch. Design and code a huge project. -->
                             {{ course.subtitle }}
                         </span>
                         <span class="course-autor"> | {{ course.instructor.firstName + " " + course.instructor.lastName }} </span>

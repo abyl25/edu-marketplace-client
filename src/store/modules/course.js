@@ -3,7 +3,8 @@ import { COURSE_REQUEST, COURSE_SUCCESS, COURSE_ERROR, COURSES_REQUEST, COURSES_
     INSTR_COURSE_CREATE_REQUEST, INSTR_COURSE_CREATE_SUCCESS, INSTR_COURSE_CREATE_ERROR, INSTR_CREATE_COURSE_TARGET_REQUEST, INSTR_CREATE_COURSE_TARGET_SUCCESS,
     INSTR_CREATE_COURSE_TARGET_ERROR, INSTR_COURSE_TARGET_REQUEST, INSTR_COURSE_TARGET_SUCCESS, INSTR_COURSE_TARGET_ERROR, INSTR_DELETE_COURSE_REQ_GOAL_REQUEST,
     INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, INSTR_DELETE_COURSE_REQ_GOAL_ERROR, CART_COURSES_REQUEST, CART_COURSES_SUCCESS, CART_COURSES_ERROR,
-    ADD_COURSE_TO_CART_REQUEST, ADD_COURSE_TO_CART_SUCCESS, ADD_COURSE_TO_CART_ERROR,
+    ADD_COURSE_TO_CART_REQUEST, ADD_COURSE_TO_CART_SUCCESS, ADD_COURSE_TO_CART_ERROR, DELETE_COURSE_FROM_CART_REQUEST, DELETE_COURSE_FROM_CART_SUCCESS,
+    DELETE_COURSE_FROM_CART_ERROR,
 } from '../actions';
 import axios from 'axios';
 
@@ -219,6 +220,28 @@ const actions = {
                 });
         });
     },
+    [DELETE_COURSE_FROM_CART_REQUEST]: ({commit, rootState}, payload) => {
+        return new Promise((resolve, reject) => {
+            commit(DELETE_COURSE_FROM_CART_REQUEST);
+            const config = {
+                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
+            };
+            axios.delete(`/api/user/${payload.userId}/cart/${payload.courseId}`, config)
+                .then(res => {
+                    const mutationPayload = {
+                        auth: rootState.auth,
+                        courseId: payload.courseId
+                    };
+                    commit(DELETE_COURSE_FROM_CART_SUCCESS, mutationPayload);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(DELETE_COURSE_FROM_CART_ERROR);
+                    reject(err);
+                });
+        });
+    },
+
 };
 
 const mutations = {
@@ -335,6 +358,20 @@ const mutations = {
     },
     [ADD_COURSE_TO_CART_ERROR]: (state) => {
         state.status = 'Add Course To Cart Error';
+    },
+    // Delete Course From Cart
+    [DELETE_COURSE_FROM_CART_REQUEST]: (state) => {
+        state.status = 'Delete Course From Cart Request';
+    },
+    [DELETE_COURSE_FROM_CART_SUCCESS]: (state, {auth, courseId}) => {
+        state.status = 'Delete Course From Cart Success';
+        const newCartItems = auth.user.cart.cartItems.filter(i => i.course.id !== courseId);
+        console.log(newCartItems);
+        auth.user.cart.cartItems = newCartItems;
+        localStorage.setItem('user', JSON.stringify(auth.user));
+    },
+    [DELETE_COURSE_FROM_CART_ERROR]: (state) => {
+        state.status = 'Delete Course From Cart Error';
     },
 
 };

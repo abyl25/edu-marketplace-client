@@ -113,7 +113,7 @@ export default {
     header {
         padding: 0 20px;
         /*background: #EC9F42; !* #6CD867;  #FF5733;  #39CCCC;  #001f3f; #0b98de; *!;  github: #24292e;  #686d6e; */
-        background-color: #737778;  /*     #29303b;   */
+        background-color:  #737778;  /* #505763;  #29303b;  */
         width: 100%;
         height: 60px;
         box-sizing: border-box;
