@@ -1,10 +1,39 @@
-import { COURSE_REQUEST, COURSE_SUCCESS, COURSE_ERROR, COURSES_REQUEST, COURSES_SUCCESS, COURSES_ERROR, INSTR_COURSES_REQUEST, INSTR_COURSE_REQUEST, INSTR_COURSES_SUCCESS,
-    INSTR_COURSE_SUCCESS, INSTR_COURSES_ERROR, INSTR_COURSE_UPDATE_REQUEST, INSTR_COURSE_UPDATE_SUCCESS, INSTR_COURSE_UPDATE_ERROR,
-    INSTR_COURSE_CREATE_REQUEST, INSTR_COURSE_CREATE_SUCCESS, INSTR_COURSE_CREATE_ERROR, INSTR_CREATE_COURSE_TARGET_REQUEST, INSTR_CREATE_COURSE_TARGET_SUCCESS,
-    INSTR_CREATE_COURSE_TARGET_ERROR, INSTR_COURSE_TARGET_REQUEST, INSTR_COURSE_TARGET_SUCCESS, INSTR_COURSE_TARGET_ERROR, INSTR_DELETE_COURSE_REQ_GOAL_REQUEST,
-    INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, INSTR_DELETE_COURSE_REQ_GOAL_ERROR, CART_COURSES_REQUEST, CART_COURSES_SUCCESS, CART_COURSES_ERROR,
-    ADD_COURSE_TO_CART_REQUEST, ADD_COURSE_TO_CART_SUCCESS, ADD_COURSE_TO_CART_ERROR, DELETE_COURSE_FROM_CART_REQUEST, DELETE_COURSE_FROM_CART_SUCCESS,
+import {
+    ADD_COURSE_TO_CART_ERROR,
+    ADD_COURSE_TO_CART_REQUEST,
+    ADD_COURSE_TO_CART_SUCCESS,
+    CART_COURSES_ERROR,
+    CART_COURSES_REQUEST,
+    CART_COURSES_SUCCESS,
+    COURSE_ERROR,
+    COURSE_REQUEST,
+    COURSE_SUCCESS,
+    COURSES_ERROR,
+    COURSES_REQUEST,
+    COURSES_SUCCESS,
     DELETE_COURSE_FROM_CART_ERROR,
+    DELETE_COURSE_FROM_CART_REQUEST,
+    DELETE_COURSE_FROM_CART_SUCCESS,
+    INSTR_COURSE_CREATE_ERROR,
+    INSTR_COURSE_CREATE_REQUEST,
+    INSTR_COURSE_CREATE_SUCCESS,
+    INSTR_COURSE_REQUEST,
+    INSTR_COURSE_SUCCESS,
+    INSTR_COURSE_TARGET_ERROR,
+    INSTR_COURSE_TARGET_REQUEST,
+    INSTR_COURSE_TARGET_SUCCESS,
+    INSTR_COURSE_UPDATE_ERROR,
+    INSTR_COURSE_UPDATE_REQUEST,
+    INSTR_COURSE_UPDATE_SUCCESS,
+    INSTR_COURSES_ERROR,
+    INSTR_COURSES_REQUEST,
+    INSTR_COURSES_SUCCESS,
+    INSTR_CREATE_COURSE_TARGET_ERROR,
+    INSTR_CREATE_COURSE_TARGET_REQUEST,
+    INSTR_CREATE_COURSE_TARGET_SUCCESS,
+    INSTR_DELETE_COURSE_REQ_GOAL_ERROR,
+    INSTR_DELETE_COURSE_REQ_GOAL_REQUEST,
+    INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS,
 } from '../actions';
 import axios from 'axios';
 
@@ -12,6 +41,7 @@ const state = {
     courses: [],
     instructorCourses: [],
     instructorCourse: {},
+    cartCourses: [],
     status: '',
     fetched: false,
     message: '',
@@ -19,9 +49,9 @@ const state = {
 
 const getters = {
     courses: state => state.courses,
-    // course: (state, courseId) => state.courses.filter(c => c.id == courseId),
     instrCourses: state => state.instructorCourses,
     instrCourse: state => state.instructorCourse,
+    cartCourses: state => state.cartCourses,
     courseStatus: state => state.status,
     fetched: state => state.fetched,
     message: state => state.message,
@@ -114,7 +144,7 @@ const actions = {
             const config = {
                 headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
             };
-            axios.put(`/api/courses/${courseId}`, updateCourse, config) // /${courseId}
+            axios.put(`/api/courses/${courseId}`, updateCourse, config)
                 .then(res => {
                     commit(INSTR_COURSE_UPDATE_SUCCESS, res);
                     resolve(res);
@@ -341,8 +371,9 @@ const mutations = {
     [CART_COURSES_REQUEST]: (state) => {
         state.status = 'Cart Courses Request';
     },
-    [CART_COURSES_SUCCESS]: (state) => {
+    [CART_COURSES_SUCCESS]: (state, res) => {
         state.status = 'Cart Courses Success';
+        state.cartCourses = res.data;
     },
     [CART_COURSES_ERROR]: (state) => {
         state.status = 'Cart Courses Error';
@@ -365,9 +396,8 @@ const mutations = {
     },
     [DELETE_COURSE_FROM_CART_SUCCESS]: (state, {auth, courseId}) => {
         state.status = 'Delete Course From Cart Success';
-        const newCartItems = auth.user.cart.cartItems.filter(i => i.course.id !== courseId);
-        console.log(newCartItems);
-        auth.user.cart.cartItems = newCartItems;
+        state.cartCourses = state.cartCourses.filter(i => i.course.id !== courseId);
+        auth.user.cart.cartItems = auth.user.cart.cartItems.filter(i => i.course.id !== courseId);
         localStorage.setItem('user', JSON.stringify(auth.user));
     },
     [DELETE_COURSE_FROM_CART_ERROR]: (state) => {

@@ -47,14 +47,17 @@
             <ul>
                 <li>
                     <router-link to="/cart" class="cart-link">
-                        <img src="../../assets/icons8-shopping-cart-35-white.png">
+                        <div class="cart-badge-container" style="position: relative">
+                            <img src="../../assets/icons8-shopping-cart-35-white.png">
+                            <span class="badge" v-if="cartItemsLength>0">{{ cartItemsLength }}</span>
+                        </div>
                     </router-link>
                 </li>
-                <template v-if="!isAuthenticated">
+                <template v-if="!this.isAuthenticated">
                     <li><router-link to="/login">Sign in</router-link></li>
                     <li><router-link to="/signup">Sign up</router-link></li>
                 </template>
-                <template v-if="isAuthenticated">
+                <template v-if="this.isAuthenticated">
 <!--                    <li><span class="username">{{ user.userName }}</span></li>-->
                     <li><router-link :to="{ path: this.homePage }">{{ user.userName }}</router-link></li>
                     <li><p class="logout-btn" @click="logout">Log out</p></li>
@@ -86,28 +89,50 @@ export default {
         },
         searchCourses(e) {
             e.preventDefault();
-            // console.log('search text: ' + this.searchText);
             if (this.searchText) {
                 this.$router.push({ path: '/courses/search', query: { q: this.searchText } });
             }
         }
     },
     computed: {
-        ...mapGetters(['isAuthenticated', 'authStatus', 'user', 'isInstructor', 'homePage'])
+        ...mapGetters(['isAuthenticated', 'authStatus', 'user', 'isInstructor', 'homePage']),
+        cartItemsLength() {
+            if (this.user != null) {
+                return this.user.cart.cartItems.length;
+            }
+            return 0;
+        }
     }
 }
 </script>
 
 <style scoped>
-    .cart-link {
-        display: flex;
-        align-items: center;
-    }
-
     *{
         margin: 0;
         padding: 0;
         font-family: sans-serif;
+    }
+
+    .badge {
+        position: absolute;
+        right: -6px;
+        top: -4px;
+        display: inline-block;
+        min-width: 9px;
+        padding: 1px 4px;
+        font-size: 10px;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1.43;
+        background-color: #ec5252;
+        border: 1px solid #fff;
+        border-radius: 15px;
+        z-index: 1;
+    }
+
+    .cart-badge-container {
+        display: flex;
+        align-items: center;
     }
 
     header {

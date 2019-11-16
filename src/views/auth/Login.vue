@@ -38,16 +38,12 @@
           userType: this.userType
         };
         this.$store.dispatch(AUTH_LOGIN, credentials).then(() => {
-          console.log(this.isInstructor);
           let role = this.user.roles[0];
           if (role.name === 'Instructor') {
-            console.log('user is Instructor');
             this.$router.push('/instructor/home');
           } else if (role.name === 'Student') {
-            console.log('user is Student');
             this.$router.push('/student/home');
           } else if (role.name === 'Admin'){
-            console.log('user is Admin');
             this.$router.push('/admin/home');
           }
         }).catch(err => {

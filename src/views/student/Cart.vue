@@ -3,28 +3,34 @@
         <div class="cart-header">
             <h2 class="cart-header-title">Shopping Cart</h2>
         </div>
-        <div v-if="fetched && cartCourses.length === 0">
-            <p>No courses</p>
+        <div v-if="!fetched">
+            <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">
         </div>
-        <div class="course-container" v-else>
+        <div class="empty-cart" v-if="fetched && this.cartCourses.length === 0">
+            <img src="../../assets/icons8-clear-shopping-cart-100.png" alt="">
+            <p>Your cart is empty. Keep shopping!</p>
+            <button class="shopping-btn" @click="continueShopping">Keep shopping</button>
+        </div>
+        <div class="course-container" v-else-if="fetched">
             <div class="courses-list">
-                <h3 class="list-title">2 Courses in Cart</h3>
-                <CartItem v-bind:key="cartCourse.course.id" v-for="cartCourse in cartCourses" v-bind:course="cartCourse.course"
-                    @update-cart="updateCart"/>
+                <h3 class="list-title" v-if="fetched">{{ this.cartCourses.length }} Course in Cart</h3>
+                <CartItem v-bind:key="cartCourse.course.id" v-for="cartCourse in this.cartCourses" v-bind:course="cartCourse.course"
+                    @remove-course="removeCourseFromCart"/>
             </div>
             <div class="checkout-pane">
                 <h3 class="text">Total:</h3>
-                <p class="price-text">$100</p>
-                <button class="checkout-btn">Check out</button>
+                <p class="price-text">{{ totalPrice }}</p>
+                <button class="checkout-btn" @click="checkOut">Check out</button>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import {CART_COURSES_REQUEST} from "@/store/actions";
+    import { CART_COURSES_REQUEST, DELETE_COURSE_FROM_CART_REQUEST } from "@/store/actions";
     import {mapGetters} from "vuex";
     import CartItem from "@/views/student/CartItem";
+    import axios from 'axios';
 
     export default {
         name: "Cart",
@@ -33,17 +39,22 @@
         },
         data() {
             return {
-                cartCourses: [],
+                totalPrice: '',
                 fetched: false
             }
         },
         created() {
             this.getCoursesInCart();
         },
-        updated() {
-            console.log('Cart updated');
-        },
         methods: {
+            continueShopping() {
+                this.$router.push('/');
+            },
+            calculateTotalPrice () {
+                let total = 0;
+                this.cartCourses.forEach(i => total += i.course.price);
+                this.totalPrice = '$' + total;
+            },
             getCoursesInCart() {
                 const payload = {
                     userId: this.user.id
@@ -51,17 +62,38 @@
                 this.$store.dispatch(CART_COURSES_REQUEST, payload)
                     .then(res => {
                         console.log(res.data);
-                        this.cartCourses = res.data;
+                        // this.cartCourses = res.data;
                         this.fetched = true;
+                        this.calculateTotalPrice();
                     })
                     .catch(err => { console.log(err); console.log(err.response.data); });
             },
-            updateCart(crs) {
-                this.cartCourses = this.cartCourses.filter(i => i.course.id !== crs.id);
+            removeCourseFromCart(crs) {
+                const payload = {
+                    userId: this.user.id,
+                    courseId: crs.id
+                };
+                this.$store.dispatch(DELETE_COURSE_FROM_CART_REQUEST, payload)
+                    .then(res => {
+                        console.log(res.data);
+                    })
+                    .catch(err => { console.log(err); console.log(err.response.data); });
+            },
+            checkOut() {
+                console.log('CheckOut clicked');
+                console.log('Do it later');
+                // axios.post('/api/payment/create?total=1')
+                //     .then(res => {
+                //         console.log(res.data);
+                //         if (res.data.status === 'success') {
+                //             window.location = res.data.redirectUrl;
+                //         }
+                //     })
+                //     .catch(err => { console.log(err); console.log(err.response.data); });
             }
         },
         computed: {
-            ...mapGetters(['user'])
+            ...mapGetters(['user', 'cartCourses'])
         }
     }
 </script>
@@ -119,7 +151,7 @@
     }
 
     .checkout-btn {
-        background-color: #4CAF50;
+        background-color: #ec5252;  /*  #4CAF50;  */
         color: white;
         width: 70%;
         margin-top: 20px;
@@ -128,6 +160,28 @@
         border-radius: 3px;
         cursor: pointer;
         font-size: 17px;
+    }
+
+    .empty-cart {
+        height: 300px;
+        padding: 50px;
+    }
+
+    .empty-cart p {
+        margin-top: 10px;
+        font-size: 17px;
+    }
+
+    .shopping-btn {
+        background-color: #ec5252;
+        color: white;
+        margin-top: 20px;
+        padding: 15px 22px;
+        border: none;
+        border-radius: 2px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
     }
 
 </style>

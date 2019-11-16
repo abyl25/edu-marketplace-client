@@ -11,7 +11,7 @@
                     </div>
                     <div class="course-card-content-description">
                         <span>{{ course.subtitle }}</span>
-                        <!--   <span class="course-autor"> | {{ course.instructor.firstName + " " + course.instructor.lastName }} </span>-->
+<!--                        <span class="course-autor"> | {{ course.instructor.firstName + " " + course.instructor.lastName }} </span>-->
                     </div>
                 </div>
             </div>
@@ -21,39 +21,20 @@
                 <span class="course-price">${{ course.price }}</span>
             </div>
             <div class="remove-course">
-                <a class="remove-course-btn" @click="removeCourseFromCart(course)">Remove</a>
+                <a class="remove-course-btn" @click="removeCourse(course)">Remove</a>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import { DELETE_COURSE_FROM_CART_REQUEST } from "@/store/actions";
-    import { mapGetters } from "vuex";
-
     export default {
         name: "CartItem",
         props: ["course"],
-        updated() {
-            console.log('CartItem updated');
-        },
         methods: {
-            removeCourseFromCart(course) {
-                console.log('remove clicked');
-                this.$emit('update-cart', course);
-                const payload = {
-                    userId: this.user.id,
-                    courseId: this.course.id
-                };
-                // this.$store.dispatch(DELETE_COURSE_FROM_CART_REQUEST, payload)
-                //     .then(res => {
-                //         console.log(res.data);
-                //     })
-                //     .catch(err => { console.log(err); console.log(err.response.data); });
+            removeCourse(course) {
+                this.$emit('remove-course', course);
             }
-        },
-        computed: {
-            ...mapGetters(['user'])
         }
     }
 </script>

@@ -17,6 +17,7 @@ import CourseTarget from "@/views/instructor/CourseTarget";
 import ICourseCurriculum from "@/views/instructor/IcourseCurriculum";
 import ICourseSetting from "@/views/instructor/ICourseSetting";
 import Cart from "@/views/student/Cart";
+import Checkout from "@/views/student/Checkout";
 
 Vue.use(Router);
 
@@ -143,6 +144,11 @@ const router = new Router({
       name: 'StudentHome',
       component: StudentHome,
       // beforeEnter: ifAuthenticated,
+    },
+    {
+        path: '/cart/checkout',
+        name: 'Checkout',
+        component: Checkout,
     },
     {
       path: '/cart',
