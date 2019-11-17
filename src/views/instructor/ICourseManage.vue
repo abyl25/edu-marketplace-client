@@ -42,7 +42,8 @@
     }
 
     .sidebar {
-        flex-basis: 280px;
+        /*flex-basis: 280px;*/
+        flex: 1;
         display: flex;
         flex-direction: column;
         border: 1px solid #ddede1;
@@ -70,7 +71,8 @@
     }
 
     .main-content {
-        flex: 1;
+        flex: 3.5;
+        flex-shrink: 3;
         border: 1px solid transparent;
         border-radius: 3px;
         background-color:  #fff;

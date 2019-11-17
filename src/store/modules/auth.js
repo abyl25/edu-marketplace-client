@@ -1,6 +1,8 @@
 import { AUTH_LOGIN, AUTH_SIGNUP, AUTH_ERROR, LOGIN_SUCCESS, SIGNUP_SUCCESS, AUTH_LOGOUT, ACCOUNT_CONFIRMATION, ACCOUNT_CONFIRMATION_SUCCESS, ACCOUNT_CONFIRMATION_ERROR } from '../actions';
 import axios from 'axios';
 
+const api_endpoint = process.env.VUE_APP_API;
+
 const state = {
     confirmed: false,
     signupSuccess: false,
@@ -36,7 +38,7 @@ const actions = {
     [AUTH_LOGIN]: ({commit}, credentials) => {
         return new Promise((resolve, reject) => {
             commit(AUTH_LOGIN);
-            axios.post('/api/auth/login', credentials)
+            axios.post(api_endpoint + '/api/auth/login', credentials)
                 .then(res => {
                     console.log(res.data); // eslint-disable-line no-console
                     localStorage.setItem('token', res.data.token);
@@ -55,7 +57,7 @@ const actions = {
     [AUTH_SIGNUP]: ({commit, dispatch}, credentials) => {
         return new Promise((resolve, reject) => {
             commit(AUTH_SIGNUP);
-            axios.post('/api/auth/signup', credentials)
+            axios.post(api_endpoint + '/api/auth/signup', credentials)
                 .then(res => {
                     console.log(res.data); // eslint-disable-line no-console
                     commit(SIGNUP_SUCCESS);
@@ -78,7 +80,7 @@ const actions = {
     [ACCOUNT_CONFIRMATION]: ({commit, dispatch}, confirmToken) => {
         return new Promise((resolve, reject) => {
             commit(ACCOUNT_CONFIRMATION);
-            axios.get('/api/auth/confirmAccount?token=' + confirmToken)
+            axios.get(api_endpoint + '/api/auth/confirmAccount?token=' + confirmToken)
                 .then(res => {
                     commit(ACCOUNT_CONFIRMATION_SUCCESS);
                     resolve(res);

@@ -76,6 +76,7 @@
                 this.$store.dispatch(DELETE_COURSE_FROM_CART_REQUEST, payload)
                     .then(res => {
                         console.log(res.data);
+                        this.calculateTotalPrice();
                     })
                     .catch(err => { console.log(err); console.log(err.response.data); });
             },

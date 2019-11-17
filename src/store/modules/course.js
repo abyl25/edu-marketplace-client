@@ -37,6 +37,8 @@ import {
 } from '../actions';
 import axios from 'axios';
 
+const api_endpoint = process.env.VUE_APP_API;
+
 const state = {
     courses: [],
     instructorCourses: [],
@@ -61,7 +63,7 @@ const actions = {
     [COURSES_REQUEST]: ({commit}, searchText) => {
         return new Promise((resolve, reject) => {
             commit(COURSES_REQUEST);
-            axios.get('/api/courses/search?q=' + searchText)
+            axios.get(api_endpoint + '/api/courses/search?q=' + searchText)
                 .then(res => {
                     commit(COURSES_SUCCESS, res);
                     resolve(res);
@@ -76,7 +78,7 @@ const actions = {
         return new Promise((resolve, reject) => {
             commit(COURSE_REQUEST);
             // commit(COURSE_SUCCESS, courseId);
-            axios.get('/api/courses/' + courseId)
+            axios.get(api_endpoint + '/api/courses/' + courseId)
                 .then(res => {
                     commit(COURSE_SUCCESS, res);
                     resolve(res);
@@ -93,7 +95,7 @@ const actions = {
             const config = {
                 headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
             };
-            axios.get(`/api/instructor/${instructorID}/courses`, config)
+            axios.get(api_endpoint + `/api/instructor/${instructorID}/courses`, config)
                 .then(res => {
                     commit(INSTR_COURSES_SUCCESS, res);
                     resolve(res);
@@ -110,7 +112,7 @@ const actions = {
             const config = {
                 headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
             };
-            axios.get(`/api/instructor/${instructorID}/courses/${courseId}`, config)
+            axios.get(api_endpoint + `/api/instructor/${instructorID}/courses/${courseId}`, config)
                 .then(res => {
                     commit(INSTR_COURSE_SUCCESS, res);
                     resolve(res);
@@ -127,7 +129,7 @@ const actions = {
             const config = {
                 headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
             };
-            axios.post(`/api/courses`, newCourse, config)
+            axios.post(api_endpoint + `/api/courses`, newCourse, config)
                 .then(res => {
                     commit(INSTR_COURSE_CREATE_SUCCESS, res);
                     resolve(res);
@@ -144,7 +146,7 @@ const actions = {
             const config = {
                 headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
             };
-            axios.put(`/api/courses/${courseId}`, updateCourse, config)
+            axios.put(api_endpoint + `/api/courses/${courseId}`, updateCourse, config)
                 .then(res => {
                     commit(INSTR_COURSE_UPDATE_SUCCESS, res);
                     resolve(res);
@@ -161,7 +163,7 @@ const actions = {
             const config = {
                 headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
             };
-            axios.get(`/api/courses/${payload.courseId}/target`, config)
+            axios.get(api_endpoint + `/api/courses/${payload.courseId}/target`, config)
                 .then(res => {
                     commit(INSTR_COURSE_TARGET_SUCCESS, res);
                     resolve(res);
@@ -178,7 +180,7 @@ const actions = {
             const config = {
                 headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
             };
-            axios.post(`/api/courses/target`, payload, config)
+            axios.post(api_endpoint + `/api/courses/target`, payload, config)
                 .then(res => {
                     commit(INSTR_CREATE_COURSE_TARGET_SUCCESS, res);
                     resolve(res);
@@ -197,9 +199,9 @@ const actions = {
             };
             let url = '';
             if ('reqName' in payload) { // payload.hasOwnProperty('reqName')
-                url = `/api/courses/${payload.courseId}/req/${payload.reqName}`;
+                url = `${api_endpoint}/api/courses/${payload.courseId}/req/${payload.reqName}`;
             } else if ('goalName' in payload) {
-                url = `/api/courses/${payload.courseId}/goal/${payload.goalName}`;
+                url = `${api_endpoint}/api/courses/${payload.courseId}/goal/${payload.goalName}`;
             }
             axios.delete(url, config)
                 .then(res => {
@@ -218,7 +220,7 @@ const actions = {
             const config = {
                 headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
             };
-            axios.post(`/api/user/${payload.userId}/cart/${payload.courseId}`, config)
+            axios.post(api_endpoint + `/api/user/${payload.userId}/cart/${payload.courseId}`, config)
                 .then(res => {
                     const mutationPayload = {
                         auth: rootState.auth,
@@ -239,7 +241,7 @@ const actions = {
             const config = {
                 headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
             };
-            axios.get(`/api/user/${payload.userId}/cart`, config)
+            axios.get(api_endpoint + `/api/user/${payload.userId}/cart`, config)
                 .then(res => {
                     commit(CART_COURSES_SUCCESS, res);
                     resolve(res);
@@ -256,7 +258,7 @@ const actions = {
             const config = {
                 headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
             };
-            axios.delete(`/api/user/${payload.userId}/cart/${payload.courseId}`, config)
+            axios.delete(api_endpoint + `/api/user/${payload.userId}/cart/${payload.courseId}`, config)
                 .then(res => {
                     const mutationPayload = {
                         auth: rootState.auth,

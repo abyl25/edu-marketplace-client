@@ -1,5 +1,8 @@
 <template>
     <div class="course-container">
+        <div v-if="!fetched">
+            <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">
+        </div>
         <div v-if="fetched && courses.length === 0">
             <p>No courses</p>
         </div>
@@ -41,6 +44,7 @@ export default {
                     console.log(err.response.data);
                     if (err.response.status === 404) {
                         this.message = err.response.data;
+                        this.fetched = true;
                     }
                 });
         },
@@ -56,6 +60,7 @@ export default {
                     console.log(err.response.data);
                     if (err.response.status === 404) {
                         this.message = err.response.data;
+                        this.fetched = true;
                     }
                 });
         }

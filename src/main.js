@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import CKEditor from '@ckeditor/ckeditor5-vue'
 import axios from 'axios';
-import { AUTH_LOGOUT} from "@/store/actions";
+import { AUTH_LOGOUT } from "@/store/actions";
 
 Vue.use(CKEditor);
 Vue.config.productionTip = false;
