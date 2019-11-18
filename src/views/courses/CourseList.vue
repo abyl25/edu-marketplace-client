@@ -26,6 +26,7 @@ export default {
     },
     data() {
         return {
+            api_endpoint: process.env.VUE_APP_API,
             courses: [],
             fetched: false,
             message: ''
@@ -33,7 +34,7 @@ export default {
     },
     methods: {
         getCoursesByCategory(category) {
-            axios.get('/api/courses/category/' + category)
+            axios.get(this.api_endpoint + '/api/courses/category/' + category)
                 .then(res => {
                     console.log(res.data);
                     this.courses = res.data;
@@ -49,7 +50,7 @@ export default {
                 });
         },
         getCoursesBySubCategory(category, subcategory) {
-            axios.get('/api/courses/category/' + category + '/' + subcategory)
+            axios.get(this.api_endpoint + '/api/courses/category/' + category + '/' + subcategory)
                 .then(res => {
                     console.log(res.data);
                     this.courses = res.data;
