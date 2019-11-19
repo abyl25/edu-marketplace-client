@@ -17,7 +17,7 @@
                     <router-link to="/cart" v-else class="addtocart">Go to cart</router-link>
                 </div>
                 <div class="b2">
-                    <button class="buynow">Buy now</button>
+                    <button class="buynow" @click="registerToCourse">Register</button>
                 </div>
             </div>
         </div>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { ADD_COURSE_TO_CART_REQUEST, COURSE_REQUEST } from "@/store/actions";
+import { ADD_COURSE_TO_CART_REQUEST, COURSE_REQUEST, REGISTER_TO_COURSE_REQUEST } from "@/store/actions";
 import { mapGetters } from "vuex";
 
 export default {
@@ -105,6 +105,18 @@ export default {
                 .then(res => {
                     console.log(res.data);
                     this.alreadyAddedToCart = true;
+                })
+                .catch(err => { console.log(err); console.log(err.response.data); });
+        },
+        registerToCourse() {
+            const payload = {
+                studentId: this.user.id,
+                courseId: this.$route.params.id,
+                price: this.course.price
+            };
+            this.$store.dispatch(REGISTER_TO_COURSE_REQUEST, payload)
+                .then(res => {
+                    console.log(res.data);
                 })
                 .catch(err => { console.log(err); console.log(err.response.data); });
         }

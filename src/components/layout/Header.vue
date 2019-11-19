@@ -59,6 +59,7 @@
                 </template>
                 <template v-if="this.isAuthenticated">
 <!--                    <li><span class="username">{{ user.userName }}</span></li>-->
+                    <li><router-link to="/home/my-courses">My Courses</router-link></li>
                     <li><router-link :to="{ path: this.homePage }">{{ user.userName }}</router-link></li>
                     <li><p class="logout-btn" @click="logout">Log out</p></li>
                 </template>
@@ -76,7 +77,6 @@ export default {
     name: "Header",
     data() {
         return {
-            // courses: [],
             searchText: ''
         }
     },

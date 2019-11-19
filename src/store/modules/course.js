@@ -1,39 +1,12 @@
 import {
-    ADD_COURSE_TO_CART_ERROR,
-    ADD_COURSE_TO_CART_REQUEST,
-    ADD_COURSE_TO_CART_SUCCESS,
-    CART_COURSES_ERROR,
-    CART_COURSES_REQUEST,
-    CART_COURSES_SUCCESS,
-    COURSE_ERROR,
-    COURSE_REQUEST,
-    COURSE_SUCCESS,
-    COURSES_ERROR,
-    COURSES_REQUEST,
-    COURSES_SUCCESS,
-    DELETE_COURSE_FROM_CART_ERROR,
-    DELETE_COURSE_FROM_CART_REQUEST,
-    DELETE_COURSE_FROM_CART_SUCCESS,
-    INSTR_COURSE_CREATE_ERROR,
-    INSTR_COURSE_CREATE_REQUEST,
-    INSTR_COURSE_CREATE_SUCCESS,
-    INSTR_COURSE_REQUEST,
-    INSTR_COURSE_SUCCESS,
-    INSTR_COURSE_TARGET_ERROR,
-    INSTR_COURSE_TARGET_REQUEST,
-    INSTR_COURSE_TARGET_SUCCESS,
-    INSTR_COURSE_UPDATE_ERROR,
-    INSTR_COURSE_UPDATE_REQUEST,
-    INSTR_COURSE_UPDATE_SUCCESS,
-    INSTR_COURSES_ERROR,
-    INSTR_COURSES_REQUEST,
-    INSTR_COURSES_SUCCESS,
-    INSTR_CREATE_COURSE_TARGET_ERROR,
-    INSTR_CREATE_COURSE_TARGET_REQUEST,
-    INSTR_CREATE_COURSE_TARGET_SUCCESS,
-    INSTR_DELETE_COURSE_REQ_GOAL_ERROR,
-    INSTR_DELETE_COURSE_REQ_GOAL_REQUEST,
-    INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS,
+    ADD_COURSE_TO_CART_ERROR, ADD_COURSE_TO_CART_REQUEST, ADD_COURSE_TO_CART_SUCCESS, CART_COURSES_ERROR, CART_COURSES_REQUEST,
+    CART_COURSES_SUCCESS, COURSE_ERROR, COURSE_REQUEST, COURSE_SUCCESS, COURSES_ERROR, COURSES_REQUEST, COURSES_SUCCESS, SEARCH_COURSES_REQUEST,
+    SEARCH_COURSES_SUCCESS, SEARCH_COURSES_ERROR, DELETE_COURSE_FROM_CART_ERROR, DELETE_COURSE_FROM_CART_REQUEST, DELETE_COURSE_FROM_CART_SUCCESS,
+    INSTR_COURSE_CREATE_ERROR, INSTR_COURSE_CREATE_REQUEST, INSTR_COURSE_CREATE_SUCCESS, INSTR_COURSE_REQUEST, INSTR_COURSE_SUCCESS,
+    INSTR_COURSE_TARGET_ERROR, INSTR_COURSE_TARGET_REQUEST, INSTR_COURSE_TARGET_SUCCESS, INSTR_COURSE_UPDATE_ERROR, INSTR_COURSE_UPDATE_REQUEST,
+    INSTR_COURSE_UPDATE_SUCCESS, INSTR_COURSES_ERROR, INSTR_COURSES_REQUEST, INSTR_COURSES_SUCCESS, INSTR_CREATE_COURSE_TARGET_ERROR,
+    INSTR_CREATE_COURSE_TARGET_REQUEST, INSTR_CREATE_COURSE_TARGET_SUCCESS, INSTR_DELETE_COURSE_REQ_GOAL_ERROR, INSTR_DELETE_COURSE_REQ_GOAL_REQUEST,
+    INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, REGISTER_TO_COURSE_REQUEST, REGISTER_TO_COURSE_SUCCESS, REGISTER_TO_COURSE_ERROR
 } from '../actions';
 import axios from 'axios';
 
@@ -44,6 +17,7 @@ const state = {
     instructorCourses: [],
     instructorCourse: {},
     cartCourses: [],
+    myCourses: [],
     status: '',
     fetched: false,
     message: '',
@@ -60,16 +34,36 @@ const getters = {
 };
 
 const actions = {
-    [COURSES_REQUEST]: ({commit}, searchText) => {
+    [COURSES_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(COURSES_REQUEST);
-            axios.get(api_endpoint + '/api/courses/search?q=' + searchText)
+            let url = '';
+            if (payload.hasOwnProperty('subcategory')) {
+                url = `${api_endpoint}/api/courses/category/${payload.category}/${payload.subcategory}`;
+            } else {
+                url = `${api_endpoint}/api/courses/category/${payload.category}`;
+            }
+            axios.get(url)
                 .then(res => {
                     commit(COURSES_SUCCESS, res);
                     resolve(res);
                 })
                 .catch(err => {
                     commit(COURSES_ERROR);
+                    reject(err);
+                });
+        });
+    },
+    [SEARCH_COURSES_REQUEST]: ({commit}, searchText) => {
+        return new Promise((resolve, reject) => {
+            commit(SEARCH_COURSES_REQUEST);
+            axios.get(api_endpoint + '/api/courses/search?q=' + searchText)
+                .then(res => {
+                    commit(SEARCH_COURSES_SUCCESS, res);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(SEARCH_COURSES_ERROR);
                     reject(err);
                 });
         });
@@ -273,20 +267,53 @@ const actions = {
                 });
         });
     },
+    [REGISTER_TO_COURSE_REQUEST]: ({commit, rootState}, payload) => {
+        return new Promise((resolve, reject) => {
+            commit(REGISTER_TO_COURSE_REQUEST);
+            const config = {
+                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
+            };
+            console.log(payload);
+            axios.post(`${api_endpoint}/api/courses/register`, payload, config)
+                .then(res => {
+                    // const mutationPayload = {
+                    //     auth: rootState.auth,
+                    //     courseId: payload.courseId
+                    // };
+                    commit(REGISTER_TO_COURSE_SUCCESS, payload.courseId);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(REGISTER_TO_COURSE_ERROR);
+                    reject(err);
+                });
+        });
+    },
 
 };
 
 const mutations = {
     // General Courses
     [COURSES_REQUEST]: (state) => {
-        state.status = 'Fetching courses...';
+        state.status = 'Fetching Courses';
     },
     [COURSES_SUCCESS]: (state, res) => {
-        state.status = 'Fetch Success';
+        state.status = 'Courses Fetch Success';
         state.courses = res.data;
     },
     [COURSES_ERROR]: (state) => {
-        state.status = 'Fetch Error';
+        state.status = 'Courses Fetch Error';
+    },
+    // Search Courses
+    [SEARCH_COURSES_REQUEST]: (state) => {
+        state.status = 'Searching courses';
+    },
+    [SEARCH_COURSES_SUCCESS]: (state, res) => {
+        state.status = 'Search Course Success';
+        state.courses = res.data;
+    },
+    [SEARCH_COURSES_ERROR]: (state) => {
+        state.status = 'Search Course Error';
     },
     // Course Details
     [COURSE_REQUEST]: (state) => {
@@ -404,6 +431,18 @@ const mutations = {
     },
     [DELETE_COURSE_FROM_CART_ERROR]: (state) => {
         state.status = 'Delete Course From Cart Error';
+    },
+    // Register To Course
+    [REGISTER_TO_COURSE_REQUEST]: (state) => {
+        state.status = 'Register To Course Request Request';
+    },
+    [REGISTER_TO_COURSE_SUCCESS]: (state, courseId) => {
+        state.status = 'Register To Course Request Success';
+        const course = state.courses.filter(c => c.id === courseId);
+        state.myCourses.push(course);
+    },
+    [REGISTER_TO_COURSE_ERROR]: (state) => {
+        state.status = 'Register To Course Request Error';
     },
 
 };

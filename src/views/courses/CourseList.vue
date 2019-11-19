@@ -9,15 +9,16 @@
         <div v-if="message">
             <p>{{ message }}</p>
         </div>
-        <div v-bind:key="course.id" v-for="course in courses">
+        <div v-bind:key="course.id" v-for="course in this.courses">
             <CourseItem v-bind:course="course"/>
         </div>
     </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex";
+import { COURSES_REQUEST } from "@/store/actions";
 import CourseItem from './CourseItem';
-import axios from 'axios';
 
 export default {
     name: "CourseList",
@@ -26,18 +27,27 @@ export default {
     },
     data() {
         return {
-            api_endpoint: process.env.VUE_APP_API,
-            courses: [],
             fetched: false,
             message: ''
         }
     },
+    created() {
+        console.log('CourseList created');
+        let { category, subcategory } = this.$route.params;
+        if (subcategory === undefined) {
+            this.getCoursesByCategory(category);
+        } else {
+            this.getCoursesBySubCategory(category, subcategory);
+        }
+    },
     methods: {
         getCoursesByCategory(category) {
-            axios.get(this.api_endpoint + '/api/courses/category/' + category)
+            const payload = {
+                category: category
+            };
+            this.$store.dispatch(COURSES_REQUEST, payload)
                 .then(res => {
                     console.log(res.data);
-                    this.courses = res.data;
                     this.fetched = true;
                 })
                 .catch(err => {
@@ -50,10 +60,12 @@ export default {
                 });
         },
         getCoursesBySubCategory(category, subcategory) {
-            axios.get(this.api_endpoint + '/api/courses/category/' + category + '/' + subcategory)
+            const payload = {
+                category, subcategory
+            };
+            this.$store.dispatch(COURSES_REQUEST, payload)
                 .then(res => {
                     console.log(res.data);
-                    this.courses = res.data;
                     this.fetched = true;
                 })
                 .catch(err => {
@@ -76,13 +88,8 @@ export default {
             }
         }
     },
-    created() {
-        let { category, subcategory } = this.$route.params;
-        if (subcategory === undefined) {
-            this.getCoursesByCategory(category);
-        } else {
-            this.getCoursesBySubCategory(category, subcategory);
-        }
+    computed: {
+        ...mapGetters(['courses'])
     }
 
 }

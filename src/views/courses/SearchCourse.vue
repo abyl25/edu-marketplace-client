@@ -15,7 +15,7 @@
 <script>
     import CourseItem from './CourseItem';
     import { mapGetters } from 'vuex';
-    import { COURSES_REQUEST } from '../../store/actions';
+    import { SEARCH_COURSES_REQUEST } from '../../store/actions';
 
     export default {
         name: "SearchCourse",
@@ -27,14 +27,14 @@
         },
         created() {
             let searchText = this.$route.query.q;
-            this.$store.dispatch(COURSES_REQUEST, searchText)
+            this.$store.dispatch(SEARCH_COURSES_REQUEST, searchText)
                 .then()
                 .catch(err => console.log(err));
         },
         watch: {
             $route(to, from) {
                 let q = to.query.q;
-                this.$store.dispatch(COURSES_REQUEST, q)
+                this.$store.dispatch(SEARCH_COURSES_REQUEST, q)
                     .then()
                     .catch(err => console.log(err));
             }

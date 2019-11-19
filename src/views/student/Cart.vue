@@ -104,6 +104,13 @@
         padding: 30px 106px;
         background-color: #f7f9fa;   /*  #505763;  #f7f9fa;  */
     }
+    .cart-header-title {
+        font-size: 30px;
+        font-weight: 400;
+        line-height: 1.287;
+        margin: 0;
+        text-align: left;
+    }
 
     .course-container {
         display: flex;
@@ -121,14 +128,6 @@
         font-size: 18px;
         font-weight: 400;
         line-height: 1.2;
-    }
-
-    .cart-header-title {
-        font-size: 30px;
-        font-weight: 400;
-        line-height: 1.287;
-        margin: 0;
-        text-align: left;
     }
 
     .checkout-pane {

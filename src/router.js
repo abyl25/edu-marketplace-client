@@ -18,6 +18,7 @@ import ICourseCurriculum from "@/views/instructor/IcourseCurriculum";
 import ICourseSetting from "@/views/instructor/ICourseSetting";
 import Cart from "@/views/student/Cart";
 import Checkout from "@/views/student/Checkout";
+import MyCourses from "@/views/student/MyCourses";
 
 Vue.use(Router);
 
@@ -117,10 +118,6 @@ const router = new Router({
       path: '/instructor/course/:id',
       component: ICourseManage,
       children: [
-        // {
-        //   path: '',
-        //   component:
-        // },
         {
           path: 'main',
           component: ICourseInfo
@@ -144,6 +141,11 @@ const router = new Router({
       name: 'StudentHome',
       component: StudentHome,
       // beforeEnter: ifAuthenticated,
+    },
+    {
+      path: '/home/my-courses',
+      name: 'MyCourses',
+      component: MyCourses
     },
     {
         path: '/cart/checkout',
