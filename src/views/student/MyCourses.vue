@@ -5,15 +5,17 @@
         </div>
         <div class="my-courses-container">
             <div class="card-wrapper">
-                <div class="course-card" v-for="i in count">
+                <div class="course-card" v-for="course in this.myCourses"> <!--  i in count  -->
                     <router-link to="/" class="course-link">
                         <div class="image-container">
                             <img class="image" src="../../assets/1.png" alt="">
                         </div>
                         <div class="course-details">
-                            <p class="course-title">Python eCommerce | Build a Django eCommerce Web Application</p>
+                            <p class="course-title">{{ course.title }}</p>
+<!--                            <p class="course-title">Python eCommerce | Build a Django eCommerce Web Application | Justin Mitchell</p>-->
                             <div class="details-instructor">
-                                <p>Justin Mitchell</p>
+                                <p>{{ course.instructor.firstName + ' ' + course.instructor.lastName }}</p>
+<!--                                <p>Justin Mitchell</p>-->
                             </div>
                             <div class="details-bottom">
                                 <span class="details-progress"></span>
@@ -28,12 +30,36 @@
 </template>
 
 <script>
+    import { MY_COURSES_REQUEST } from "@/store/actions";
+    import { mapGetters } from "vuex";
+
     export default {
         name: "MyCourses",
         data() {
             return {
                 count: 10
             }
+        },
+        created() {
+            this.getMyCourses();
+        },
+        methods: {
+            getMyCourses() {
+                const payload = {
+                    studentId: this.user.id
+                };
+                this.$store.dispatch(MY_COURSES_REQUEST, payload)
+                    .then(res => {
+                        console.log(res.data);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        console.log(err.response.data);
+                    });
+            }
+        },
+        computed: {
+            ...mapGetters(['user', 'myCourses'])
         }
     }
 </script>
@@ -62,11 +88,11 @@
     }
 
     .course-card {
-        flex: 0 1 22.5%;
+        flex: 0 1 22%;
         /*flex-basis: 230px;*/
         position: relative;
-        height: 260px;
-        margin: 12px;
+        height: 280px;
+        margin: 14px;
     }
 
     .course-card:before {
@@ -99,12 +125,13 @@
     }
 
     .course-details {
+        height: 126px;
         padding: 12px 15px;
         text-align: left;
     }
 
     .course-title {
-        height: 42px;
+        height: 43px;
         font-weight: 800;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -112,11 +139,15 @@
     }
 
     .details-instructor {
-        height: 30px;
+        height: 35px;
+        vertical-align: center;
+    }
+    .details-instructor p {
+        padding-top: 5px;
     }
 
     .details-bottom {
-        height: 30px;
+        height: 35px;
         margin-top: 5px;
     }
 
@@ -127,6 +158,8 @@
     }
 
     .details__start-course {
+        display: inline-block;
+        margin-top: 5px;
         color: #007791;
     }
 

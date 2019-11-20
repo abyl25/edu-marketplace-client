@@ -6,7 +6,8 @@ import {
     INSTR_COURSE_TARGET_ERROR, INSTR_COURSE_TARGET_REQUEST, INSTR_COURSE_TARGET_SUCCESS, INSTR_COURSE_UPDATE_ERROR, INSTR_COURSE_UPDATE_REQUEST,
     INSTR_COURSE_UPDATE_SUCCESS, INSTR_COURSES_ERROR, INSTR_COURSES_REQUEST, INSTR_COURSES_SUCCESS, INSTR_CREATE_COURSE_TARGET_ERROR,
     INSTR_CREATE_COURSE_TARGET_REQUEST, INSTR_CREATE_COURSE_TARGET_SUCCESS, INSTR_DELETE_COURSE_REQ_GOAL_ERROR, INSTR_DELETE_COURSE_REQ_GOAL_REQUEST,
-    INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, REGISTER_TO_COURSE_REQUEST, REGISTER_TO_COURSE_SUCCESS, REGISTER_TO_COURSE_ERROR
+    INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, REGISTER_TO_COURSE_REQUEST, REGISTER_TO_COURSE_SUCCESS, REGISTER_TO_COURSE_ERROR, MY_COURSES_REQUEST,
+    MY_COURSES_SUCCESS, MY_COURSES_ERROR, INSTR_STUDENTS_REQUEST, INSTR_STUDENTS_SUCCESS, INSTR_STUDENTS_ERROR
 } from '../actions';
 import axios from 'axios';
 
@@ -16,8 +17,10 @@ const state = {
     courses: [],
     instructorCourses: [],
     instructorCourse: {},
+    instructorCourseStudents: [],
     cartCourses: [],
     myCourses: [],
+    myCourse: {},
     status: '',
     fetched: false,
     message: '',
@@ -27,7 +30,10 @@ const getters = {
     courses: state => state.courses,
     instrCourses: state => state.instructorCourses,
     instrCourse: state => state.instructorCourse,
+    instrCourseStudents: state => state.instructorCourseStudents,
     cartCourses: state => state.cartCourses,
+    myCourses: state => state.myCourses,
+    myCourse: state => state.myCourse,
     courseStatus: state => state.status,
     fetched: state => state.fetched,
     message: state => state.message,
@@ -208,6 +214,24 @@ const actions = {
                 });
         });
     },
+    [INSTR_STUDENTS_REQUEST]: ({commit}, payload) => {
+        return new Promise((resolve, reject) => {
+            commit(INSTR_STUDENTS_REQUEST);
+            const config = {
+                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
+            };
+            axios.get(`${api_endpoint}/api/instructor/${payload.instructorId}/courses/${payload.courseId}/students`, config)
+                .then(res => {
+                    commit(INSTR_STUDENTS_SUCCESS, res);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(INSTR_STUDENTS_ERROR);
+                    reject(err);
+                });
+        });
+    },
+
     [ADD_COURSE_TO_CART_REQUEST]: ({commit, rootState}, payload) => {
         return new Promise((resolve, reject) => {
             commit(ADD_COURSE_TO_CART_REQUEST);
@@ -267,7 +291,7 @@ const actions = {
                 });
         });
     },
-    [REGISTER_TO_COURSE_REQUEST]: ({commit, rootState}, payload) => {
+    [REGISTER_TO_COURSE_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(REGISTER_TO_COURSE_REQUEST);
             const config = {
@@ -276,15 +300,28 @@ const actions = {
             console.log(payload);
             axios.post(`${api_endpoint}/api/courses/register`, payload, config)
                 .then(res => {
-                    // const mutationPayload = {
-                    //     auth: rootState.auth,
-                    //     courseId: payload.courseId
-                    // };
                     commit(REGISTER_TO_COURSE_SUCCESS, payload.courseId);
                     resolve(res);
                 })
                 .catch(err => {
                     commit(REGISTER_TO_COURSE_ERROR);
+                    reject(err);
+                });
+        });
+    },
+    [MY_COURSES_REQUEST]: ({commit, rootState}, payload) => {
+        return new Promise((resolve, reject) => {
+            commit(MY_COURSES_REQUEST);
+            const config = {
+                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
+            };
+            axios.get(`${api_endpoint}/api/user/${payload.studentId}/courses`, config)
+                .then(res => {
+                    commit(MY_COURSES_SUCCESS, res);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(MY_COURSES_ERROR);
                     reject(err);
                 });
         });
@@ -396,6 +433,17 @@ const mutations = {
     [INSTR_DELETE_COURSE_REQ_GOAL_ERROR]: (state) => {
         state.status = 'Instructor Delete Course Req Goal Error';
     },
+    // Instructor Course Students
+    [INSTR_STUDENTS_REQUEST]: (state) => {
+        state.status = 'Instructor Students Request';
+    },
+    [INSTR_STUDENTS_SUCCESS]: (state, res) => {
+        state.status = 'Instructor Students Success';
+        state.instructorCourseStudents = res.data;
+    },
+    [INSTR_STUDENTS_ERROR]: (state) => {
+        state.status = 'Instructor Students Error';
+    },
     // Get Cart Courses
     [CART_COURSES_REQUEST]: (state) => {
         state.status = 'Cart Courses Request';
@@ -443,6 +491,17 @@ const mutations = {
     },
     [REGISTER_TO_COURSE_ERROR]: (state) => {
         state.status = 'Register To Course Request Error';
+    },
+    // My Courses
+    [MY_COURSES_REQUEST]: (state) => {
+        state.status = 'Fetch My Courses Request';
+    },
+    [MY_COURSES_SUCCESS]: (state, res) => {
+        state.status = 'Fetch My Courses Success';
+        state.myCourses = res.data;
+    },
+    [MY_COURSES_ERROR]: (state) => {
+        state.status = 'Fetch My Courses Error';
     },
 
 };

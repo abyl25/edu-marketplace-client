@@ -7,13 +7,16 @@
         </div>
         <div class="sidebar">
             <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/main' }" class="sidebar-el">
-                <i class="fa fa-fw fa-home"></i> Course info
+                <span class="icon"><i class="fa fa-fw fa-home"></i></span> Course info
             </router-link>
             <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/target' }" class="sidebar-el">
                 <img src="../../assets/icons8-goal2-23-6d736f.png" alt="" style="vertical-align: middle"> Course target
             </router-link>
             <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/curriculum' }" class="sidebar-el">
                 <img src="../../assets/icons8-table-of-content-24.png" alt="" style="vertical-align: middle"> Curriculum
+            </router-link>
+            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/students' }" class="sidebar-el">
+                <img src="../../assets/icons8-students-24.png" alt="" style="vertical-align: middle"> My Students
             </router-link>
             <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/settings' }" class="sidebar-el">
                 <img src="../../assets/icons8-gear-25.png" alt="" style="vertical-align: middle"> Settings
@@ -59,9 +62,14 @@
         padding: 20px 25px;
         text-decoration: none;
         text-align: left;
-        color: #6d736f;
+        color: #57635b;  /*  #6d736f;  */
         font-size: 17px;
     }
+
+    .icon {
+        color: #6d736f;
+    }
+
     /*.sidebar-el:focus {*/
     /*    background-color: #a3c2bd;  !* #8E8A84; #ec5252; *!*/
     /*}*/
