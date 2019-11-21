@@ -3,7 +3,8 @@
         <router-link class="course-link" :to="{ path: '/course/' + course.id }">
             <div class="course-cardcontainer">
                 <div class="course-card-imagecontainer">
-                    <img class="course-image" src="../../assets/1.png" width="240" height="135">
+                    <img class="course-image" src="../../assets/1.png" v-if="!hasImage" width="240" height="135">
+                    <img :src="'http://37.18.30.105:6600/upload_images/' + course.image_name + '.png'" alt="" v-else width="180" height="120">
                 </div>
                 <div class="course-card-content">
                     <div class="course-card-content-title">
@@ -42,7 +43,12 @@
 <script>
 export default {
     name: "CourseItem",
-    props: ["course"]
+    props: ["course"],
+    computed: {
+        hasImage() {
+            return this.course.image_name;
+        }
+    }
 }
 </script>
 

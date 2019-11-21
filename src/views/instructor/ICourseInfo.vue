@@ -163,10 +163,10 @@
                         console.log(err);
                         console.log(err.response.data);
                     });
-            }
+            },
         },
         computed: {
-            ...mapGetters(['user', 'instrCourse'])
+            ...mapGetters(['user', 'instrCourse']),
         }
     }
 </script>

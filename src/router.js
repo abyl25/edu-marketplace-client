@@ -20,6 +20,7 @@ import Cart from "@/views/student/Cart";
 import Checkout from "@/views/student/Checkout";
 import MyCourses from "@/views/student/MyCourses";
 import ICourseStudent from "@/views/instructor/ICourseStudent";
+import ImageUpload from "@/views/instructor/ImageUpload";
 
 Vue.use(Router);
 
@@ -122,6 +123,10 @@ const router = new Router({
         {
           path: 'main',
           component: ICourseInfo
+        },
+        {
+          path: 'image',
+          component: ImageUpload
         },
         {
           path: 'target',

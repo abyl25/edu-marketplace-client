@@ -3,7 +3,10 @@
         <div class="header">
             <h2 class="header-title">My Courses</h2>
         </div>
-        <div class="my-courses-container">
+        <div v-if="!fetched">
+            <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">
+        </div>
+        <div v-if="fetched" class="my-courses-container">
             <div class="card-wrapper">
                 <div class="course-card" v-for="course in this.myCourses"> <!--  i in count  -->
                     <router-link to="/" class="course-link">
@@ -37,6 +40,7 @@
         name: "MyCourses",
         data() {
             return {
+                fetched: false,
                 count: 10
             }
         },
@@ -51,10 +55,12 @@
                 this.$store.dispatch(MY_COURSES_REQUEST, payload)
                     .then(res => {
                         console.log(res.data);
+                        this.fetched = true;
                     })
                     .catch(err => {
                         console.log(err);
                         console.log(err.response.data);
+                        this.fetched = true;
                     });
             }
         },

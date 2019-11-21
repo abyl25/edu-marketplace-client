@@ -33,20 +33,6 @@
                         <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer
                     </button>
                 </div>
-
-<!--                <div class="form-group">-->
-<!--                    <p>Who are your target students?</p>-->
-<!--                    <div v-for="(input,k) in studentInputs" :key="k" style="height: 46px;">-->
-<!--                        <input type="text" class="form-input" placeholder="Course students" v-model="input.name">-->
-<!--                        <span class="remove-btn" @click="removeStudent($event, k)">-->
-<!--                            <i class="far fa-trash-alt fa-lg" v-show="k || (!k && goalInputs.length > 1)"></i>-->
-<!--                        </span>-->
-<!--                    </div>-->
-<!--                    <button type="button" id="3" class="btn" @click="addAnswerInput">-->
-<!--                        <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer-->
-<!--                    </button>-->
-<!--                </div>-->
-
                 <button type="submit" class="save-btn">Save</button>
             </form>
         </div>

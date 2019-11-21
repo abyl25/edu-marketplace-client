@@ -13,9 +13,19 @@
                     <i class="fas fa-search"></i>
                 </button>
             </form>
-            <button class="add-course-btn">Filter</button>
+<!--            <button class="add-course-btn">Filter</button>-->
+            <select name="" id="filter" class="select" @change="applyFilter($event)">
+                <option value="filter" selected>Filter</option>
+                <option value="sort-1">A-Z</option>
+                <option value="sort-2">Z-A</option>
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+            </select>
         </div>
-        <div class="instructor-courses-list">
+        <div v-if="!fetched">
+            <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">
+        </div>
+        <div v-if="fetched" class="instructor-courses-list">
             <div v-bind:key="course.id" v-for="course in this.instrCourses">
                 <ICourseListItem v-bind:course="course"/>
             </div>
@@ -24,36 +34,56 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
-  import ICourseListItem from "@/views/instructor/ICourseListItem";
-  import { INSTR_COURSES_REQUEST } from "@/store/actions";
+import { mapGetters } from 'vuex';
+import ICourseListItem from "@/views/instructor/ICourseListItem";
+import { INSTR_COURSES_REQUEST } from "@/store/actions";
 
-  export default {
+export default {
     name: 'home',
     components: {
         ICourseListItem
     },
     data() {
-      return {
-        courses: []
-      }
+        return {
+            fetched: false,
+            courses: []
+        }
     },
     created() {
-      this.getInstructorCourses();
+        this.getInstructorCourses();
     },
     methods: {
-      searchCourses(e) {
-        e.preventDefault();
-      },
-      getInstructorCourses() {
-        const instructorID = this.user.id;
-        this.$store.dispatch(INSTR_COURSES_REQUEST, instructorID)
-          .then(res => console.log(res.data))
-          .catch(err => console.log(err));
-      }
+        searchCourses(e) {
+            e.preventDefault();
+        },
+        getInstructorCourses() {
+            const instructorID = this.user.id;
+            this.$store.dispatch(INSTR_COURSES_REQUEST, instructorID)
+                .then(res => {
+                    console.log(res.data);
+                    this.fetched = true;
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.fetched = true;
+                });
+        },
+        applyFilter(e) {
+            const selectedFilter = e.target.value;
+            console.log(selectedFilter);
+            if (selectedFilter === 'sort-1') {
+                this.instrCourses.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (selectedFilter === 'sort-2') {
+                this.instrCourses.sort((a, b) => b.title.localeCompare(a.title));
+            } else if (selectedFilter === 'newest') {
+                this.instrCourses.sort((a, b) => b.id - a.id);
+            } else if (selectedFilter === 'oldest') {
+                this.instrCourses.sort((a, b) => a.id - b.id);
+            }
+        }
     },
     computed: {
-      ...mapGetters(['user', 'isAuthenticated', 'instrCourses'])
+        ...mapGetters(['user', 'isAuthenticated', 'instrCourses'])
     }
   }
 </script>
@@ -138,9 +168,25 @@
         cursor: pointer;
     }
 
+    .select {
+        display: block;
+        height: 42px;
+        width: 100px;
+        padding: 5px 10px;
+        border-radius: 2px;
+        font-size: 16px;
+        background: transparent;
+        color: #6d736f;
+        font-family: 'Open Sans', 'Helvetica Neue', 'Segoe UI', 'Calibri', 'Arial', sans-serif;
+    }
+    .select:hover {
+        cursor: pointer;
+    }
+
     .instructor-courses-list {
         /*background-color: #b6bdbf;*/
         /*padding: 10px;*/
     }
+
 
 </style>

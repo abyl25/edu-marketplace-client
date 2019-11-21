@@ -1,0 +1,161 @@
+<template>
+    <div class="container">
+        <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
+            <h3>Upload Course Image</h3>
+            <div class="image-container">
+                <img id="my_image" class="preview-image" src="" alt="">
+            </div>
+            <div class="dropbox">
+                <input type="file" class="input-file" :name="uploadFieldName" :disabled="isSaving"
+                       @change="onFileSelected($event); preview($event)"
+                       accept="image/*" >
+                <p v-if="isInitial">
+                    Drag your file(s) here to begin<br> or click to browse
+                </p>
+                <p v-if="isSaving">
+                    Uploading {{ fileCount }} files...
+                </p>
+            </div>
+            <button type="button" class="upload-btn" @click="onUpload">Upload</button>
+        </form>
+    </div>
+</template>
+
+<script>
+    const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
+    import axios from 'axios';
+
+    export default {
+        name: "ImageUpload",
+        data() {
+            return {
+                selectedFile: null,
+                uploadedFiles: [],
+                uploadError: null,
+                currentStatus: null,
+                uploadFieldName: 'photos'
+            }
+        },
+        mounted() {
+            this.reset();
+        },
+        methods: {
+            reset() {
+                this.currentStatus = STATUS_INITIAL;
+                this.uploadedFiles = [];
+                this.uploadError = null;
+            },
+            onFileSelected(e) {
+                console.log('onFileSelected');
+                this.selectedFile = e.target.files[0];
+            },
+            preview(e) {
+                console.log('previewing');
+                const reader = new FileReader();
+                reader.onload = function(){
+                    const my_image = document.getElementById('my_image');
+                    my_image.src = reader.result;
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            },
+            onUpload() {
+                console.log('onUpload');
+                const fd = new FormData();
+                fd.append('uploadFile', this.selectedFile, this.selectedFile.name);
+                fd.append('id', '2');
+                console.log(fd);
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'session_id': 'Bearer this_is_a_token',
+                        'File-Type': 'image/png',
+                        'id': '1',
+                        'Referer': 'course'
+                    }
+                };
+                axios.post(`http://37.18.30.105:6600/api/upload/image`, fd, config)
+                    .then(res => {
+                        console.log('uploaded');
+                        console.log(res.data);
+                    })
+                    .catch(err => console.log(err.response.data));
+            },
+        },
+        computed: {
+            isInitial() {
+                return this.currentStatus === STATUS_INITIAL;
+            },
+            isSaving() {
+                return this.currentStatus === STATUS_SAVING;
+            },
+            isSuccess() {
+                return this.currentStatus === STATUS_SUCCESS;
+            },
+            isFailed() {
+                return this.currentStatus === STATUS_FAILED;
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    .container {
+        padding: 20px 50px;
+    }
+
+    .image-container {
+        text-align: left;
+    }
+
+    .preview-image {
+        width: 120px;
+        height: 100px;
+        border: 1px solid #a3c2bd;
+        border-radius: 5px;
+    }
+
+    .dropbox {
+        border: 1px solid transparent;
+        border-radius: 5px;
+        outline: 2px dashed grey; /* the dash box */
+        outline-offset: -10px;
+        background: lightcyan;
+        color: dimgray;
+        padding: 10px 10px;
+        width: 97%;
+        min-height: 200px; /* minimum height */
+        position: relative;
+        cursor: pointer;
+    }
+
+    .input-file {
+        opacity: 0; /* invisible but it's there! */
+        display: block;
+        width: 98%;
+        height: 200px;
+        position: absolute;
+        cursor: pointer;
+    }
+
+    .dropbox:hover {
+        background: lightblue; /* when mouse over to the drop zone, change color */
+    }
+
+    .dropbox p {
+        font-size: 1.2em;
+        text-align: center;
+        padding: 50px 0;
+    }
+
+    .upload-btn {
+        border: none;
+        border-radius: 2px;
+        margin-top: 10px;
+        padding: 12px 40px;
+        background-color: #4CAF50;
+        color: #fff;
+        font-size: 17px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+</style>

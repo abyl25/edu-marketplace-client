@@ -9,6 +9,9 @@
             <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/main' }" class="sidebar-el">
                 <span class="icon"><i class="fa fa-fw fa-home"></i></span> Course info
             </router-link>
+            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/image' }" class="sidebar-el">
+                <img src="../../assets/icons8-image-24.png" alt="" style="vertical-align: middle"> Course image
+            </router-link>
             <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/target' }" class="sidebar-el">
                 <img src="../../assets/icons8-goal2-23-6d736f.png" alt="" style="vertical-align: middle"> Course target
             </router-link>

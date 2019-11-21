@@ -4,8 +4,10 @@
             <h1 class="title">My Students</h1>
         </div>
         <div class="students-container">
-            <h4 class="students-count">{{ this.instrCourseStudents.length }} Students</h4>
-            <div class="column-names">
+            <h4 class="students-count" v-if="studentsCount === 0">No Students</h4>
+            <h4 class="students-count" v-else-if="studentsCount === 1">1 Student</h4>
+            <h4 class="students-count" v-else>{{ studentsCount }} Students</h4>
+            <div class="column-names" v-if="studentsCount > 0">
                 <p class="main-info-text">Basic Info</p>
                 <p class="registration-date-text">Registration date</p>
             </div>
@@ -20,8 +22,8 @@
 <!--                    <p class="student-email">abylay.tastanbekov@nu.edu.kz</p>-->
                 </div>
                 <div class="student-registration-date">
-                    <p class="date-text">{{ student.orderDate }}</p>
-<!--                    <p class="date-text">18 Nov 2019</p>-->
+<!--                    <p class="date-text">{{ student.orderDate }}</p>-->
+                    <p class="date-text">18 Nov 2019</p>
                 </div>
             </div>
         </div>
@@ -37,6 +39,7 @@
         data() {
             return {
                 count: 5,
+                fetched: false
             }
         },
         created() {
@@ -52,16 +55,21 @@
                 this.$store.dispatch(INSTR_STUDENTS_REQUEST, payload)
                     .then(res => {
                         console.log(res.data);
+                        this.fetched = true;
                         // this.parseOrderDate();
                     })
                     .catch(err => {
                         console.log(err);
                         console.log(err.response.data);
+                        this.fetched = true;
                     });
             }
         },
         computed: {
             ...mapGetters(['user', 'instrCourseStudents']),
+            studentsCount() {
+                return this.instrCourseStudents.length;
+            },
             parseOrderDate() {
                 let date = new Date(this.orderDate * 1000);
                 console.log(date.getFullYear());
