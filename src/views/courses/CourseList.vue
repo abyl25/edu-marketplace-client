@@ -3,11 +3,19 @@
         <div v-if="!fetched">
             <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">
         </div>
-        <div v-if="fetched && courses.length === 0">
-            <p>No courses</p>
-        </div>
-        <div v-if="message">
-            <p>{{ message }}</p>
+        <div v-if="fetched && courses.length === 0"><h4>No Courses</h4></div>
+        <div v-if="fetched && courses.length === 1"><h4>1 Course</h4></div>
+        <div v-if="fetched && courses.length > 1" class="sort-container">
+            <select name="" id="filter" class="select" @change="applyFilter($event)">
+                <option value="sort" selected>Sort</option>
+                <option value="sort-1">A-Z</option>
+                <option value="sort-2">Z-A</option>
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="highest-price">Highest Price</option>
+                <option value="lowest-price">Lowest Price</option>
+            </select>
+            <h4 class="courses-count">{{ this.courses.length }} Courses</h4>
         </div>
         <div v-bind:key="course.id" v-for="course in this.courses">
             <CourseItem v-bind:course="course"/>
@@ -76,6 +84,23 @@ export default {
                         this.fetched = true;
                     }
                 });
+        },
+        applyFilter(e) {
+            const selectedFilter = e.target.value;
+            console.log(selectedFilter);
+            if (selectedFilter === 'sort-1') {
+                this.courses.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (selectedFilter === 'sort-2') {
+                this.courses.sort((a, b) => b.title.localeCompare(a.title));
+            } else if (selectedFilter === 'newest') {
+                this.courses.sort((a, b) => b.id - a.id);
+            } else if (selectedFilter === 'oldest') {
+                this.courses.sort((a, b) => a.id - b.id);
+            } else if (selectedFilter === 'highest-price') {
+                this.courses.sort((a, b) => b.price - a.price);
+            } else if (selectedFilter === 'lowest-price') {
+                this.courses.sort((a, b) => a.price - b.price);
+            }
         }
     },
     watch: {
@@ -98,8 +123,36 @@ export default {
 <style scoped>
     .course-container {
         margin: 30px auto;
-        /*padding-top: 10px; */
-        /*padding-left: 10%;*/
         width: 80%;
     }
+
+    .sort-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        padding: 15px 20px 15px 10px;
+        border-bottom: 1px solid #d7dedc;
+    }
+
+    .select {
+        display: block;
+        height: 35px;
+        width: 130px;
+        padding-left: 5px;
+        /*outline: none;*/
+        /*border: none;*/
+        border-radius: 2px;
+        font-size: 16px;
+        background: transparent;
+        color: #6d736f;
+        font-family: 'Open Sans', 'Helvetica Neue', 'Segoe UI', 'Calibri', 'Arial', sans-serif;
+    }
+    .select:hover {
+        cursor: pointer;
+    }
+
+    .courses-count {
+        text-align: left;
+    }
+
 </style>

@@ -55,12 +55,12 @@
       signUp(e) {
         e.preventDefault();
         const credentials = {
-          firstName: this.firstName,
-          lastName: this.lastName,
-          email: this.email,
-          userName: this.userName,
-          password: this.password,
-          userType: this.userType
+          firstName: this.firstName.trim(),
+          lastName: this.lastName.trim(),
+          email: this.email.trim(),
+          userName: this.userName.trim(),
+          password: this.password.trim(),
+          userType: this.userType.trim()
         };
         this.$store.dispatch(AUTH_SIGNUP, credentials).then(() => {
           // this.$router.push('/')

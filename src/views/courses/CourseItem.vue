@@ -76,15 +76,15 @@ export default {
     .course a {
         display: block;
         /*padding: 20px 0;*/
-        margin: 20px 0;
+        margin-bottom: 20px;
     }
 
     .course-cardcontainer {
         text-align: left;
         display: flex;
         position: relative;
-        border-bottom: 1px solid #f2f3f5;
-        padding: 15px 0 8px 8px;
+        border-bottom: 1px solid #d7e0df;
+        padding: 15px 8px 5px 8px;
     }
 
     .course-card-imagecontainer {

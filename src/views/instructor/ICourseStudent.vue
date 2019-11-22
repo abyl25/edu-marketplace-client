@@ -3,7 +3,10 @@
         <div class="sub-header">
             <h1 class="title">My Students</h1>
         </div>
-        <div class="students-container">
+        <div v-if="!fetched">
+            <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">
+        </div>
+        <div class="students-container" v-if="fetched">
             <h4 class="students-count" v-if="studentsCount === 0">No Students</h4>
             <h4 class="students-count" v-else-if="studentsCount === 1">1 Student</h4>
             <h4 class="students-count" v-else>{{ studentsCount }} Students</h4>
@@ -18,12 +21,9 @@
                 <div class="student-main-info-wrapper">
                     <p class="student-full-name">{{ student.firstName + ' ' + student.lastName }}</p>
                     <p class="student-email">{{ student.email }}</p>
-<!--                    <p class="student-full-name">Abylay Tastanbekov</p>-->
-<!--                    <p class="student-email">abylay.tastanbekov@nu.edu.kz</p>-->
                 </div>
                 <div class="student-registration-date">
-<!--                    <p class="date-text">{{ student.orderDate }}</p>-->
-                    <p class="date-text">18 Nov 2019</p>
+                    <p class="date-text">{{ parseOrderDate(student.orderDate) }}</p>
                 </div>
             </div>
         </div>
@@ -38,7 +38,7 @@
         name: "ICourseStudent",
         data() {
             return {
-                count: 5,
+                monthNames: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
                 fetched: false
             }
         },
@@ -56,25 +56,22 @@
                     .then(res => {
                         console.log(res.data);
                         this.fetched = true;
-                        // this.parseOrderDate();
                     })
                     .catch(err => {
                         console.log(err);
                         console.log(err.response.data);
                         this.fetched = true;
                     });
+            },
+            parseOrderDate(orderDate) {
+                let date = new Date(orderDate);
+                return date.getDate() + ' ' + this.monthNames[date.getMonth()].substring(0, 3) + ' ' + date.getFullYear();
             }
         },
         computed: {
             ...mapGetters(['user', 'instrCourseStudents']),
             studentsCount() {
                 return this.instrCourseStudents.length;
-            },
-            parseOrderDate() {
-                let date = new Date(this.orderDate * 1000);
-                console.log(date.getFullYear());
-                console.log(date.getDate());
-                return '';
             }
         }
     }
@@ -103,17 +100,16 @@
 
     .column-names {
         display: flex;
-        /*justify-content: space-between;*/
         margin: 5px 0;
         font-size: 15px;
     }
     .main-info-text {
-        flex: 0 1 55%;
-        margin-left: 20px;
+        /*flex: 0 1 55%;*/
+        margin-left: 50px;
     }
     .registration-date-text {
-        flex: 0 1 50%;
-        /*margin-left: 235px;*/
+        /*flex: 0 1 25%;*/
+        margin-left: 220px;
     }
 
     .student {
@@ -141,7 +137,8 @@
     }
 
     .student-main-info-wrapper {
-        flex: 0 1 40%;
+        /*flex: 0 1 40%;*/
+        flex-basis: 250px;
         display: flex;
         flex-direction: column;
         justify-content: flex-start;

@@ -15,7 +15,7 @@
             </form>
 <!--            <button class="add-course-btn">Filter</button>-->
             <select name="" id="filter" class="select" @change="applyFilter($event)">
-                <option value="filter" selected>Filter</option>
+                <option value="filter" selected>Sort</option>
                 <option value="sort-1">A-Z</option>
                 <option value="sort-2">Z-A</option>
                 <option value="newest">Newest</option>

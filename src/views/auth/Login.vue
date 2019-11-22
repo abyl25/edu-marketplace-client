@@ -33,9 +33,9 @@
       login(e) {
         e.preventDefault();
         const credentials = {
-          userName: this.userName,
-          password: this.password,
-          userType: this.userType
+          userName: this.userName.trim(),
+          password: this.password.trim(),
+          userType: this.userType.trim()
         };
         this.$store.dispatch(AUTH_LOGIN, credentials).then(() => {
           let role = this.user.roles[0];

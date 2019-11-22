@@ -13,8 +13,6 @@
       Header
     },
     created() {
-      console.log('mode: ' + process.env.NODE_ENV);
-      console.log('api_endpoint: ' + process.env.VUE_APP_API);
     }
   }
 </script>
