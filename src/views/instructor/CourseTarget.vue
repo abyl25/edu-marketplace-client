@@ -20,9 +20,9 @@
                                 <!--  v-show="k || (!k && goalInputs.length > 1)"  -->
                             </span>
                         </div>
-                        <button type="button" id="1" class="btn" @click="addAnswerInput">
-                            <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer
-                        </button>
+                        <v-button id="1" class="add-answer-btn" :on-click="addAnswerInput">
+                            <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer1
+                        </v-button>
                     </div>
 
                     <div class="form-group">
@@ -34,11 +34,11 @@
                                 <!--  v-show="k || (!k && goalInputs.length > 1)"  -->
                             </span>
                         </div>
-                        <button type="button" id="2" class="btn" @click="addAnswerInput">
-                            <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer
-                        </button>
+                        <v-button id="2" class="add-answer-btn" :on-click="addAnswerInput">
+                            <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer1
+                        </v-button>
                     </div>
-                    <button type="submit" class="save-btn">Save</button>
+                    <v-button class="save-target-btn green" :on-click="saveCourseTarget">Save</v-button>
                 </form>
             </div>
         </transition>
@@ -50,9 +50,13 @@
         INSTR_COURSE_TARGET_REQUEST, INSTR_CREATE_COURSE_TARGET_REQUEST, INSTR_DELETE_COURSE_REQ_GOAL_REQUEST
     } from "@/store/actions";
     import { mapGetters } from "vuex";
+    import Button from "@/components/Button";
 
     export default {
         name: "CourseTarget",
+        components: {
+            'v-button': Button
+        },
         data() {
             return {
                 fetched: false,
@@ -182,13 +186,6 @@
         opacity: 0;
     }
 
-    /* .loader-fade-enter-leave {
-        transition: all ease 5s;
-    }
-    .loader-fade-enter, .loader-fade-leave-to {
-        opacity: 0;
-    }  */
-
     /**/
     .app-content {
         /*font-family: open sans,helvetica neue,Helvetica,Arial,sans-serif;*/
@@ -230,44 +227,12 @@
         padding: 10px 12px;
         font-size: 16px;
         box-shadow: none;
-        /*outline: none;*/
-    }
-
-    .btn {
-        border: 1px solid #686f7a;
-        border-radius: 2px;
-        margin-top: 10px;
-        padding: 7px 10px;
-        color: #007791;
-        font-size: 15px;
-        font-weight: 600;
-        cursor: pointer;
-        user-select: none;
-        outline: none;
-    }
-
-    .save-btn {
-        border: none;
-        border-radius: 2px;
-        margin-top: 5px;
-        padding: 12px 40px;
-        background-color: #4CAF50;
-        color: #fff;
-        font-size: 17px;
-        font-weight: 500;
-        cursor: pointer;
-    }
-
-    .plus-sign {
-        margin-right: 5px;
     }
 
     .remove-btn {
         margin-left: 10px;
     }
-
     .remove-btn:hover {
         cursor: pointer;
     }
-
 </style>

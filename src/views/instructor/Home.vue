@@ -4,9 +4,7 @@
             <h2>Instructor Courses</h2>
         </div>
         <div class="courses-form-header">
-            <router-link to="/instructor/course/create">
-                <button class="add-course-btn">New Course</button>
-            </router-link>
+            <v-button class="add-course-btn green" :on-click="navigateToCreateCoursePage">New Course</v-button>
             <form class="courses-search-form" @submit="searchCourses">
                 <input type="text" class="courses-search-input" placeholder="Search your courses">
                 <button type="button" class="search-btn" @click="searchCourses">
@@ -35,14 +33,16 @@
 </template>
 
 <script>
+import { INSTR_COURSES_REQUEST } from "@/store/actions";
 import { mapGetters } from 'vuex';
 import ICourseListItem from "@/views/instructor/ICourseListItem";
-import { INSTR_COURSES_REQUEST } from "@/store/actions";
+import Button from "@/components/Button";
 
 export default {
     name: 'home',
     components: {
-        ICourseListItem
+        ICourseListItem,
+        'v-button': Button
     },
     data() {
         return {
@@ -54,6 +54,9 @@ export default {
         this.getInstructorCourses();
     },
     methods: {
+        navigateToCreateCoursePage() {
+            this.$router.push('/instructor/course/create');
+        },
         searchCourses(e) {
             e.preventDefault();
         },
@@ -118,28 +121,6 @@ export default {
         margin-bottom: 40px;
     }
 
-    .add-course-btn {
-        border-radius: 2px;
-        background-color: #4CAF50; /* Green */
-        border: none;
-        padding: 12px 25px;
-        text-align: center;
-        text-decoration: none;
-        color: white;
-        font-size: 16px;
-        font-weight: 500;
-        list-style: none;
-    }
-
-    .add-course-btn:hover {
-        background-color: #4CA333;
-        cursor: pointer;
-    }
-
-    button:focus {
-        outline: 0;
-    }
-
     .courses-search-form {
         display: flex;
         align-items: center;
@@ -197,6 +178,5 @@ export default {
         /*background-color: #b6bdbf;*/
         /*padding: 10px;*/
     }
-
 
 </style>

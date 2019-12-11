@@ -81,7 +81,7 @@
                             <input type="number" id="price" v-model="course.price" placeholder="Price" autocomplete="off">
                         </div>
                     </div>
-                    <input type="submit" value="Edit">
+                    <v-button :onClick="editCourse" myClass="edit-btn green">Edit</v-button>
                 </form>
             </div>
         </div>
@@ -89,12 +89,16 @@
 </template>
 
 <script>
-    import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-    import { mapGetters } from 'vuex';
     import {INSTR_COURSE_REQUEST, INSTR_COURSE_UPDATE_REQUEST} from "@/store/actions";
+    import { mapGetters } from 'vuex';
+    import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+    import Button from "@/components/Button";
 
     export default {
         name: "ICourseInfo",
+        components: {
+            'v-button': Button
+        },
         data() {
             return {
                 editor: ClassicEditor,
@@ -228,29 +232,4 @@
         resize: vertical
     }
 
-    input[type=submit] {
-        background-color: #4CAF50;
-        color: white;
-        width: 30%;
-        margin-top: 30px;
-        padding: 15px 50px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 18px;
-    }
-
-    input[type=submit]:hover {
-        background-color: #45a049;
-        text-align: center;
-    }
-
-    /*.ck.ck-editor__main>.ck-editor__editable:not(.ck-focused) {*/
-    /*    margin-bottom: 20px;*/
-    /*}*/
-
-    .ck-content .todo-list li {
-        /*margin-bottom: 5px;*/
-        padding-left: 20px;
-    }
 </style>
