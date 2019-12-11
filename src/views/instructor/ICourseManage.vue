@@ -41,6 +41,7 @@
 </script>
 
 <style scoped>
+    /*  */
     .course-manage-container {
         display: flex;
         padding: 50px 70px 50px 50px;

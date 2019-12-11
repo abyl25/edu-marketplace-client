@@ -6,23 +6,29 @@
         <div v-if="!fetched">
             <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">
         </div>
-        <div class="empty-cart" v-if="fetched && this.cartCourses.length === 0">
-            <img src="../../assets/icons8-clear-shopping-cart-100.png" alt="">
-            <p>Your cart is empty. Keep shopping!</p>
-            <button class="shopping-btn" @click="continueShopping">Keep shopping</button>
-        </div>
-        <div class="course-container" v-else-if="fetched">
-            <div class="courses-list">
-                <h3 class="list-title" v-if="fetched">{{ this.cartCourses.length }} Course in Cart</h3>
-                <CartItem v-bind:key="cartCourse.course.id" v-for="cartCourse in this.cartCourses" v-bind:course="cartCourse.course"
-                    @remove-course="removeCourseFromCart"/>
+        <transition name="fade">
+            <div v-if="fetched">
+                <div class="empty-cart" v-if="this.cartCourses.length === 0">
+                    <img src="../../assets/icons8-clear-shopping-cart-100.png" alt="">
+                    <p>Your cart is empty. Keep shopping!</p>
+                    <button class="shopping-btn" @click="continueShopping">Keep shopping</button>
+                </div>
+                <div class="course-container" v-else-if="this.cartCourses.length > 0">
+                    <div class="courses-list">
+                        <h3 class="list-title">{{ this.cartCourses.length }} Course in Cart</h3>
+                        <transition-group name="delete-transition">
+                            <CartItem v-bind:key="cartCourse.course.id" v-for="cartCourse in this.cartCourses" v-bind:course="cartCourse.course"
+                                @remove-course="removeCourseFromCart"/>
+                        </transition-group>
+                    </div>
+                    <div class="checkout-pane">
+                        <h3 class="text">Total:</h3>
+                        <p class="price-text">{{ totalPrice }}</p>
+                        <button class="checkout-btn" @click="checkOut">Check out</button>
+                    </div>
+                </div>
             </div>
-            <div class="checkout-pane">
-                <h3 class="text">Total:</h3>
-                <p class="price-text">{{ totalPrice }}</p>
-                <button class="checkout-btn" @click="checkOut">Check out</button>
-            </div>
-        </div>
+        </transition>
     </div>
 </template>
 
@@ -66,7 +72,11 @@
                         this.fetched = true;
                         this.calculateTotalPrice();
                     })
-                    .catch(err => { console.log(err); console.log(err.response.data); });
+                    .catch(err => {
+                        console.log(err);
+                        console.log(err.response.data);
+                        this.fetched = true;
+                    });
             },
             removeCourseFromCart(crs) {
                 const payload = {
@@ -100,6 +110,18 @@
 </script>
 
 <style scoped>
+    /* Transitions */
+    .fade-enter-active, .fade-leave-active {
+        transition: all ease .8s;
+    }
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
+    }
+    .delete-transition-leave-active { /*  .delete-transition-enter-active, */
+        transition: all ease .3s;
+    }
+
+    /*  */
     .cart-header {
         padding: 30px 106px;
         background-color: #f7f9fa;   /*  #505763;  #f7f9fa;  */

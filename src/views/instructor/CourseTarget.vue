@@ -3,40 +3,45 @@
         <div class="sub-header">
             <h1 class="title">Target your students</h1>
         </div>
-<!--        <hr>-->
-        <div class="form-container">
-            <form @submit="saveCourseTarget">
-                <div class="form-group">
-                    <p>What will students learn in your course?</p>
-                    <div class="input-wrapper" v-for="(input,k) in goalInputs" :key="k" style="height: 46px;">
-                        <input type="text" class="form-input" placeholder="Course goals" v-model="input.name">
-                        <span class="remove-btn" @click="removeGoal($event, k, input.name)">
-                            <i class="far fa-trash-alt fa-lg"></i>
-                            <!--  v-show="k || (!k && goalInputs.length > 1)"  -->
-                        </span>
+<!--        <transition name="loader-fade">-->
+<!--            <div v-if="!fetched">-->
+<!--                <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">-->
+<!--            </div>-->
+<!--        </transition>-->
+        <transition name="fade">
+            <div class="form-container" v-if="fetched">
+                <form @submit="saveCourseTarget">
+                    <div class="form-group">
+                        <p>What will students learn in your course?</p>
+                        <div class="input-wrapper" v-for="(input,k) in goalInputs" :key="k" style="height: 46px;">
+                            <input type="text" class="form-input" placeholder="Course goals" v-model="input.name">
+                            <span class="remove-btn" @click="removeGoal($event, k, input.name)">
+                                <i class="far fa-trash-alt fa-lg"></i>
+                                <!--  v-show="k || (!k && goalInputs.length > 1)"  -->
+                            </span>
+                        </div>
+                        <button type="button" id="1" class="btn" @click="addAnswerInput">
+                            <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer
+                        </button>
                     </div>
-                    <button type="button" id="1" class="btn" @click="addAnswerInput">
-                        <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer
-                    </button>
-                </div>
 
-                <div class="form-group">
-                    <p>What are course requirements?</p>
-                    <div class="input-wrapper" v-for="(input,k) in reqInputs" :key="k" style="height: 46px;">
-                        <input type="text" class="form-input" placeholder="Course reqs" v-model="input.name">
-                        <span class="remove-btn" @click="removeReq($event, k, input.name)">
-                            <i class="far fa-trash-alt fa-lg" ></i>
-                            <!--  v-show="k || (!k && goalInputs.length > 1)"  -->
-                        </span>
+                    <div class="form-group">
+                        <p>What are course requirements?</p>
+                        <div class="input-wrapper" v-for="(input,k) in reqInputs" :key="k" style="height: 46px;">
+                            <input type="text" class="form-input" placeholder="Course reqs" v-model="input.name">
+                            <span class="remove-btn" @click="removeReq($event, k, input.name)">
+                                <i class="far fa-trash-alt fa-lg" ></i>
+                                <!--  v-show="k || (!k && goalInputs.length > 1)"  -->
+                            </span>
+                        </div>
+                        <button type="button" id="2" class="btn" @click="addAnswerInput">
+                            <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer
+                        </button>
                     </div>
-                    <button type="button" id="2" class="btn" @click="addAnswerInput">
-                        <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer
-                    </button>
-                </div>
-                <button type="submit" class="save-btn">Save</button>
-            </form>
-        </div>
-
+                    <button type="submit" class="save-btn">Save</button>
+                </form>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -50,6 +55,7 @@
         name: "CourseTarget",
         data() {
             return {
+                fetched: false,
                 goalInputs: [{
                     name: ''
                 }],
@@ -73,10 +79,12 @@
                         if(res.data.target.reqs.length !== 0 || res.data.target.goals.length !== 0) {
                             this.populateInputs(res.data.target);
                         }
+                        this.fetched = true;
                     })
                     .catch(err => {
                         console.log(err);
                         console.log(err.response.data);
+                        this.fetched = true;
                     });
             },
             clearInputs() {
@@ -166,6 +174,22 @@
 </script>
 
 <style scoped>
+    /* Transitions */
+    .fade-enter-active {
+        transition: all ease .6s;
+    }
+    .fade-enter, .fade-leave  {
+        opacity: 0;
+    }
+
+    /* .loader-fade-enter-leave {
+        transition: all ease 5s;
+    }
+    .loader-fade-enter, .loader-fade-leave-to {
+        opacity: 0;
+    }  */
+
+    /**/
     .app-content {
         /*font-family: open sans,helvetica neue,Helvetica,Arial,sans-serif;*/
         font-family: Helvetica, sans-serif;

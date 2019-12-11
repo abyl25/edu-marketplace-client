@@ -3,23 +3,27 @@
         <div v-if="!fetched">
             <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">
         </div>
-        <div v-if="fetched && courses.length === 0"><h4>No Courses</h4></div>
-        <div v-if="fetched && courses.length === 1"><h4>1 Course</h4></div>
-        <div v-if="fetched && courses.length > 1" class="sort-container">
-            <select name="" id="filter" class="select" @change="applyFilter($event)">
-                <option value="sort" selected>Sort</option>
-                <option value="sort-1">A-Z</option>
-                <option value="sort-2">Z-A</option>
-                <option value="newest">Newest</option>
-                <option value="oldest">Oldest</option>
-                <option value="highest-price">Highest Price</option>
-                <option value="lowest-price">Lowest Price</option>
-            </select>
-            <h4 class="courses-count">{{ this.courses.length }} Courses</h4>
-        </div>
-        <div v-bind:key="course.id" v-for="course in this.courses">
-            <CourseItem v-bind:course="course"/>
-        </div>
+        <transition name="fade">
+            <div v-if="fetched">
+                <div v-if="courses.length === 0"><h4>No Courses</h4></div>
+                <div v-if="courses.length === 1"><h4>1 Course</h4></div>
+                <div v-if="courses.length > 1" class="sort-container">
+                    <select name="" id="filter" class="select" @change="applyFilter($event)">
+                        <option value="sort" selected>Sort</option>
+                        <option value="sort-1">A-Z</option>
+                        <option value="sort-2">Z-A</option>
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                        <option value="highest-price">Highest Price</option>
+                        <option value="lowest-price">Lowest Price</option>
+                    </select>
+                    <h4 class="courses-count">{{ this.courses.length }} Courses</h4>
+                </div>
+                <div v-bind:key="course.id" v-for="course in this.courses">
+                    <CourseItem v-bind:course="course"/>
+                </div>
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -121,6 +125,15 @@ export default {
 </script>
 
 <style scoped>
+    /* Transitions */
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity ease .8s;
+    }
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
+    }
+
+    /*  */
     .course-container {
         margin: 30px auto;
         width: 80%;

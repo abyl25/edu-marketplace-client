@@ -45,20 +45,17 @@
         </div>
         <nav id="navbar">
             <ul>
-                <li>
-                    <router-link to="/cart" class="cart-link">
-                        <div class="cart-badge-container" style="position: relative">
-                            <img src="../../assets/icons8-shopping-cart-35-white.png">
-                            <span class="badge" v-if="cartItemsLength>0">{{ cartItemsLength }}</span>
-                        </div>
-                    </router-link>
-                </li>
                 <template v-if="!this.isAuthenticated">
                     <li><router-link to="/login">Sign in</router-link></li>
                     <li><router-link to="/signup">Sign up</router-link></li>
                 </template>
                 <template v-if="this.isAuthenticated">
-<!--                    <li><span class="username">{{ user.userName }}</span></li>-->
+                    <li><router-link to="/cart" class="cart-link">
+                        <div class="cart-badge-container">
+                            <img src="../../assets/icons8-shopping-cart-35-white.png">
+                            <span class="badge" v-if="cartItemsLength > 0">{{ cartItemsLength }}</span>
+                        </div>
+                    </router-link></li>
                     <li><router-link to="/home/my-courses">My Courses</router-link></li>
                     <li><router-link :to="{ path: this.homePage }">{{ user.userName }}</router-link></li>
                     <li><p class="logout-btn" @click="logout">Log out</p></li>
@@ -131,6 +128,7 @@ export default {
     }
 
     .cart-badge-container {
+        position: relative;
         display: flex;
         align-items: center;
     }

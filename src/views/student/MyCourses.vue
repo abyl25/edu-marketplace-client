@@ -6,29 +6,31 @@
         <div v-if="!fetched">
             <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">
         </div>
-        <div v-if="fetched" class="my-courses-container">
-            <div class="card-wrapper">
-                <div class="course-card" v-for="course in this.myCourses"> <!--  i in count  -->
-                    <router-link to="/" class="course-link">
-                        <div class="image-container">
-                            <img class="image" src="../../assets/1.png" alt="">
-                        </div>
-                        <div class="course-details">
-                            <p class="course-title">{{ course.title }}</p>
-<!--                            <p class="course-title">Python eCommerce | Build a Django eCommerce Web Application | Justin Mitchell</p>-->
-                            <div class="details-instructor">
-                                <p>{{ course.instructor.firstName + ' ' + course.instructor.lastName }}</p>
-<!--                                <p>Justin Mitchell</p>-->
+        <transition name="fade">
+            <div v-if="fetched" class="my-courses-container">
+                <div class="card-wrapper">
+                    <div class="course-card" v-for="course in this.myCourses"> <!--  i in count  -->
+                        <router-link to="/" class="course-link">
+                            <div class="image-container">
+                                <img class="image" src="../../assets/1.png" alt="">
                             </div>
-                            <div class="details-bottom">
-                                <span class="details-progress"></span>
-                                <span class="details__start-course">START COURSE</span>
+                            <div class="course-details">
+                                <p class="course-title">{{ course.title }}</p>
+    <!--                            <p class="course-title">Python eCommerce | Build a Django eCommerce Web Application | Justin Mitchell</p>-->
+                                <div class="details-instructor">
+                                    <p>{{ course.instructor.firstName + ' ' + course.instructor.lastName }}</p>
+    <!--                                <p>Justin Mitchell</p>-->
+                                </div>
+                                <div class="details-bottom">
+                                    <span class="details-progress"></span>
+                                    <span class="details__start-course">START COURSE</span>
+                                </div>
                             </div>
-                        </div>
-                    </router-link>
+                        </router-link>
+                    </div>
                 </div>
             </div>
-        </div>
+        </transition>
     </div>
 </template>
 
@@ -71,6 +73,13 @@
 </script>
 
 <style scoped>
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity ease .8s;
+    }
+    .fade-enter, .fade-leave-to {
+        opacity: 0;
+    }
+
     .header {
         padding: 30px 106px;
         background-color: #f7f9fa;

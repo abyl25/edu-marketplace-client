@@ -1,89 +1,91 @@
 <template>
-    <div class="container">
-        <div class="add-form">
-            <form @submit="editCourse">
-                <label for="title">Title</label>
-                <input type="text" id="title" v-model="course.title" placeholder="Title.." autocomplete="off">
+    <transition name="fade">
+        <div class="container">
+            <div class="add-form">
+                <form @submit="editCourse">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" v-model="course.title" placeholder="Title.." autocomplete="off">
 
-                <label for="subtitle">Subtitle</label>
-                <input type="text" id="subtitle" v-model="course.subtitle" placeholder="Subtitle.." autocomplete="off">
+                    <label for="subtitle">Subtitle</label>
+                    <input type="text" id="subtitle" v-model="course.subtitle" placeholder="Subtitle.." autocomplete="off">
 
-                <label>Description</label>
-                <div class="editor">
-                    <ckeditor :editor="editor" v-model="course.description" :config="editorConfig"></ckeditor>
-                </div>
-
-                <div class="select-wrapper"> <!--  select-wrapper  -->
-                    <div class="select-left">  <!--  select-left  -->
-                        <label for="language">Language</label>
-                        <select id="language" v-model="course.language" name="language">
-                            <option value="select" selected>--Select--</option>
-                            <option value="Kazakh">Kazakh</option>
-                            <option value="Russian">Russian</option>
-                            <option value="English">English</option>
-                        </select>
-                    </div>
-                    <div class="select-right"> <!--  select-right  -->
-                        <label for="level">Level</label>
-                        <select id="level" v-model="course.level" name="level">
-                            <option value="select">--Select--</option>
-                            <option value="Beginner">Beginner</option>
-                            <option value="Intermediate">Intermediate</option>
-                            <option value="Advanced">Advanced</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="select-wrapper">
-                    <div class="select-left">
-                        <label for="category">Category</label>
-                        <select id="category" name="category" v-model="course.category.parent.name" @change="onCategorySelectChange($event)">
-                            <option value="select">--Select--</option>
-                            <option value="Development">Development</option>
-                            <option value="Business">Business</option>
-                            <option value="Design">Design</option>
-                        </select>
+                    <label>Description</label>
+                    <div class="editor">
+                        <ckeditor :editor="editor" v-model="course.description" :config="editorConfig"></ckeditor>
                     </div>
 
-                    <div class="select-right">
-                        <label for="subcategory">Subcategory</label>
-                        <select id="subcategory" name="subcategory" v-model="course.category.name" >
-<!--                            <option v-bind:key="sc.id" v-for="sc in course.category" :value="sc">{{ sc }}</option>-->
-                            <option value="select">--Select--</option>
-                            <option value="Web Development">Web Development</option>
-                            <option value="Mobile App">Mobile App</option>
-                            <option value="Programming Language">Programming Language</option>
-                            <option value="Databases">Databases</option>
-                            <option value="Finance">Finance</option>
-                            <option value="Management">Management</option>
-                            <option value="Strategy">Strategy</option>
-                            <option value="Project Management">Project Management</option>
-                            <option value="Web Design">Web Design</option>
-                            <option value="Graphic Design">Graphic Design</option>
-                            <option value="Game Design">Game Design</option>
-                            <option value="Fashion">Fashion</option>
-                        </select>
+                    <div class="select-wrapper"> <!--  select-wrapper  -->
+                        <div class="select-left">  <!--  select-left  -->
+                            <label for="language">Language</label>
+                            <select id="language" v-model="course.language" name="language">
+                                <option value="select" selected>--Select--</option>
+                                <option value="Kazakh">Kazakh</option>
+                                <option value="Russian">Russian</option>
+                                <option value="English">English</option>
+                            </select>
+                        </div>
+                        <div class="select-right"> <!--  select-right  -->
+                            <label for="level">Level</label>
+                            <select id="level" v-model="course.level" name="level">
+                                <option value="select">--Select--</option>
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                <div class="select-wrapper">
-                    <div class="select-left">
-                        <label for="topic">Topic</label>
-                        <select id="topic" name="topic" v-model="course.topic.name">
-                            <option value="select">--Select--</option>
-                            <option value="React">React</option>
-                            <option value="Vue.JS">Vue.JS</option>
-                            <option value="Angular">Angular</option>
-                        </select>
+
+                    <div class="select-wrapper">
+                        <div class="select-left">
+                            <label for="category">Category</label>
+                            <select id="category" name="category" v-model="course.category.parent.name" @change="onCategorySelectChange($event)">
+                                <option value="select">--Select--</option>
+                                <option value="Development">Development</option>
+                                <option value="Business">Business</option>
+                                <option value="Design">Design</option>
+                            </select>
+                        </div>
+
+                        <div class="select-right">
+                            <label for="subcategory">Subcategory</label>
+                            <select id="subcategory" name="subcategory" v-model="course.category.name" >
+    <!--                            <option v-bind:key="sc.id" v-for="sc in course.category" :value="sc">{{ sc }}</option>-->
+                                <option value="select">--Select--</option>
+                                <option value="Web Development">Web Development</option>
+                                <option value="Mobile App">Mobile App</option>
+                                <option value="Programming Language">Programming Language</option>
+                                <option value="Databases">Databases</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Management">Management</option>
+                                <option value="Strategy">Strategy</option>
+                                <option value="Project Management">Project Management</option>
+                                <option value="Web Design">Web Design</option>
+                                <option value="Graphic Design">Graphic Design</option>
+                                <option value="Game Design">Game Design</option>
+                                <option value="Fashion">Fashion</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="select-right">
-                        <label for="price">Price</label>
-                        <input type="number" id="price" v-model="course.price" placeholder="Price" autocomplete="off">
+                    <div class="select-wrapper">
+                        <div class="select-left">
+                            <label for="topic">Topic</label>
+                            <select id="topic" name="topic" v-model="course.topic.name">
+                                <option value="select">--Select--</option>
+                                <option value="React">React</option>
+                                <option value="Vue.JS">Vue.JS</option>
+                                <option value="Angular">Angular</option>
+                            </select>
+                        </div>
+                        <div class="select-right">
+                            <label for="price">Price</label>
+                            <input type="number" id="price" v-model="course.price" placeholder="Price" autocomplete="off">
+                        </div>
                     </div>
-                </div>
-                <input type="submit" value="Edit">
-            </form>
+                    <input type="submit" value="Edit">
+                </form>
+            </div>
         </div>
-    </div>
+    </transition>
 </template>
 
 <script>
@@ -172,6 +174,15 @@
 </script>
 
 <style scoped>
+    /* Transitions */
+    .fade-enter-active {
+        transition: all ease .5s;
+    }
+    .fade-enter, .fade-leave {
+        opacity: 0;
+    }
+
+    /*  */
     .editor {
         margin: 6px 0 16px 0;
     }

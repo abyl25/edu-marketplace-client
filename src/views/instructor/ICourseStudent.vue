@@ -3,9 +3,10 @@
         <div class="sub-header">
             <h1 class="title">My Students</h1>
         </div>
-        <div v-if="!fetched">
-            <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">
-        </div>
+<!--            <div v-if="!fetched">-->
+<!--                <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">-->
+<!--            </div>-->
+        <transition name="fade">
         <div class="students-container" v-if="fetched">
             <h4 class="students-count" v-if="studentsCount === 0">No Students</h4>
             <h4 class="students-count" v-else-if="studentsCount === 1">1 Student</h4>
@@ -27,6 +28,7 @@
                 </div>
             </div>
         </div>
+        </transition>
     </div>
 </template>
 
@@ -43,6 +45,7 @@
             }
         },
         created() {
+            console.log('ICourseStudent created');
             this.getInstructorStudents();
         },
         methods: {
@@ -78,6 +81,15 @@
 </script>
 
 <style scoped>
+    /* Transitions */
+    .fade-enter-active {
+        transition: all ease .5s;
+    }
+    .fade-enter, .fade-leave  {
+        opacity: 0;
+    }
+
+    /*  */
     .app-content {
         font-family: Helvetica, sans-serif;
         background-color: #fff; /*  #cfe3df;   */

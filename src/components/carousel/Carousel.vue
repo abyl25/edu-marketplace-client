@@ -20,7 +20,7 @@ export default {
     },
 
     mounted() {
-        this.slides = this.$children
+        this.slides = this.$children;
         this.slides.forEach((slide, i) => {
             slide.index = i
         })
@@ -32,21 +32,21 @@ export default {
 
     methods: {
         next() {
-            this.index++
-            this.direction = 'right'
+            this.index++;
+            this.direction = 'right';
             if(this.index >= this.slidesCount){
                 this.index = 0
             }
         },
         prev() {
-            this.index--
-            this.direction = 'left'
+            this.index--;
+            this.direction = 'left';
             if(this.index < 0){
                 this.index = this.slidesCount - 1
             }
         },
         goto(index) {
-            this.direction = index > this.index ? 'right' : 'left'
+            this.direction = index > this.index ? 'right' : 'left';
             this.index = index
         }
     }
@@ -54,6 +54,14 @@ export default {
 </script>
 
 <style scoped>
+    button:hover {
+        cursor: pointer;
+    }
+
+    button:focus {
+        outline: 0;
+    }
+
     .carousel {
         position: relative;
         overflow: hidden;
@@ -70,10 +78,6 @@ export default {
         border: none;
     }
 
-    button:focus {
-        outline: 0;
-    }    
-
     .carousel__nav.carousel__next {
         right: 10px;
         left: auto;
@@ -88,7 +92,7 @@ export default {
         text-align: center;
     }
 
-    .carousel__pagination button{
+    .carousel__pagination button {
         display: inline-block;
         width: 20px;
         height: 10px;

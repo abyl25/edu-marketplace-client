@@ -17,7 +17,7 @@ export default {
     },
     computed: {
         visible() {
-            return this.index == this.$parent.index
+            return this.index == this.$parent.index;
         },
         transition() {
             return 'slide-' + this.$parent.direction

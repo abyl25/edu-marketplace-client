@@ -13,7 +13,6 @@
                     <i class="fas fa-search"></i>
                 </button>
             </form>
-<!--            <button class="add-course-btn">Filter</button>-->
             <select name="" id="filter" class="select" @change="applyFilter($event)">
                 <option value="filter" selected>Sort</option>
                 <option value="sort-1">A-Z</option>
@@ -25,11 +24,13 @@
         <div v-if="!fetched">
             <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">
         </div>
-        <div v-if="fetched" class="instructor-courses-list">
-            <div v-bind:key="course.id" v-for="course in this.instrCourses">
-                <ICourseListItem v-bind:course="course"/>
+        <transition name="fade">
+            <div v-if="fetched" class="instructor-courses-list">
+                <div v-bind:key="course.id" v-for="course in this.instrCourses">
+                    <ICourseListItem v-bind:course="course"/>
+                </div>
             </div>
-        </div>
+        </transition>
     </div>
 </template>
 
@@ -89,6 +90,15 @@ export default {
 </script>
 
 <style scoped>
+    /* Transitions */
+    .fade-enter-active, .fade-leave-active {
+        transition: opacity ease .8s;
+    }
+    .fade-enter, .fade-leave-to {
+        opacity: 0
+    }
+
+    /*  */
     .container {
         font-family: open sans,helvetica neue,Helvetica,Arial,sans-serif;
         padding: 40px 90px;

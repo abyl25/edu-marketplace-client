@@ -1,5 +1,5 @@
 <template>
-  <div class="caraousel-container">
+    <div class="carousel-container">
         <carousel>
             <carousel-slide>
                 <!-- <div class="slide-text">Slide 1</div>  -->
@@ -35,18 +35,18 @@ export default {
 </script>
 
 <style>
+    .slide-text {
+        position: absolute;
+        left: 0;
+        right: 0;
+        text-align: center;
+        top: 50%;
+        color: #fff;
+        font-size: 16px;
+     }
 
-  .slide-text {
-    position: absolute;
-    left: 0;
-    right: 0;
-    text-align: center;
-    top: 50%;
-    color: #fff;
-    font-size: 16px;
-  }
-
-  .slide-img {
-    width: 100%;
-  }
+    .slide-img {
+        height: 91vh;
+        width: 100%;
+    }
 </style>
