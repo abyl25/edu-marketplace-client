@@ -21,7 +21,7 @@
 
 <style scoped>
     .btn {
-        /*border: none;*/
+        border: none;
         border-radius: 2px;
         color: #fff;
         text-align: center;

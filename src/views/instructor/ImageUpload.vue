@@ -1,9 +1,12 @@
 <template>
     <div class="container">
+        <div class="sub-header">
+            <h1 class="title">Upload Course Image</h1>
+        </div>
         <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
-            <h3>Upload Course Image</h3>
-            <div class="image-container">
+            <div class="image-container" v-if="selectedFile != null">
                 <img id="my_image" class="preview-image" src="" alt="">
+                <p>{{ selectedFile.name }}</p>
             </div>
             <div class="dropbox">
                 <input type="file" class="input-file" :name="uploadFieldName" :disabled="isSaving"
@@ -99,7 +102,22 @@
 </script>
 
 <style scoped>
-    .container {
+    /*.container {*/
+    /*    padding: 20px 50px;*/
+    /*}*/
+
+    .sub-header {
+        padding: 20px 50px;
+        border-bottom: 1px solid #dedfe0;  /* #fff; #dedfe0   */
+        text-align: left;
+    }
+
+    .title {
+        font-size: 24px;
+        font-weight: 300;
+    }
+
+    form {
         padding: 20px 50px;
     }
 
@@ -122,6 +140,7 @@
         background: lightcyan;
         color: dimgray;
         padding: 10px 10px;
+        margin-top: 15px;
         width: 97%;
         min-height: 200px; /* minimum height */
         position: relative;

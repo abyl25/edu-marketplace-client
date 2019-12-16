@@ -12,13 +12,15 @@
                 <div class="price">
                     <h2>Price: ${{ this.course.price }}</h2>
                 </div>
-                <div class="b1">
-                    <button v-if="!alreadyAddedToCart" class="addtocart" @click="addToCart">Add to cart</button>
-                    <router-link to="/cart" v-else class="addtocart">Go to cart</router-link>
-                </div>
-                <div class="b2">
-                    <button class="buynow" @click="registerToCourse">Register</button>
-                </div>
+                <template v-if="isStudent">
+                    <div class="b1">
+                        <button v-if="!alreadyAddedToCart" class="addtocart" @click="addToCart">Add to cart</button>
+                        <router-link to="/cart" v-else class="addtocart">Go to cart</router-link>
+                    </div>
+                    <div class="b2">
+                        <button class="buynow" @click="registerToCourse">Register</button>
+                    </div>
+                </template>
             </div>
         </div>
         <div class="learning">
@@ -122,7 +124,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['user', 'courses'])
+        ...mapGetters(['user', 'courses']),
+        isStudent() {
+            return this.user.roles[0].name === 'Student';
+        }
     }
 }
 </script>

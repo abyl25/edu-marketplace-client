@@ -21,24 +21,26 @@ import Checkout from "@/views/student/Checkout";
 import MyCourses from "@/views/student/MyCourses";
 import ICourseStudent from "@/views/instructor/ICourseStudent";
 import ImageUpload from "@/views/instructor/ImageUpload";
+import NotFound from "@/views/NotFound";
+import NotAuthorized from "@/views/NotAuthorized";
 
 Vue.use(Router);
 
-const ifNotAuthenticated = (to, from, next) => {
-    if (!store.getters.isAuthenticated) {
-        next();
-        return
-    }
-    next('/');
-};
-
-const ifAuthenticated = (to, from, next) => {
-    if (store.getters.isAuthenticated) {
-        next();
-        return
-    }
-    next('/login');
-};
+// const ifNotAuthenticated = (to, from, next) => {
+//     if (!store.getters.isAuthenticated) {
+//         next();
+//         return
+//     }
+//     next('/');
+// };
+//
+// const ifAuthenticated = (to, from, next) => {
+//     if (store.getters.isAuthenticated) {
+//         next();
+//         return
+//     }
+//     next('/login');
+// };
 
 const router = new Router({
   mode: 'history',
@@ -49,7 +51,7 @@ const router = new Router({
       name: 'CarouselContainer',
       component: CarouselContainer,
       meta: {
-          guest: true
+        guest: true
       }
     },
     {
@@ -64,9 +66,20 @@ const router = new Router({
       path: '/login',
       name: 'Login',
       component: Login,
-      beforeEnter: ifNotAuthenticated,
       meta: {
         guest: true
+      },
+      beforeEnter: (to, from, next) => {
+        if (store.getters.isAuthenticated) {
+          console.log('Authenticated');
+          console.log('to: ' + to.fullPath);
+          console.log('from path:' + from.fullPath);
+          console.log(from);
+          // next(from.fullPath);
+          next('/');
+        } else {
+          next();
+        }
       }
     },
     {
@@ -86,11 +99,17 @@ const router = new Router({
       path: '/courses/search',
       name: 'SearchCourse',
       component: SearchCourse,
+      meta: {
+        guest: true
+      }
     },
     {
       path: '/courses/:category',
       name: 'CoursesCat',
       component: CourseList,
+      meta: {
+        guest: true
+      }
     },
     {
       path: '/courses/:category/:subcategory',
@@ -104,21 +123,35 @@ const router = new Router({
       path: '/course/:id',
       name: 'CourseDetails',
       component: CourseDetails,
+      meta: {
+        guest: true
+      }
     },
     {
       path: '/instructor/home',
       name: 'Home',
       component: Home,
-      // beforeEnter: ifAuthenticated,
+      meta: {
+        requiresAuth: true,
+        isInstructor: true
+      },
     },
     {
       path: '/instructor/course/create',
       name: 'CreateCourse',
       component: CreateCourse,
+      meta: {
+        requiresAuth: true,
+        isInstructor: true
+      },
     },
     {
       path: '/instructor/course/:id',
       component: ICourseManage,
+      meta: {
+        requiresAuth: true,
+        isInstructor: true
+      },
       children: [
         {
           path: 'main',
@@ -150,25 +183,92 @@ const router = new Router({
       path: '/student/home',
       name: 'StudentHome',
       component: StudentHome,
-      // beforeEnter: ifAuthenticated,
+      meta: {
+        requiresAuth: true,
+        isStudent: true
+      }
     },
     {
       path: '/home/my-courses',
       name: 'MyCourses',
-      component: MyCourses
+      component: MyCourses,
+      meta: {
+        requiresAuth: true,
+        isStudent: true
+      }
     },
     {
-        path: '/cart/checkout',
-        name: 'Checkout',
-        component: Checkout,
+      path: '/cart/checkout',
+      name: 'Checkout',
+      component: Checkout,
+      meta: {
+        requiresAuth: true,
+        isStudent: true
+      }
     },
     {
       path: '/cart',
       name: 'Cart',
       component: Cart,
+      meta: {
+        requiresAuth: true,
+        isStudent: true
+      }
+    },
+    {
+      path: '/403',
+      name: 'NotAuthorized',
+      component: NotAuthorized,
+      meta: {
+        guest: true
+      }
+    },
+    {
+      path: '/404',
+      name: 'NotFound',
+      component: NotFound,
+      meta: {
+        guest: true
+      }
+    },
+    {
+      path: '*',
+      redirect: '/404'
     }
-
   ]
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    if (!store.getters.isAuthenticated) {
+      next({
+        path: '/login',
+        query: { redirect: to.fullPath }
+      });
+    } else {
+      if (to.matched.some(record => record.meta.isStudent)) {
+        if (store.getters.user.roles[0].name === 'Student'){
+          next();
+        } else{
+          next({ path: '/403'})
+        }
+      } else if (to.matched.some(record => record.meta.isInstructor)) {
+        if (store.getters.user.roles[0].name === 'Instructor'){
+          next();
+        } else {
+          next('/403');
+        }
+      } else if (to.matched.some(record => record.meta.isAdmin)) {
+        if (store.getters.user.roles[0].name === 'Admin'){
+          next();
+        } else {
+          next('/403');
+        }
+      }
+    }
+  } else if (to.matched.some(record => record.meta.guest)) {
+    next();
+  }
 });
 
 export default router;

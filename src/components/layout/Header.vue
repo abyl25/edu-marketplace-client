@@ -50,13 +50,15 @@
                     <li><router-link to="/signup">Sign up</router-link></li>
                 </template>
                 <template v-if="this.isAuthenticated">
-                    <li><router-link to="/cart" class="cart-link">
-                        <div class="cart-badge-container">
-                            <img src="../../assets/icons8-shopping-cart-35-white.png">
-                            <span class="badge" v-if="cartItemsLength > 0">{{ cartItemsLength }}</span>
-                        </div>
-                    </router-link></li>
-                    <li><router-link to="/home/my-courses">My Courses</router-link></li>
+                    <template v-if="isStudent"> <!--  -->
+                        <li><router-link to="/cart" class="cart-link">
+                            <div class="cart-badge-container">
+                                <img src="../../assets/icons8-shopping-cart-35-white.png">
+                                <span class="badge" v-if="cartItemsLength > 0">{{ cartItemsLength }}</span>
+                            </div>
+                        </router-link></li>
+                        <li><router-link to="/home/my-courses">My Courses</router-link></li>
+                    </template>
                     <li><router-link :to="{ path: this.homePage }">{{ user.userName }}</router-link></li>
                     <li><p class="logout-btn" @click="logout">Log out</p></li>
                 </template>
@@ -98,6 +100,9 @@ export default {
                 return this.user.cart.cartItems.length;
             }
             return 0;
+        },
+        isStudent() {
+            return this.user.roles[0].name === 'Student';
         }
     }
 }
