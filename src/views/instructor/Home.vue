@@ -24,15 +24,24 @@
         </div>
         <transition name="fade">
             <div v-if="fetched" class="instructor-courses-list">
-                <div v-bind:key="course.id" v-for="course in this.instrCourses">
+                <div v-bind:key="course.id" v-for="course in this.courses">
                     <ICourseListItem v-bind:course="course"/>
                 </div>
+                <paginate
+                    v-model="selectedPage"
+                    :page-count="count"
+                    :click-handler="getCoursesByPage"
+                    :prev-text="'Prev'"
+                    :next-text="'Next'"
+                    :container-class="'pagination'">
+                </paginate>
             </div>
         </transition>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
 import { INSTR_COURSES_REQUEST } from "@/store/actions";
 import { mapGetters } from 'vuex';
 import ICourseListItem from "@/views/instructor/ICourseListItem";
@@ -47,11 +56,20 @@ export default {
     data() {
         return {
             fetched: false,
-            courses: []
+            selectedPage: 1,
+            count: 0,
+            courses: [],
         }
     },
     created() {
-        this.getInstructorCourses();
+        // this.getInstructorCourses();
+        this.getCoursesCount();
+        if (this.$route.query.p !== undefined) {
+            this.selectedPage = this.$route.query.p;
+            this.getCoursesByPage(this.selectedPage);
+        } else {
+            this.getCoursesByPage(1);
+        }
     },
     methods: {
         navigateToCreateCoursePage() {
@@ -60,11 +78,34 @@ export default {
         searchCourses(e) {
             e.preventDefault();
         },
+        getCoursesCount() {
+            axios.get(`${process.env.VUE_APP_API}/api/instructor/${this.user.id}/courses/count`)
+                .then(res => {
+                    console.log(res.data);
+                    this.count = Math.ceil(res.data/10);
+                })
+                .catch(err => console.log(err));
+        },
         getInstructorCourses() {
             const instructorID = this.user.id;
             this.$store.dispatch(INSTR_COURSES_REQUEST, instructorID)
                 .then(res => {
                     console.log(res.data);
+                    this.fetched = true;
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.fetched = true;
+                });
+        },
+        getCoursesByPage(pageNum) {
+            this.$router.push({path: this.$route.path, query: { p: pageNum }});
+            // const startIndex = ((pageNum - 1) * 10) + 1;
+            // const lastIndex = Math.min(pageNum * 10, this.count);
+            axios.get(`${process.env.VUE_APP_API}/api/instructor/${this.user.id}/courses?page=${pageNum-1}`)
+                .then(res => {
+                    console.log(res.data);
+                    this.courses = res.data;
                     this.fetched = true;
                 })
                 .catch(err => {
@@ -87,7 +128,10 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['user', 'isAuthenticated', 'instrCourses'])
+        ...mapGetters(['user', 'isAuthenticated', 'instrCourses']),
+        coursesLength() {
+            return this.instrCourses.length;
+        }
     }
   }
 </script>

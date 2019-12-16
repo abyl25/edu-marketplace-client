@@ -6,6 +6,7 @@ import CKEditor from '@ckeditor/ckeditor5-vue'
 import axios from 'axios';
 import { AUTH_LOGOUT } from "@/store/actions";
 
+Vue.component('paginate', VuejsPaginate);
 Vue.use(CKEditor);
 Vue.config.productionTip = false;
 

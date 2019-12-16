@@ -24,6 +24,14 @@
                 </div>
             </div>
         </transition>
+        <paginate
+            v-model="selectedPage"
+            :page-count="count"
+            :click-handler="getCoursesByPage"
+            :prev-text="'Prev'"
+            :next-text="'Next'"
+            :container-class="'pagination'">
+        </paginate>
     </div>
 </template>
 
@@ -40,7 +48,9 @@ export default {
     data() {
         return {
             fetched: false,
-            message: ''
+            message: '',
+            count: 0,
+            selectedPage: 1,
         }
     },
     created() {
@@ -89,6 +99,8 @@ export default {
                     }
                 });
         },
+        getCoursesByPage(pageNum) {
+        },
         applyFilter(e) {
             const selectedFilter = e.target.value;
             console.log(selectedFilter);
@@ -118,7 +130,13 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['courses'])
+        ...mapGetters(['courses']),
+        coursesLength() {
+            return this.courses.length;
+        },
+        pageCount() {
+            return Math.ceil(this.courses.length/10);
+        }
     }
 
 }

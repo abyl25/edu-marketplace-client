@@ -26,22 +26,6 @@ import NotAuthorized from "@/views/NotAuthorized";
 
 Vue.use(Router);
 
-// const ifNotAuthenticated = (to, from, next) => {
-//     if (!store.getters.isAuthenticated) {
-//         next();
-//         return
-//     }
-//     next('/');
-// };
-//
-// const ifAuthenticated = (to, from, next) => {
-//     if (store.getters.isAuthenticated) {
-//         next();
-//         return
-//     }
-//     next('/login');
-// };
-
 const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
@@ -71,11 +55,6 @@ const router = new Router({
       },
       beforeEnter: (to, from, next) => {
         if (store.getters.isAuthenticated) {
-          console.log('Authenticated');
-          console.log('to: ' + to.fullPath);
-          console.log('from path:' + from.fullPath);
-          console.log(from);
-          // next(from.fullPath);
           next('/');
         } else {
           next();
