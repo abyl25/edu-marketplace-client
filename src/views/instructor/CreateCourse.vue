@@ -9,9 +9,8 @@
                 <input type="text" id="subtitle" v-model="subtitle" placeholder="Subtitle.." autocomplete="off">
 
                 <label>Description</label>
-<!--                <textarea id="description" v-model="description" placeholder="Write description.." autocomplete="off" style="height:200px"></textarea>-->
                 <div class="editor">
-                    <ckeditor :editor="editor" v-model="editorData" :config="editorConfig"></ckeditor>
+                    <froala id="edit" :tag="'textarea'" :config="config" v-model="description"></froala>
                 </div>
                 <label for="price">Price</label>
                 <input type="number" id="price" v-model="price" placeholder="Price" autocomplete="off">
@@ -76,6 +75,13 @@
                         <option value="Angular">Angular</option>
                     </select>
                 </div>
+                <div>
+<!--                    <multiselect v-model="value" :options="options"></multiselect>-->
+                    <multiselect v-model="value" :options="options" :multiple="true" group-values="libs" group-label="language"
+                        :group-select="true" placeholder="Type to search" track-by="name" label="name">
+                        <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>
+                    </multiselect>
+                </div>
                 <input type="submit" value="Create">
             </form>
         </div>
@@ -84,7 +90,6 @@
 
 <script>
   import axios from 'axios';
-  import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
   import { INSTR_COURSE_CREATE_REQUEST } from "@/store/actions";
   import { mapGetters } from 'vuex';
 
@@ -94,11 +99,12 @@
     },
     data() {
       return {
-        editor: ClassicEditor,
-        editorData: '',
-        editorConfig: {
-          // The configuration of the editor.
+        // Froala editor data
+        config: {
+          placeholderText: 'Edit Your Content Here!',
         },
+        model: '',
+        // other data
         title: '',
         subtitle: '',
         description: '',
@@ -107,7 +113,33 @@
         category: '',
         subcategory: '',
         topic: '',
-        price: ''
+        price: '',
+        // vue-select
+        value: [],
+        options: [
+          {
+            language: 'Javascript',
+            libs: [
+              { name: 'Vue.js', category: 'Front-end' },
+              { name: 'Adonis', category: 'Backend' }
+            ]
+          },
+          {
+            language: 'Ruby',
+            libs: [
+              { name: 'Rails', category: 'Backend' },
+              { name: 'Sinatra', category: 'Backend' }
+            ]
+          },
+          {
+            language: 'Other',
+            libs: [
+              { name: 'Laravel', category: 'Backend' },
+              { name: 'Phoenix', category: 'Backend' }
+            ]
+          }
+        ]
+
       }
     },
     methods: {
@@ -117,7 +149,7 @@
           instructorId: this.user.id,
           title: this.title,
           subtitle: this.subtitle,
-          description: this.editorData,
+          description: this.description,
           price: this.price,
           language: this.language,
           level: this.level,
@@ -141,6 +173,8 @@
     },
   }
 </script>
+
+<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
     .editor {

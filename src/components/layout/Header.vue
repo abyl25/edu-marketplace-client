@@ -57,29 +57,79 @@
                                 <span class="badge" v-if="cartItemsLength > 0">{{ cartItemsLength }}</span>
                             </div>
                         </router-link></li>
-                        <li><router-link to="/home/my-courses">My Courses</router-link></li>
+<!--                        <li><router-link to="/home/my-courses">My Courses</router-link></li>-->
+                        <Dropdown :name="user.userName" :items="studentItems" :onClick="onClick" />
                     </template>
-                    <li><router-link :to="{ path: this.homePage }">{{ user.userName }}</router-link></li>
-                    <li><p class="logout-btn" @click="logout">Log out</p></li>
+<!--                    <template v-if="isStudent">-->
+<!--                        <Dropdown :name="user.userName" :items="studentItems" :onClick="onClick" />-->
+<!--                    </template>-->
+                    <template v-else>
+                        <Dropdown :name="user.userName" :items="instructorItems" :onClick="onClick" />
+                    </template>
                 </template>
             </ul>
         </nav>
-        <div class="menu-toggle" v-on:click="toggle"> <i class="fa fa-bars" aria-hidden="true"></i></div>
+        <div class="menu-toggle" v-on:click="toggle"><i class="fa fa-bars" aria-hidden="true"></i></div>
     </header>
+<!--    <vue-navigation-bar :options="navbarOptions" />-->
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
 import { AUTH_LOGOUT } from '../../store/actions';
+import Dropdown from "@/components/layout/Dropdown";
+// import "vue-navigation-bar/dist/vue-navigation-bar.css";
+// import VueNavigationBar from "vue-navigation-bar";
 
 export default {
     name: "Header",
+    components: {
+        // "vue-navigation-bar": VueNavigationBar,
+        Dropdown
+    },
     data() {
         return {
-            searchText: ''
+            searchText: '',
+            studentItems: [
+                {
+                    text: 'Home',
+                    link: '/home'
+                }, {
+                    text: 'Profile',
+                    link: '/profile'
+                }, {
+                    text: 'My Courses',
+                    link: '/home/my-courses'
+                }, {
+                    text: 'Cart',
+                    link: '/cart'
+                }, {
+                    text: 'Log out',
+                    link: '/logout'
+                }
+            ],
+            instructorItems: [
+                {
+                    text: 'Home',
+                    link: '/instructor/home'
+                }, {
+                    text: 'Profile',
+                    link: '/instructor/profile'
+                }, {
+                    text: 'Log out',
+                    link: '/logout'
+                }
+            ]
         }
     },
     methods: {
+        onClick(item) {
+            if (item.link === '/logout') {
+                this.logout();
+            } else {
+                this.$router.push(item.link);
+            }
+        },
         toggle(){
             document.getElementById("navbar").classList.toggle('active');
         },

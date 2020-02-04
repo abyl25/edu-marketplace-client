@@ -23,6 +23,8 @@ import ICourseStudent from "@/views/instructor/ICourseStudent";
 import ImageUpload from "@/views/instructor/ImageUpload";
 import NotFound from "@/views/NotFound";
 import NotAuthorized from "@/views/NotAuthorized";
+import LearnPage from "@/views/LearnPage";
+import FileUpload from "@/views/instructor/FileUpload";
 
 Vue.use(Router);
 
@@ -107,6 +109,14 @@ const router = new Router({
       }
     },
     {
+      path: '/learn',
+      name: 'LearnPage',
+      component: LearnPage,
+      meta: {
+        guest: true
+      }
+    },
+    {
       path: '/instructor/home',
       name: 'Home',
       component: Home,
@@ -141,6 +151,10 @@ const router = new Router({
           component: ImageUpload
         },
         {
+          path: 'files',
+          component: FileUpload
+        },
+        {
           path: 'target',
           component: CourseTarget
         },
@@ -159,9 +173,16 @@ const router = new Router({
       ]
     },
     {
-      path: '/student/home',
+      path: '/home',
       name: 'StudentHome',
       component: StudentHome,
+      // get component() {
+      //   if (store.getters.user.roles[0].name === 'Student') {
+      //     return StudentHome;
+      //   } else {
+      //     return Home;
+      //   }
+      // },
       meta: {
         requiresAuth: true,
         isStudent: true

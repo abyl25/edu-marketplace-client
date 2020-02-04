@@ -1,46 +1,132 @@
 <template>
-    <div class="course-manage-container">
-        <div class="back-link-wrapper">
-            <router-link :to="{ path: '/instructor/home' }" class="back-link">
-                <i class="fas fa-chevron-left" style="color: red"></i> Home
-            </router-link>
+    <transition name="fade">
+        <div v-if="notAuthorized">
+            <NotAuthorized/>
         </div>
-        <div class="sidebar">
-            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/main' }" class="sidebar-el">
-                <span class="icon"><i class="fa fa-fw fa-home"></i></span> Course info
-            </router-link>
-            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/image' }" class="sidebar-el">
-                <img src="../../assets/icons8-image-24.png" alt="" style="vertical-align: middle"> Course image
-            </router-link>
-            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/target' }" class="sidebar-el">
-                <img src="../../assets/icons8-goal2-23-6d736f.png" alt="" style="vertical-align: middle"> Course target
-            </router-link>
-            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/curriculum' }" class="sidebar-el">
-                <img src="../../assets/icons8-table-of-content-24.png" alt="" style="vertical-align: middle"> Curriculum
-            </router-link>
-            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/students' }" class="sidebar-el">
-                <img src="../../assets/icons8-students-24.png" alt="" style="vertical-align: middle"> My Students
-            </router-link>
-            <router-link :to="{ path: '/instructor/course/' + this.$route.params.id + '/settings' }" class="sidebar-el">
-                <img src="../../assets/icons8-gear-25.png" alt="" style="vertical-align: middle"> Settings
-            </router-link>
+        <div v-else-if="notFound">
+            <NotFound/>
         </div>
-        <div class="main-content">
-            <router-view></router-view>
+        <div class="course-manage-container" v-else>
+            <div class="back-link-wrapper">
+                <router-link :to="{ path: '/instructor/home' }" class="back-link">
+                    <i class="fas fa-chevron-left" style="color: red"></i> Home
+                </router-link>
+            </div>
+            <div class="sidebar">
+                <span class="sidebar-el" v-bind:key="item.id" v-for="item in items" :class="{active: activeElementId === item.id}" v-on:click="activate(item.id, item.link)">
+                    <img :src="getImageUrl(item.image)" alt="" style="vertical-align: -5px"> {{ item.text }}
+                </span>
+            </div>
+            <div class="main-content">
+                <router-view @notAuthorized="handleNotAuthorized" @notFound="handleNotFound"></router-view>
+            </div>
         </div>
-    </div>
+    </transition>
 </template>
 
 <script>
+    import axios from 'axios';
+    import { mapGetters } from 'vuex';
+    import NotAuthorized from "@/views/NotAuthorized";
+    import NotFound from "@/views/NotFound";
+
     export default {
         name: "ICourseManage",
+        components: {
+            NotAuthorized, NotFound
+        },
+        data() {
+            return {
+                notAuthorized: false,
+                notFound: false,
+                activeElementId: 1,
+                items: [{
+                    id: 1,
+                    text: 'Course info',
+                    link: '/instructor/course/' + this.$route.params.id + '/main',
+                    image: 'home_24_6d736f.png'
+                }, {
+                    id: 2,
+                    text: 'Course image',
+                    link: '/instructor/course/' + this.$route.params.id + '/image',
+                    image: 'icons8-image-24.png'
+                }, {
+                    id: 3,
+                    text: 'Course files',
+                    link: '/instructor/course/' + this.$route.params.id + '/files',
+                    image: 'icons8-image-24.png'
+                }, {
+                    id: 4,
+                    text: 'Course target',
+                    link: '/instructor/course/' + this.$route.params.id + '/target',
+                    image: 'icons8-goal2-23-6d736f.png'
+                }, {
+                    id: 5,
+                    text: 'Curriculum',
+                    link: '/instructor/course/' + this.$route.params.id + '/curriculum',
+                    image: 'icons8-table-of-content-24.png'
+                }, {
+                    id: 6,
+                    text: 'My Students',
+                    link: '/instructor/course/' + this.$route.params.id + '/students',
+                    image: 'icons8-students-24.png'
+                }, {
+                    id: 7,
+                    text: 'Settings',
+                    link: '/instructor/course/' + this.$route.params.id + '/settings',
+                    image: 'icons8-gear-25.png'
+                }]
+            }
+        },
         created() {
             console.log('ICourseManage created');
+            // this.checkIfAuthorized();
+        },
+        methods: {
+            activate(id, link) {
+                this.activeElementId = id;
+                this.$router.push(link).catch(err => {});
+            },
+            getImageUrl(img) {
+                return require('../../assets/' + img);
+            },
+            // checkIfAuthorized() {
+            //     console.log('checkIfAuthorized()');
+            //     axios.get(process.env.VUE_APP_API + `/api/instructor/${this.user.id}/courses/${this.$route.params.id}/checkAccess`)
+            //         .then(res =>
+            //             console.log(res)
+            //         ).catch(err => {
+            //             console.log(err.response.data);
+            //             if (err.response.data === true) {
+            //                 console.log('setting notAuthorized');
+            //                 this.notAuthorized = true;
+            //                 // this.$emit('notAuthorized');
+            //             }
+            //             console.log(err);
+            //         });
+            // },
+            handleNotAuthorized() {
+                this.notAuthorized = true;
+            },
+            handleNotFound() {
+                this.notFound = true;
+            }
+        },
+        computed: {
+            ...mapGetters(['user']),
         }
     }
 </script>
 
 <style scoped>
+    /* Transitions */
+    .fade-enter-active {
+        transition: all ease .5s;
+    }
+    .fade-enter, .fade-leave {
+        opacity: 0;
+    }
+
     /*  */
     .course-manage-container {
         display: flex;
@@ -68,18 +154,16 @@
         text-align: left;
         color: #57635b;  /*  #6d736f;  */
         font-size: 17px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .active {
+        background-color: #aaded6;  /* #a3c2bd; */
     }
 
     .icon {
         color: #6d736f;
-    }
-
-    /*.sidebar-el:focus {*/
-    /*    background-color: #a3c2bd;  !* #8E8A84; #ec5252; *!*/
-    /*}*/
-
-    .active {
-        background-color: #a3c2bd;
     }
 
     .main-content {

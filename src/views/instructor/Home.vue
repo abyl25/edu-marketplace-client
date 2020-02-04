@@ -65,7 +65,7 @@ export default {
         // this.getInstructorCourses();
         this.getCoursesCount();
         if (this.$route.query.p !== undefined) {
-            this.selectedPage = this.$route.query.p;
+            this.selectedPage = parseInt(this.$route.query.p);
             this.getCoursesByPage(this.selectedPage);
         } else {
             this.getCoursesByPage(1);
@@ -77,6 +77,10 @@ export default {
         },
         searchCourses(e) {
             e.preventDefault();
+        },
+        clickHandler(pageNum) {
+            console.log('page clicked');
+            this.$router.push({path: this.$route.path, query: { p: pageNum }});
         },
         getCoursesCount() {
             axios.get(`${process.env.VUE_APP_API}/api/instructor/${this.user.id}/courses/count`)
@@ -99,7 +103,7 @@ export default {
                 });
         },
         getCoursesByPage(pageNum) {
-            this.$router.push({path: this.$route.path, query: { p: pageNum }});
+            this.$router.push({path: this.$route.path, query: { p: pageNum }}).catch(err => {});
             // const startIndex = ((pageNum - 1) * 10) + 1;
             // const lastIndex = Math.min(pageNum * 10, this.count);
             axios.get(`${process.env.VUE_APP_API}/api/instructor/${this.user.id}/courses?page=${pageNum-1}`)
@@ -127,6 +131,16 @@ export default {
             }
         }
     },
+    // watch: {
+    //     $route(to, from) {
+    //         const page = to.query.p;
+    //         console.log('page: ' + page);
+    //         if (page !== undefined) {
+    //             console.log('page !== undefined');
+    //             this.getCoursesByPage(page);
+    //         }
+    //     }
+    // },
     computed: {
         ...mapGetters(['user', 'isAuthenticated', 'instrCourses']),
         coursesLength() {

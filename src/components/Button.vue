@@ -34,9 +34,33 @@
 
     .green {
         background-color: #4CAF50;
+        transition: background-color 0.15s;
     }
     .green:hover {
         background-color: #4CA333; /*  #45a049; */
+    }
+
+    .red-btn {
+        background-color: #E14732;
+        transition: background-color 0.15s;
+    }
+    .red-btn:hover {
+        background-color: #E11C20; /*  #45a049; */
+    }
+
+    .grey-btn {
+        background-color: #b3c9c5;
+        transition: background-color 0.15s;
+    }
+    .grey-btn:hover {
+        background-color: #8e9e9b;
+    }
+
+    .std-btn {
+        border-radius: 4px;
+        width: 20%;
+        margin-top: 20px;
+        padding: 10px 15px;
     }
 
     .edit-btn {

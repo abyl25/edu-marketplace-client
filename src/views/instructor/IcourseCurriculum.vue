@@ -1,6 +1,9 @@
 <template>
     <div>
-        <h2>ICourseCurriculum</h2>
+<!--        <h2>ICourseCurriculum</h2>-->
+        <div class="sub-header">
+            <h1 class="title">Course Curriculum</h1>
+        </div>
         <div class="container">
             <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
                 <h3>Upload images</h3>
@@ -128,6 +131,18 @@ export default {
 </script>
 
 <style scoped>
+    .sub-header {
+        padding: 20px 50px;
+        border-bottom: 1px solid #dedfe0;  /* #fff; #dedfe0   */
+        text-align: left;
+    }
+
+    .title {
+        font-size: 24px;
+        font-weight: 300;
+    }
+
+
     /*.container {*/
     /*    padding: 20px;*/
     /*}*/

@@ -22,16 +22,16 @@
                 <div v-bind:key="course.id" v-for="course in this.courses">
                     <CourseItem v-bind:course="course"/>
                 </div>
+                <paginate
+                        v-model="selectedPage"
+                        :page-count="count"
+                        :click-handler="getCoursesByPage"
+                        :prev-text="'Prev'"
+                        :next-text="'Next'"
+                        :container-class="'pagination'">
+                </paginate>
             </div>
         </transition>
-        <paginate
-            v-model="selectedPage"
-            :page-count="count"
-            :click-handler="getCoursesByPage"
-            :prev-text="'Prev'"
-            :next-text="'Next'"
-            :container-class="'pagination'">
-        </paginate>
     </div>
 </template>
 
@@ -73,11 +73,11 @@ export default {
                     this.fetched = true;
                 })
                 .catch(err => {
+                    this.fetched = true;
                     console.log(err);
                     console.log(err.response.data);
                     if (err.response.status === 404) {
                         this.message = err.response.data;
-                        this.fetched = true;
                     }
                 });
         },
@@ -91,11 +91,11 @@ export default {
                     this.fetched = true;
                 })
                 .catch(err => {
+                    this.fetched = true;
                     console.log(err);
                     console.log(err.response.data);
                     if (err.response.status === 404) {
                         this.message = err.response.data;
-                        this.fetched = true;
                     }
                 });
         },
