@@ -72,6 +72,14 @@ export default {
         await this.getCourseDetails();
         this.checkIfAlreadyAddedToCart();
     },
+    notifications: {
+        showToast: {
+            title: 'Success',
+            message: 'Course Edited!',
+            type: 'success', // VueNotifications.types.success,
+            timeout: 2000
+        }
+    },
     methods: {
         checkIfAlreadyAddedToCart() {
             console.log(this.user.cart);
@@ -107,6 +115,12 @@ export default {
                 .then(res => {
                     console.log(res.data);
                     this.alreadyAddedToCart = true;
+                    this.showToast({
+                        title: 'Course Added to Cart',
+                        message: '',
+                        type: 'success',
+                        timeout: 2000
+                    });
                 })
                 .catch(err => { console.log(err); console.log(err.response.data); });
         },
@@ -119,8 +133,33 @@ export default {
             this.$store.dispatch(REGISTER_TO_COURSE_REQUEST, payload)
                 .then(res => {
                     console.log(res.data);
+                    this.showToast({
+                        title: 'Course Registered',
+                        message: '',
+                        type: 'success',
+                        timeout: 2000
+                    });
                 })
-                .catch(err => { console.log(err); console.log(err.response.data); });
+                .catch(err => {
+                    console.log(err);
+                    console.log(err.response.data);
+                    if (err.response.data === 'Student already purchased this course') {
+                        this.showToast({
+                            title: 'Registration Failure',
+                            message: 'Already registered to this course',
+                            type: 'error',
+                            timeout: 2000
+                        });
+                    } else {
+                        this.showToast({
+                            title: 'Registration Failure',
+                            message: '',
+                            type: 'error',
+                            timeout: 2000
+                        });
+                    }
+
+                });
         }
     },
     computed: {

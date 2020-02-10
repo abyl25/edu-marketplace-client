@@ -36,6 +36,7 @@
             NotAuthorized, NotFound
         },
         data() {
+            const basePath = '/instructor/course/' + this.$route.params.id;
             return {
                 notAuthorized: false,
                 notFound: false,
@@ -43,37 +44,44 @@
                 items: [{
                     id: 1,
                     text: 'Course info',
-                    link: '/instructor/course/' + this.$route.params.id + '/main',
-                    image: 'home_24_6d736f.png'
+                    path: 'main',
+                    link: basePath + '/main',
+                    image: 'home_24_6d736f.png',
                 }, {
                     id: 2,
                     text: 'Course image',
-                    link: '/instructor/course/' + this.$route.params.id + '/image',
+                    path: 'image',
+                    link: basePath + '/image',
                     image: 'icons8-image-24.png'
                 }, {
                     id: 3,
                     text: 'Course files',
-                    link: '/instructor/course/' + this.$route.params.id + '/files',
+                    path: 'files',
+                    link: basePath + '/files',
                     image: 'icons8-image-24.png'
                 }, {
                     id: 4,
                     text: 'Course target',
-                    link: '/instructor/course/' + this.$route.params.id + '/target',
+                    path: 'target',
+                    link: basePath + '/target',
                     image: 'icons8-goal2-23-6d736f.png'
                 }, {
                     id: 5,
                     text: 'Curriculum',
-                    link: '/instructor/course/' + this.$route.params.id + '/curriculum',
+                    path: 'curriculum',
+                    link: basePath + '/curriculum',
                     image: 'icons8-table-of-content-24.png'
                 }, {
                     id: 6,
                     text: 'My Students',
-                    link: '/instructor/course/' + this.$route.params.id + '/students',
+                    path: 'students',
+                    link: basePath + '/students',
                     image: 'icons8-students-24.png'
                 }, {
                     id: 7,
                     text: 'Settings',
-                    link: '/instructor/course/' + this.$route.params.id + '/settings',
+                    path: 'settings',
+                    link: basePath + '/settings',
                     image: 'icons8-gear-25.png'
                 }]
             }
@@ -81,8 +89,20 @@
         created() {
             console.log('ICourseManage created');
             // this.checkIfAuthorized();
+            this.setSidebarActiveElement();
         },
         methods: {
+            setSidebarActiveElement() {
+                const currentPathName = this.$route.path.split('/').slice(-1)[0];
+                let currentId;
+                for (let i = 0; i < this.items.length; i++) {
+                    if (this.items[i].path === currentPathName) {
+                        currentId = this.items[i].id;
+                        break;
+                    }
+                }
+                this.activeElementId = currentId;
+            },
             activate(id, link) {
                 this.activeElementId = id;
                 this.$router.push(link).catch(err => {});

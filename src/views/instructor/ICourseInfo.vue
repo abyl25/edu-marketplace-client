@@ -122,6 +122,20 @@
             NotAuthorized,
             'v-button': Button
         },
+        notifications: {
+            showEditError: {
+                title: 'Error',
+                message: 'Course Edit Failed',
+                type: 'error', // You also can use 'VueNotifications.types.error' instead of 'error'
+                timeout: 2000
+            },
+            showEditSuccess: {
+                title: 'Success',
+                message: 'Course Edited!',
+                type: 'success', // VueNotifications.types.success,
+                timeout: 2000
+            }
+        },
         data() {
             return {
                 // Froala editor data
@@ -248,10 +262,17 @@
                     .then(res => {
                         console.log(res.data);
                         // this.$router.push('/instructor/home');
+                        this.showEditSuccess();
                     })
                     .catch(err => {
                         console.log(err);
                         console.log(err.response.data);
+                        this.showEditError({
+                            title: 'Course Edit Failed',
+                            message: err.response.data.errors.title,
+                            type: 'error',
+                            timeout: 2000
+                        });
                     });
             },
         },
