@@ -76,7 +76,7 @@
                         'Referer': 'course'
                     }
                 };
-                axios.post(`http://37.18.30.105:6600/api/upload/image`, fd, config)
+                axios.post(`http://192.168.43.59:6010/api/upload/image`, fd, config)
                     .then(res => {
                         console.log('uploaded');
                         console.log(res.data);

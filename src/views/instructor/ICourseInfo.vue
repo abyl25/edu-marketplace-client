@@ -9,16 +9,35 @@
             </div>
             <div class="add-form">
                 <form @submit="editCourse">
-                    <label for="title">Title</label>
-                    <input type="text" id="title" v-model="course.title" placeholder="Title.." autocomplete="off">
-
-                    <label for="subtitle">Subtitle</label>
-                    <input type="text" id="subtitle" v-model="course.subtitle" placeholder="Subtitle.." autocomplete="off">
-
-                    <label>Description</label>
-                    <div class="editor">
-                        <froala id="edit" :tag="'textarea'" :config="config" v-model="course.description"></froala>
+                    <div class="form-ctrl">
+                        <label for="title">Title</label>
+                        <input type="text" id="title" v-model="course.title" placeholder="Title.." autocomplete="off">
+                        <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('title')" class="error">{{ errors.title }} </p>
                     </div>
+<!--                    <label for="title">Title</label>-->
+<!--                    <input type="text" id="title" v-model="course.title" placeholder="Title.." autocomplete="off">-->
+
+                    <div class="form-ctrl">
+                        <label for="subtitle">Subtitle</label>
+                        <input type="text" id="subtitle" v-model="course.subtitle" placeholder="Subtitle.." autocomplete="off">
+                        <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('subtitle')" class="error">{{ errors.subtitle }} </p>
+                    </div>
+<!--                    <label for="subtitle">Subtitle</label>-->
+<!--                    <input type="text" id="subtitle" v-model="course.subtitle" placeholder="Subtitle.." autocomplete="off">-->
+
+                    <div class="form-ctrl">
+                        <p class="description-label">Description</p>
+<!--                        <label for="description">Description</label>-->
+<!--                        <input type="text" id="description" style="opacity: 0">-->
+                        <div class="editor">
+                            <froala id="edit" :tag="'textarea'" :config="config" v-model="course.description"></froala>
+                        </div>
+                        <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('description')" class="error">{{ errors.description }} </p>
+                    </div>
+<!--                    <label>Description</label>-->
+<!--                    <div class="editor">-->
+<!--                        <froala id="edit" :tag="'textarea'" :config="config" v-model="course.description"></froala>-->
+<!--                    </div>-->
 
                     <div class="select-wrapper"> <!--  select-wrapper  -->
                         <div class="select-left">  <!--  select-left  -->
@@ -28,6 +47,7 @@
                                 <option value="Russian">Russian</option>
                                 <option value="English">English</option>
                             </select>
+                            <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('language')" class="error">{{ errors.language }} </p>
 <!--                            <multiselect id="language" v-model="course.language" :options="languageOptions"-->
 <!--                                 :searchable="true" :close-on-select="true" :show-labels="false" placeholder="Pick a value">-->
 <!--                            </multiselect>-->
@@ -40,6 +60,7 @@
                                 <option value="Intermediate">Intermediate</option>
                                 <option value="Advanced">Advanced</option>
                             </select>
+                            <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('level')" class="error">{{ errors.level }} </p>
 <!--                            <multiselect id="level" v-model="course.level" :options="levelOptions"-->
 <!--                                 :searchable="true" :close-on-select="true" :show-labels="false" placeholder="Pick a value">-->
 <!--                            </multiselect>-->
@@ -54,6 +75,7 @@
                                 <option value="Business">Business</option>
                                 <option value="Design">Design</option>
                             </select>
+                            <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('category')" class="error">{{ errors.category }} </p>
 <!--                            <multiselect id="category" v-model="course.category.parent.name" :options="categoryOptions" @select="onCategorySelect"-->
 <!--                                 :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Pick a value">-->
 <!--                            </multiselect>-->
@@ -81,6 +103,7 @@
                                     <option value="Fashion">Fashion</option>
                                 </template>
                             </select>
+                            <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('subcategory')" class="error">{{ errors.subcategory }} </p>
                         </div>
                     </div>
                     <div class="select-wrapper">
@@ -97,10 +120,12 @@
                                     <option value="Angular">Angular</option>
                                 </template>
                             </select>
+                            <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('topic')" class="error">{{ errors.topic }} </p>
                         </div>
                         <div class="select-right">
                             <label for="price">Price</label>
                             <input type="number" id="price" v-model="course.price" placeholder="Price" autocomplete="off">
+                            <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('price')" class="error">{{ errors.price }}</p>
                         </div>
                     </div>
                     <v-button :onClick="editCourse" myClass="edit-btn green">Edit</v-button>
@@ -142,9 +167,10 @@
                 config: {
                     placeholderText: 'Edit Your Content Here!',
                 },
-                model: '',
+                model: 'das',
                 // Other data
                 course: {},
+                errors: {},
                 // languageOptions: ['Kazakh', 'Russian', 'English'],
                 // levelOptions: ['Beginner', 'Intermediate', 'Advanced'],
                 // categoryOptions: ['Development', 'Business', 'Design'],
@@ -180,6 +206,9 @@
             this.getInstructorCourse();
         },
         methods: {
+            isObjEmpty(myObj) {
+                return Object.entries(myObj).length === 0 && myObj.constructor === Object
+            },
             onCategorySelect(value) { },
             onCategorySelected(e) {
                 const selectedCategory = e.target.value;
@@ -266,13 +295,24 @@
                     })
                     .catch(err => {
                         console.log(err);
-                        console.log(err.response.data);
-                        this.showEditError({
-                            title: 'Course Edit Failed',
-                            message: err.response.data.errors.title,
-                            type: 'error',
-                            timeout: 2000
-                        });
+                        if (err.response) {
+                            console.log(err.response.data);
+                            this.errors = err.response.data.errors;
+                            this.showEditError({
+                                title: 'Course Edit Failed',
+                                message: '',
+                                type: 'error',
+                                timeout: 2000
+                            });
+                        } else {
+                            console.log('Server connection error');
+                            this.showToast({
+                                title: 'Server connection error',
+                                message: '',
+                                type: 'error',
+                                timeout: 2000
+                            });
+                        }
                     });
             },
         },
@@ -326,9 +366,29 @@
         /*background-color: #fff;  !*  #f2f2f2  *!*/
     }
 
+    .form-ctrl {
+        margin-bottom: 20px;
+    }
+
+    label {
+        color: #2c3e50;
+        float: left;
+        padding-left: 10px;
+        padding-bottom: 5px;
+        font-weight: 600;
+    }
+    .description-label {
+        color: #2c3e50;
+        text-align: left;
+        padding-left: 10px;
+        padding-bottom: 5px;
+        font-weight: 600;
+    }
+
     .select-wrapper {
         display: flex;
         justify-content: space-between;
+        margin-bottom: 20px;
     }
 
     .select-left {
@@ -346,14 +406,20 @@
         border: 1px solid #ccc;
         border-radius: 4px;
         box-sizing: border-box;
-        margin-top: 6px;
-        margin-bottom: 16px;
+        /*margin-top: 6px;*/
+        /*margin-bottom: 16px;*/
         font-size: 15px;
         resize: vertical
     }
 
     select {
         background-color: #fff;
+    }
+
+    .error {
+        color: red;
+        font-size: 16px;
+        margin-top: 5px;
     }
 
 </style>

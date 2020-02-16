@@ -42,7 +42,7 @@
           if (role.name === 'Instructor') {
             this.$router.push('/instructor/home');
           } else if (role.name === 'Student') {
-            this.$router.push('/student/home');
+            this.$router.push('/home');
           } else if (role.name === 'Admin'){
             this.$router.push('/admin/home');
           }

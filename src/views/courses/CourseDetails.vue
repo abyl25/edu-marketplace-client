@@ -76,7 +76,7 @@ export default {
         showToast: {
             title: 'Success',
             message: 'Course Edited!',
-            type: 'success', // VueNotifications.types.success,
+            type: 'success',
             timeout: 2000
         }
     },

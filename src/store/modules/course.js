@@ -7,7 +7,8 @@ import {
     INSTR_COURSE_UPDATE_SUCCESS, INSTR_COURSES_ERROR, INSTR_COURSES_REQUEST, INSTR_COURSES_SUCCESS, INSTR_CREATE_COURSE_TARGET_ERROR,
     INSTR_CREATE_COURSE_TARGET_REQUEST, INSTR_CREATE_COURSE_TARGET_SUCCESS, INSTR_DELETE_COURSE_REQ_GOAL_ERROR, INSTR_DELETE_COURSE_REQ_GOAL_REQUEST,
     INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, REGISTER_TO_COURSE_REQUEST, REGISTER_TO_COURSE_SUCCESS, REGISTER_TO_COURSE_ERROR, MY_COURSES_REQUEST,
-    MY_COURSES_SUCCESS, MY_COURSES_ERROR, INSTR_STUDENTS_REQUEST, INSTR_STUDENTS_SUCCESS, INSTR_STUDENTS_ERROR
+    MY_COURSES_SUCCESS, MY_COURSES_ERROR, INSTR_STUDENTS_REQUEST, INSTR_STUDENTS_SUCCESS, INSTR_STUDENTS_ERROR, EMPTY_CART_REQUEST, EMPTY_CART_SUCCESS,
+    EMPTY_CART_ERROR,
 } from '../actions';
 import axios from 'axios';
 
@@ -231,7 +232,6 @@ const actions = {
                 });
         });
     },
-
     [ADD_COURSE_TO_CART_REQUEST]: ({commit, rootState}, payload) => {
         return new Promise((resolve, reject) => {
             commit(ADD_COURSE_TO_CART_REQUEST);
@@ -291,6 +291,16 @@ const actions = {
                 });
         });
     },
+    [EMPTY_CART_REQUEST]: ({commit, rootState}) => {
+        return new Promise((resolve, reject) => {
+            commit(EMPTY_CART_REQUEST);
+            const mutationPayload = {
+                auth: rootState.auth
+            };
+            commit(EMPTY_CART_SUCCESS, mutationPayload);
+        });
+    },
+
     [REGISTER_TO_COURSE_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(REGISTER_TO_COURSE_REQUEST);
@@ -479,6 +489,19 @@ const mutations = {
     },
     [DELETE_COURSE_FROM_CART_ERROR]: (state) => {
         state.status = 'Delete Course From Cart Error';
+    },
+    // Empty cart
+    [EMPTY_CART_REQUEST]: (state) => {
+        state.status = 'Empty Cart Request';
+    },
+    [EMPTY_CART_SUCCESS]: (state, {auth}) => {
+        state.status = 'Empty Cart Success';
+        state.cartCourses.splice(0, state.cartCourses.length);
+        auth.user.cart.cartItems.splice(0, auth.user.cart.cartItems.length);
+        localStorage.setItem('user', JSON.stringify(auth.user));
+    },
+    [EMPTY_CART_ERROR]: (state) => {
+        state.status = 'Empty Cart Error';
     },
     // Register To Course
     [REGISTER_TO_COURSE_REQUEST]: (state) => {

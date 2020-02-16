@@ -49,6 +49,14 @@
                 fetched: false
             }
         },
+        notifications: {
+            showToast: {
+                title: 'Success',
+                message: 'Course Edited!',
+                type: 'success',
+                timeout: 2000
+            }
+        },
         created() {
             this.getCoursesInCart();
         },
@@ -67,15 +75,15 @@
                 };
                 this.$store.dispatch(CART_COURSES_REQUEST, payload)
                     .then(res => {
-                        console.log(res.data);
                         // this.cartCourses = res.data;
                         this.fetched = true;
+                        console.log(res.data);
                         this.calculateTotalPrice();
                     })
                     .catch(err => {
+                        this.fetched = true;
                         console.log(err);
                         console.log(err.response.data);
-                        this.fetched = true;
                     });
             },
             removeCourseFromCart(crs) {
@@ -86,13 +94,18 @@
                 this.$store.dispatch(DELETE_COURSE_FROM_CART_REQUEST, payload)
                     .then(res => {
                         console.log(res.data);
+                        this.showToast({
+                            title: 'Removed from cart',
+                            message: '',
+                            type: 'success',
+                            timeout: 2000
+                        });
                         this.calculateTotalPrice();
                     })
                     .catch(err => { console.log(err); console.log(err.response.data); });
             },
             checkOut() {
-                console.log('CheckOut clicked');
-                console.log('Do it later');
+                this.$router.push('/cart/checkout');
                 // axios.post('/api/payment/create?total=1')
                 //     .then(res => {
                 //         console.log(res.data);

@@ -6,6 +6,7 @@
         </button>
         <div v-if="showMenu" class="menu"  > <!-- @mouseleave="showMenu=false" -->
             <p class="menu-item" v-for="item in this.items" @click="itemClicked(item)">{{ item.text }}</p>
+<!--            <router-link class="menu-item" v-for="item in this.items">{{ item.text }}</router-link>-->
         </div>
 <!--        <transition name="fade"></transition>-->
     </div>

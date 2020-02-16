@@ -1,22 +1,40 @@
 <template>
     <div class="container">
+        <div class="back-link-wrapper">
+            <router-link :to="{ path: '/instructor/home' }" class="back-link">
+                <i class="fas fa-chevron-left" style="color: red"></i> Back
+            </router-link>
+        </div>
         <div class="add-form">
             <form @submit="addCourse">
-                <label for="title">Title</label>
-                <input type="text" id="title" v-model="title" placeholder="Title.." autocomplete="off">
-
-                <label for="subtitle">Subtitle</label>
-                <input type="text" id="subtitle" v-model="subtitle" placeholder="Subtitle.." autocomplete="off">
-
-                <label>Description</label>
-                <div class="editor">
-                    <froala id="edit" :tag="'textarea'" :config="config" v-model="description"></froala>
+                <div class="form-ctrl">
+                    <label for="title">Title</label>
+                    <input type="text" id="title" v-model="title" placeholder="Title.." autocomplete="off">
+                    <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('title')" class="error">{{ errors.title }} </p>
                 </div>
-                <label for="price">Price</label>
-                <input type="number" id="price" v-model="price" placeholder="Price" autocomplete="off">
 
-                <div class="langlev">
-                    <div class="lang">
+                <div class="form-ctrl">
+                    <label for="subtitle">Subtitle</label>
+                    <input type="text" id="subtitle" v-model="subtitle" placeholder="Subtitle.." autocomplete="off">
+                    <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('subtitle')" class="error">{{ errors.subtitle }} </p>
+                </div>
+
+                <div class="form-ctrl">
+                    <p class="description-label">Description</p>
+                    <div class="editor">
+                        <froala id="edit" :tag="'textarea'" :config="config" v-model="description"></froala>
+                    </div>
+                    <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('description')" class="error">{{ errors.description }} </p>
+                </div>
+
+<!--                <div class="form-ctrl">-->
+<!--                    <label for="price">Price</label>-->
+<!--                    <input type="number" id="price" v-model="price" placeholder="Price" autocomplete="off">-->
+<!--                    <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('price')" class="error">{{ errors.price }} </p>-->
+<!--                </div>-->
+
+                <div class="select-wrapper">
+                    <div class="select-left">
                         <label for="language">Language</label>
                         <select id="language" v-model="language" name="language">
 <!--                            <option :value="language">&#45;&#45;Select&#45;&#45;</option>-->
@@ -24,8 +42,9 @@
                             <option value="Russian">Russian</option>
                             <option value="English">English</option>
                         </select>
+                        <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('language')" class="error">{{ errors.language }} </p>
                     </div>
-                    <div class="lev">
+                    <div class="select-right">
                         <label for="level">Level</label>
                         <select id="level" v-model="level" name="level">
 <!--                            <option :value="level">&#45;&#45;Select&#45;&#45;</option>-->
@@ -33,11 +52,12 @@
                             <option value="Intermediate">Intermediate</option>
                             <option value="Advanced">Advanced</option>
                         </select>
+                        <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('level')" class="error">{{ errors.level }} </p>
                     </div>
                 </div>
 
-                <div class="catsubcat">
-                    <div class="cat">
+                <div class="select-wrapper">
+                    <div class="select-left">
                         <label for="category">Category</label>
                         <select id="category" v-model="category" name="category" @change="onCategorySelected($event)">
 <!--                            <option :value="category">&#45;&#45;Select&#45;&#45;</option>-->
@@ -45,9 +65,9 @@
                             <option value="Business">Business</option>
                             <option value="Design">Design</option>
                         </select>
+                        <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('category')" class="error">{{ errors.category }} </p>
                     </div>
-
-                    <div class="subcat">
+                    <div class="select-right">
                         <label for="subcategory">Subcategory</label>
                         <select id="subcategory" class="subcte" v-model="subcategory" name="subcategory" @change="onSubcategorySelected($event)">
                             <template v-if="subcat.length !== 0">
@@ -81,33 +101,37 @@
 <!--                            <option value="Game Design">Game Design</option>-->
 <!--                            <option value="Fashion">Fashion</option>-->
                         </select>
+                        <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('subcategory')" class="error">{{ errors.subcategory }} </p>
                     </div>
                 </div>
-                <div class="topic">
-                    <label for="topic">Topic</label>
-                    <select id="topic" v-model="topic" name="topic">
-                        <template v-if="topics.length !== 0">
-                            <option v-bind:key="topic.id" v-for="topic in topics" :value="topic">{{ topic }}</option>
-                        </template>
-                        <template v-else>
-<!--                            <option :value="topic">&#45;&#45;Select&#45;&#45;</option>-->
-                            <option value="React">React</option>
-                            <option value="Vue.JS">Vue.JS</option>
-                            <option value="Angular">Angular</option>
-                        </template>
-<!--                        <option value="select">&#45;&#45;Select&#45;&#45;</option>-->
-<!--                        <option value="React">React</option>-->
-<!--                        <option value="Vue.JS">Vue.JS</option>-->
-<!--                        <option value="Angular">Angular</option>-->
-                    </select>
+
+                <div class="select-wrapper">
+                    <div class="select-left">
+                        <label for="topic">Topic</label>
+                        <select id="topic" v-model="topic" name="topic">
+                            <template v-if="topics.length !== 0">
+                                <option v-bind:key="topic.id" v-for="topic in topics" :value="topic">{{ topic }}</option>
+                            </template>
+                            <template v-else>
+    <!--                            <option :value="topic">&#45;&#45;Select&#45;&#45;</option>-->
+                                <option value="React">React</option>
+                                <option value="Vue.JS">Vue.JS</option>
+                                <option value="Angular">Angular</option>
+                            </template>
+    <!--                        <option value="select">&#45;&#45;Select&#45;&#45;</option>-->
+    <!--                        <option value="React">React</option>-->
+    <!--                        <option value="Vue.JS">Vue.JS</option>-->
+    <!--                        <option value="Angular">Angular</option>-->
+                        </select>
+                        <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('topic')" class="error">{{ errors.topic }} </p>
+                    </div>
+                    <div class="select-right">
+                        <label for="price">Price</label>
+                        <input type="number" id="price" v-model="price" placeholder="Price" autocomplete="off">
+                        <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('price')" class="error">{{ errors.price }}</p>
+                    </div>
                 </div>
-                <div>
-<!--                    <multiselect v-model="value" :options="options"></multiselect>-->
-<!--                    <multiselect v-model="value" :options="options" :multiple="true" group-values="libs" group-label="language"-->
-<!--                        :group-select="true" placeholder="Type to search" track-by="name" label="name">-->
-<!--                        <span slot="noResult">Oops! No elements found. Consider changing the search query.</span>-->
-<!--                    </multiselect>-->
-                </div>
+
                 <input type="submit" value="Create">
             </form>
         </div>
@@ -140,6 +164,7 @@
         subcategory: '',
         topic: '',
         price: '',
+        errors: {},
         // vue-select
         value: [],
         options: [
@@ -191,14 +216,17 @@
       }
     },
     notifications: {
-      showToast: {
-          title: 'Success',
-          message: 'Course Edited!',
-          type: 'success', // VueNotifications.types.success,
-          timeout: 2000
-      }
+        showToast: {
+            title: 'Success',
+            message: 'Course Edited!',
+            type: 'success', // VueNotifications.types.success,
+            timeout: 2000
+        }
     },
     methods: {
+        isObjEmpty(myObj) {
+          return Object.entries(myObj).length === 0 && myObj.constructor === Object
+        },
         onCategorySelected(e) {
             const selectedCategory = e.target.value;
             this.resolveDependency('category', selectedCategory);
@@ -234,46 +262,56 @@
                 this.course.topic.name = topics[0];
             }
         },
-
-      addCourse(e) {
-        e.preventDefault();
-        const newCourse = {
-          instructorId: this.user.id,
-          title: this.title,
-          subtitle: this.subtitle,
-          description: this.description,
-          price: this.price,
-          language: this.language,
-          level: this.level,
-          category: this.subcategory,
-          topic: this.topic
-        };
-        console.log(newCourse);
-        this.$store.dispatch(INSTR_COURSE_CREATE_REQUEST, newCourse)
-          .then(res => {
-            console.log(res.data);
-              this.$router.push('/instructor/home');
-              this.showToast({
-                  title: 'Success',
-                  message: 'Course Created',
-                  type: 'success',
-                  timeout: 2000
-              });
-          })
-          .catch(err => {
-              console.log(err);
-              console.log(err.response.data);
-              this.showToast({
-                  title: 'Course Create Failure',
-                  message: '',
-                  type: 'error',
-                  timeout: 2000
-              });
-          });
-      }
+        addCourse(e) {
+            e.preventDefault();
+            const newCourse = {
+                instructorId: this.user.id,
+                title: this.title,
+                subtitle: this.subtitle,
+                description: this.description,
+                price: this.price,
+                language: this.language,
+                level: this.level,
+                category: this.subcategory,
+                topic: this.topic
+            };
+            console.log(newCourse);
+            this.$store.dispatch(INSTR_COURSE_CREATE_REQUEST, newCourse)
+                .then(res => {
+                    console.log(res.data);
+                    this.$router.push('/instructor/home');
+                    this.showToast({
+                        title: 'Success',
+                        message: 'Course Created',
+                        type: 'success',
+                        timeout: 2500
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                    if (err.response) {
+                        console.log(err.response.data);
+                        this.errors = err.response.data.errors;
+                        this.showToast({
+                            title: 'Course Create Failure',
+                            message: '',
+                            type: 'error',
+                            timeout: 2000
+                        });
+                    } else {
+                        console.log('Server connection error');
+                        this.showToast({
+                            title: 'Server connection error',
+                            message: '',
+                            type: 'error',
+                            timeout: 2000
+                        });
+                    }
+                });
+        }
     },
     computed: {
-      ...mapGetters(['user'])
+        ...mapGetters(['user'])
     },
   }
 </script>
@@ -281,61 +319,62 @@
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
 
 <style scoped>
-    .editor {
-        margin: 6px 0 16px 0;
-    }
-
     .container {
         display: flex;
         justify-content: center;
-        margin: 30px 0;
+        margin: 60px 0;
     }
-    
+
+    .back-link-wrapper {
+        /*border: 1px solid #000;*/
+        position: absolute;
+        top: 80px;
+        left: 13%;
+    }
+    .back-link {
+        /*padding: 5px 10px;*/
+        text-decoration: none;
+        color: #6d736f;
+        font-size: 18px;
+    }
+
     .add-form {
-        width: 60%;
+        width: 70%;
         border-radius: 5px;
         padding: 20px;
         background-color: #f2f2f2;
     }
 
-    .langlev {
-        display: flex;
-        justify-content: space-between;
+    .form-ctrl {
+        margin-bottom: 20px;
     }
 
-    .lang {
-        flex: 1;
-        margin-right: 80px;
+    label {
+        color: #2c3e50;
+        float: left;
+        padding-left: 10px;
+        padding-bottom: 5px;
+        font-weight: 600;
     }
-
-    .lev {
-        flex: 1;
-    }
-
-    .catsubcat {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .cat {
-        flex: 1;
-        margin-right: 80px;
-    }
-
-    .subcat {
-        flex: 1;
+    /*label:after { */
+    /*    content: ": " */
+    /*}*/
+    .description-label {
+        color: #2c3e50;
+        text-align: left;
+        padding-left: 10px;
+        padding-bottom: 5px;
+        font-weight: 600;
     }
 
     input[type=text], input[type=number], select, textarea {
         width: 100%;
-        padding: 12px; 
-        border: 1px solid #ccc; 
+        padding: 12px;
+        border: 1px solid #ccc;
         border-radius: 4px;
-        box-sizing: border-box; 
-        margin-top: 6px;
-        margin-bottom: 16px; 
+        box-sizing: border-box;
         font-size: 15px;
-        resize: vertical 
+        resize: vertical
     }
 
     input[type=submit] {
@@ -352,6 +391,42 @@
 
     input[type=submit]:hover {
         background-color: #45a049;
+    }
+
+    .error {
+        color: red;
+        font-size: 16px;
+        margin-top: 5px;
+    }
+
+    .select-wrapper {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .select-left {
+        flex: 1;
+        margin-right: 80px;
+    }
+
+    .select-right {
+        flex: 1;
+    }
+
+    .catsubcat {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+    }
+
+    .cat {
+        flex: 1;
+        margin-right: 80px;
+    }
+
+    .subcat {
+        flex: 1;
     }
 
     select {

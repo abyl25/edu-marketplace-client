@@ -10,6 +10,7 @@ import vClickOutside from 'v-click-outside';
 import VuePlyr from 'vue-plyr';
 import uploader from 'vue-simple-uploader';
 import Multiselect from 'vue-multiselect';
+import Vuelidate from 'vuelidate';
 
 // import Antd from 'ant-design-vue';
 // import 'ant-design-vue/dist/antd.css';
@@ -28,6 +29,7 @@ import 'froala-editor/js/third_party/image_tui.min';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import VueFroala from 'vue-froala-wysiwyg';
 
+Vue.use(Vuelidate);
 Vue.use(VueFroala);
 Vue.use(vClickOutside);
 Vue.use(vSelectMenu, { global });
@@ -43,21 +45,10 @@ Vue.use(VuePlyr, {
 
 //
 import VueNotifications from 'vue-notifications';
-import 'jquery';
-// import miniToastr from 'mini-toastr';
 import toastr from 'toastr';    // https://github.com/CodeSeven/toastr
+import 'jquery';
 import 'toastr/build/toastr.min.css';
 
-// const toastTypes = {
-//   success: 'success',
-//   error: 'error',
-//   info: 'info',
-//   warn: 'warn'
-// };
-// miniToastr.init({types: toastTypes});
-// function toast ({title, message, type, timeout, cb}) {
-//   return miniToastr[type](message, title, timeout, cb)
-// }
 function toast ({title, message, type, timeout, cb}) {
   if (type === VueNotifications.types.warn) type = 'warning'
   return toastr[type](message, title, {timeOut: timeout})

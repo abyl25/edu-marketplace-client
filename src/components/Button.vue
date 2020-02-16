@@ -72,6 +72,15 @@
         font-size: 18px;
     }
 
+    .pay-btn {
+        border-radius: 4px;
+        width: 30%;
+        margin-top: 15px;
+        padding: 15px 50px;
+        background-color: #4CAF50;
+        font-size: 18px;
+    }
+
     .add-answer-btn {
         border: 1px solid #686f7a;
         border-radius: 2px;
