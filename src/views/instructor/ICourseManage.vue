@@ -53,13 +53,15 @@
                     path: 'image',
                     link: basePath + '/image',
                     image: 'icons8-image-24.png'
-                }, {
-                    id: 3,
-                    text: 'Course files',
-                    path: 'files',
-                    link: basePath + '/files',
-                    image: 'icons8-image-24.png'
-                }, {
+                },
+                // {
+                //     id: 3,
+                //     text: 'Course files',
+                //     path: 'files',
+                //     link: basePath + '/files',
+                //     image: 'icons8-image-24.png'
+                // },
+                {
                     id: 4,
                     text: 'Course target',
                     path: 'target',

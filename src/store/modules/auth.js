@@ -17,6 +17,7 @@ const getters = {
     signupSuccess: state => state.signupSuccess,
     confirmed: state => state.confirmed,
     isAuthenticated: state => !!state.token,
+    token: state => state.token,
     user: state => state.user,
     // roles: state => state.user.roles,
     // roleName: state => state.roles[0].name,

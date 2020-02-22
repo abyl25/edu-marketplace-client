@@ -23,7 +23,7 @@ import ICourseStudent from "@/views/instructor/ICourseStudent";
 import ImageUpload from "@/views/instructor/ImageUpload";
 import NotFound from "@/views/NotFound";
 import NotAuthorized from "@/views/NotAuthorized";
-import LearnPage from "@/views/LearnPage";
+import LearnPage from "@/views/student/LearnPage";
 import FileUpload from "@/views/instructor/FileUpload";
 
 Vue.use(Router);
@@ -109,7 +109,7 @@ const router = new Router({
       }
     },
     {
-      path: '/learn',
+      path: '/course/:course_id/learn/lecture/:lecture_id',
       name: 'LearnPage',
       component: LearnPage,
       meta: {

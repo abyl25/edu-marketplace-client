@@ -5,6 +5,7 @@
                 <div class="course-card-imagecontainer">
                     <img class="course-image" src="../../assets/1.png" v-if="!hasImage" width="240" height="135">
                     <img :src="'http://37.18.30.105:6600/upload_images/' + course.image_name + '.png'" alt="" v-else width="180" height="120">
+<!--                    <img :src="'http://178.170.221.108:6600/upload_images/' + course.image_name + '.png'" alt="" v-else width="180" height="120">-->
                 </div>
                 <div class="course-card-content">
                     <div class="course-card-content-title">
