@@ -67,39 +67,23 @@
                 const fd = new FormData();
                 fd.append('uploadFile', this.selectedFile, this.selectedFile.name);
 
-                const url = `http://192.168.43.59:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
-                console.log('url: ' + url);
-
-                // let headers = { };
+                // const url = `http://192.168.43.59:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
+                const url = `http://178.170.221.108:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
                 const headers = {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Authorization': 'Bearer ' + this.$store.getters.token
-                    // 'session_id': `Bearer ${this.$store.getters.token}`
                 };
-                console.log(headers);
-
-                // axios.post(url, fd, { headers: headers })
-                //     .then(res => {
-                //         this.uploadFinished = true;
-                //         console.log('uploaded');
-                //         console.log(res.data);
-                //     })
-                //     .catch(err => {
-                //         this.uploadFinished = true;
-                //         console.log(err.response.data)
-                //     });
-                /* */
-                    axios({
-                        method: 'post',
-                        url: url,
-                        data: fd,
-                        headers: headers
-                    }).then(res => {
-                        console.log('uploaded');
-                        console.log(res.data);
-                    }) .catch(err => {
-                        console.log(err.response.data)
-                    });
+                axios({
+                    method: 'post',
+                    url: url,
+                    data: fd,
+                    headers: headers
+                }).then(res => {
+                    console.log('uploaded');
+                    console.log(res.data);
+                }) .catch(err => {
+                    console.log(err.response.data)
+                });
 
             },
         },

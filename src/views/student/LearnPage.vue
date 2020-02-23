@@ -14,8 +14,18 @@
                         <div class="section-lecture-stats"></div>
                     </div>
                     <transition-group name="fade">
-                        <ul v-bind:key="lecture.lecture_id" v-for="lecture in section.lectures" v-show="section.id === activeSectionId ">
-                            <router-link :to="lecture.link">{{ lecture.title }}</router-link>
+                        <ul class="section-lecture-list" v-bind:key="lecture.id" v-for="lecture in section.lectures" v-show="section.id === activeSectionId ">
+                            <li class="section-lecture-list-item" :class="{'active-lecture': lecture.id === activeLectureId}" @click="setActiveLecture(lecture.id)">
+                                <router-link class="item-link" :to="lecture.link">
+                                    <p class="lecture-title">{{ lecture.title }}</p>
+                                    <div class="lecture-type-container">
+                                        <span class="lecture-type">
+                                            <img src="../../assets/icons8-play-14.png" alt="" style="vertical-align: -2px">
+                                        </span>
+                                        <span class="lecture-duration">2min</span>
+                                    </div>
+                                </router-link>
+                            </li>
                         </ul>
                     </transition-group>
                 </div>
@@ -24,9 +34,11 @@
 
         <div class="content-column">
             <div class="video-player">
-                <vue-plyr>
-                    <video poster="../../assets/1.png" src="https://vs2.coursehunter.net/udemy-ru-react-redux/lesson1.mp4">
-                    </video>
+                <vue-plyr ref="player" >
+                    <transition name="fade">
+                        <video src="https://vs2.coursehunter.net/udemy-ru-react-redux/lesson1.mp4"></video>
+                        <!-- <video poster="../../assets/1.png" :src="activeVideoLink"></video>-->
+                    </transition>
                 </vue-plyr>
             </div>
 
@@ -57,8 +69,8 @@
 <script>
     import {Tabs, Tab} from 'vue-tabs-component';
     import 'vue-tabs-component/docs/resources/tabs-component.css';
-
     import QA from "@/views/student/QA";
+    import sectionData from "@/data/sectionData";
 
     export default {
         name: "LearnPage",
@@ -71,54 +83,19 @@
             return {
                 showSectionMenuItems: false,
                 activeSectionId: null,
-                sections: [
-                    {
-                        id: 1,
-                        title: 'Getting started',
-                        lectures: [
-                            {
-                                lecture_id: 1,
-                                title: 'Welcome',
-                                link: '/course/1/learn/lecture/1'
-                            },
-                            {
-                                lecture_id: 2,
-                                title: 'Software',
-                                link: '/course/1/learn/lecture/2'
-                            },
-                            {
-                                lecture_id: 3,
-                                title: 'Setup',
-                                link: '/course/1/learn/lecture/3'
-                            }
-                        ]
-                    },
-                    {
-                        id: 2,
-                        title: 'Hello world',
-                        lectures: [
-                            {
-                                lecture_id: 1,
-                                title: 'Intro',
-                                link: '/course/1/learn/lecture/4'
-                            },
-                            {
-                                lecture_id: 2,
-                                title: 'Render html',
-                                link: '/course/1/learn/lecture/5'
-                            }
-                        ]
-                    },
-                    {
-                        id: 3,
-                        title: 'Product Component'
-                    },
-                    {
-                        id: 4,
-                        title: 'Templates'
-                    },
-                ]
+                activeLectureId: null,
+                settingVideoLink: false,
+                activeVideoLink: 'https://vs2.coursehunter.net/udemy-ru-react-redux/lesson1.mp4',
+                sections: sectionData.sections
             }
+        },
+        created() {
+            this.activeSectionId = parseInt(localStorage.getItem("activeSectionId"));
+            this.activeLectureId = parseInt(localStorage.getItem("activeLectureId"));
+        },
+        mounted() {
+            let player = this.$refs.player.player;
+            // console.log(player);
         },
         methods: {
             tabClicked (selectedTab) {
@@ -129,6 +106,21 @@
             },
             setActiveSection(sectionId) {
                 this.activeSectionId = this.activeSectionId === sectionId ? null : sectionId;
+                localStorage.setItem("activeSectionId", this.activeSectionId);
+            },
+            setActiveLecture(lectureId) {
+                if (this.activeLectureId === lectureId) return;
+                this.settingVideoLink = true;
+                this.activeLectureId = lectureId;
+                localStorage.setItem("activeLectureId", this.activeLectureId);
+
+                let lectures = this.sections.map(s => s.lectures);
+                let lecture = lectures.flat().filter(l => l.id === lectureId)[0];
+                this.activeVideoLink = lecture.video_link;
+
+                let player = this.$refs.player.player;
+                player.media.src = lecture.video_link;
+                this.settingVideoLink = false;
             }
         }
     }
@@ -142,13 +134,21 @@
     .fade-enter, .fade-leave {
         opacity: 0;
     }
+    .video-enter-active {
+        transition: all ease-in-out .5s;
+    }
+    .video-enter, .video-leave {
+        opacity: 0;
+    }
 
+    /* */
     .app-column-container {
         display: flex;
     }
 
     .sidebar-column {
-        width: 350px;
+        width: 30%;
+        /*width: 350px;*/
     }
 
     .sidebar-header {
@@ -189,6 +189,15 @@
         background-color: #e6eaed;
     }
 
+    .section-title {
+        text-align: left;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.43em;
+        max-width: 100%;
+        margin-right: 24px;
+    }
+
     .section-chevron {
         position: absolute;
         right: 16px;
@@ -202,9 +211,55 @@
         transform: rotate(180deg);
     }
 
+    /**/
+    .section-lecture-list {
+        list-style: none;
+    }
 
+    .section-lecture-list-item {
+        color: #14171c;
+        padding: 8px 16px 8px 30px;
+    }
+    .section-lecture-list-item:hover {
+        background-color: #cbece7;
+        cursor: pointer;
+    }
+
+    .curriculum-item {
+        /*display: flex;*/
+        /*justify-content: space-between;*/
+        /*color: #14171c;*/
+        /*padding: 8px 16px;*/
+    }
+
+    .item-link {
+        display: block;
+        text-decoration: none;
+        text-align: left;
+    }
+
+    .lecture-title {
+        color: #14171c;
+        /*text-align: left;*/
+    }
+
+    .lecture-duration {
+        margin-left: 3px;
+        color: #007791;
+        font-size: 14px;
+    }
+
+    .active-lecture {
+        background-color: #d5f5f0;
+    }
+
+    /**/
     .video-player {
-        /*width: 70%;*/
+        width: 100%;
+    }
+
+    .video_placeholder {
+        height: 85vh;
     }
 
     .menu-tab-container {

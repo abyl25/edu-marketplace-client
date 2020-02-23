@@ -109,7 +109,7 @@ const router = new Router({
       }
     },
     {
-      path: '/course/:course_id/learn/lecture/:lecture_id',
+      path: '/course/:course_id/lecture/:lecture_id',
       name: 'LearnPage',
       component: LearnPage,
       meta: {
