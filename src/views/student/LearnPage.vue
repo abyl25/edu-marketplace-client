@@ -13,7 +13,7 @@
                         </span>
                         <div class="section-lecture-stats"></div>
                     </div>
-                    <transition-group name="fade">
+                    <transition-group name="items">
                         <ul class="section-lecture-list" v-bind:key="lecture.id" v-for="lecture in section.lectures" v-show="section.id === activeSectionId ">
                             <li class="section-lecture-list-item" :class="{'active-lecture': lecture.id === activeLectureId}" @click="setActiveLecture(lecture.id)">
                                 <router-link class="item-link" :to="lecture.link">
@@ -35,7 +35,7 @@
         <div class="content-column">
             <div class="video-player">
                 <vue-plyr ref="player" >
-                    <transition name="fade">
+                    <transition name="video">
                         <video src="https://vs2.coursehunter.net/udemy-ru-react-redux/lesson1.mp4"></video>
                         <!-- <video poster="../../assets/1.png" :src="activeVideoLink"></video>-->
                     </transition>
@@ -134,6 +134,17 @@
     .fade-enter, .fade-leave {
         opacity: 0;
     }
+    /* */
+    .items-enter-active, .items-leave-active {
+        transition: all ease-in-out .3s;
+    }
+    .items-enter, .items-leave-to {
+        height: 0;
+        opacity: 0;
+        /*transform: translateY(-5px);*/
+        /*transform: scaleY(0);  */
+    }
+    /* */
     .video-enter-active {
         transition: all ease-in-out .5s;
     }
@@ -214,6 +225,7 @@
     /**/
     .section-lecture-list {
         list-style: none;
+        /*transition: transform .5s ease-in-out;*/
     }
 
     .section-lecture-list-item {

@@ -4,11 +4,12 @@
         <button class="anchor" @click="toggleShow" >{{ name }}  <!--  @mouseover="showMenu=true"  -->
             <img src="../../assets/chevron-down.png" alt="" class="arrow" :class="{'arrow--rotate': showMenu}">
         </button>
-        <div v-if="showMenu" class="menu"  > <!-- @mouseleave="showMenu=false" -->
-            <p class="menu-item" v-for="item in this.items" @click="itemClicked(item)">{{ item.text }}</p>
-<!--            <router-link class="menu-item" v-for="item in this.items">{{ item.text }}</router-link>-->
-        </div>
-<!--        <transition name="fade"></transition>-->
+        <transition name="dropdown">
+            <div v-if="showMenu" class="menu"  > <!-- @mouseleave="showMenu=false" -->
+                <p class="menu-item" v-for="item in this.items" @click="itemClicked(item)">{{ item.text }}</p>
+                <!-- <router-link class="menu-item" v-for="item in this.items">{{ item.text }}</router-link>-->
+            </div>
+        </transition>
     </div>
 </template>
 
@@ -56,11 +57,12 @@
 
 <style scoped>
     /* Transitions */
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity ease .3s;
+    .dropdown-enter-active, .dropdown-leave-active {
+        transition: all ease-in-out .4s; /* ease-in-out */
     }
-    .fade-enter, .fade-leave-to {
-        opacity: 0
+    .dropdown-enter, .dropdown-leave-to {
+        opacity: 0;
+        transform: translateY(-5px);
     }
 
     .arrow {
@@ -104,7 +106,7 @@
         /*left: -15%;*/
         right: 0;
         margin: .125rem 0 0;
-        padding: .5rem 0;
+        padding: .3rem 0;
         border: 1px solid #dce8e6; /*  rgba(0,0,0,.15)  */
         border-radius: .25rem;
         background-color: #fff;
@@ -128,6 +130,7 @@
         border-style: solid;
         border-color: transparent transparent #fff transparent; /* #a3c2bd  */
         outline: none;
+        /*transition: all ease-in-out .3s;*/
     }
 
     .menu-item {

@@ -9,8 +9,8 @@
         <transition name="fade">
             <div v-if="fetched" class="my-courses-container">
                 <div class="card-wrapper">
-                    <div class="course-card" v-for="course in this.myCourses"> <!--  i in count  -->
-                        <router-link to="/" class="course-link">
+                    <div class="course-card" v-bind:key="course.id" v-for="course in this.myCourses"> <!--  i in count  -->
+                        <router-link :to="{ path: `/course/${course.id}/lecture/1` }" class="course-link">
                             <div class="image-container">
                                 <img class="image" src="../../assets/1.png" alt="">
                             </div>

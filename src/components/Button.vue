@@ -1,5 +1,5 @@
 <template>
-    <button class="btn" v-bind:class="myClass" @click="onClick">
+    <button class="btn" v-bind:class="myClass" @click="onClick">  <!--  @click="onClick";  this.$emit('click'); -->
         <slot>Button</slot>
     </button>
 </template>
@@ -10,7 +10,7 @@
         props: {
             onClick: {
                 type: Function,
-                required: true
+                required: false
             },
             myClass: {
                 type: String
@@ -24,7 +24,7 @@
         border: none;
         border-radius: 2px;
         color: #fff;
-        text-align: center;
+        /*text-align: center;*/
         font-size: 16px;
         font-weight: 500;
         cursor: pointer;
@@ -108,4 +108,45 @@
         padding: 12px 25px;
     }
 
+    .save-section-btn {
+        /*width: 80px;*/
+        margin-top: 5px;
+        border: 1px solid transparent;
+        color: #fff;
+        background-color: #007791;
+        transition: background-color 0.15s;
+    }
+    .save-section-btn:hover {
+        background-color: #02596b;  /* #00657e; */
+    }
+
+    .btn-tertiary {
+        color: #007791;
+        background-color: transparent;
+        border: 1px solid transparent;
+        transition: background-color 0.15s;
+    }
+    .btn-tertiary:hover {
+        color: #02333d;
+    }
+
+    /* Button size */
+    .btn-sm {
+        padding: 5px 12px; /* 6px 10px  */
+        font-size: 15px;
+        line-height: 1.35135;
+        border-radius: 2px;
+    }
+
+    /* margin */
+    .mr {
+        margin-top: 5px;
+    }
+
+    .btn-left {
+        text-align: left;
+    }
+    .btn-right {
+        text-align: right;
+    }
 </style>
