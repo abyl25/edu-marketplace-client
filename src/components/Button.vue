@@ -84,7 +84,7 @@
     .add-answer-btn {
         border: 1px solid #686f7a;
         border-radius: 2px;
-        margin-top: 10px;
+        /*margin-top: 10px;*/
         padding: 7px 10px;
         color: #007791;
         font-size: 15px;
@@ -110,7 +110,7 @@
 
     .save-section-btn {
         /*width: 80px;*/
-        margin-top: 5px;
+        margin-top: 10px;
         border: 1px solid transparent;
         color: #fff;
         background-color: #007791;
@@ -121,6 +121,7 @@
     }
 
     .btn-tertiary {
+        margin-top: 10px;
         color: #007791;
         background-color: transparent;
         border: 1px solid transparent;
