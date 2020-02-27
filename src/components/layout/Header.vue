@@ -128,11 +128,6 @@ export default {
             ]
         }
     },
-    watch: {
-        locale (val) {
-            this.$i18n.locale = val;
-        }
-    },
     methods: {
         onClick(item) {
             if (item.link === '/logout') {

@@ -8,11 +8,15 @@ import {
     INSTR_CREATE_COURSE_TARGET_REQUEST, INSTR_CREATE_COURSE_TARGET_SUCCESS, INSTR_DELETE_COURSE_REQ_GOAL_ERROR, INSTR_DELETE_COURSE_REQ_GOAL_REQUEST,
     INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, REGISTER_TO_COURSE_REQUEST, REGISTER_TO_COURSE_SUCCESS, REGISTER_TO_COURSE_ERROR, MY_COURSES_REQUEST,
     MY_COURSES_SUCCESS, MY_COURSES_ERROR, INSTR_STUDENTS_REQUEST, INSTR_STUDENTS_SUCCESS, INSTR_STUDENTS_ERROR, EMPTY_CART_REQUEST, EMPTY_CART_SUCCESS,
-    EMPTY_CART_ERROR,
+    EMPTY_CART_ERROR, ADD_COURSE_SECTION_REQUEST, ADD_COURSE_SECTION_SUCCESS, ADD_COURSE_SECTION_ERROR, EDIT_COURSE_SECTION_REQUEST, EDIT_COURSE_SECTION_SUCCESS,
+    EDIT_COURSE_SECTION_ERROR, DELETE_COURSE_SECTION_REQUEST, DELETE_COURSE_SECTION_SUCCESS, DELETE_COURSE_SECTION_ERROR,
 } from './index';
 import axios from "axios";
 
 const api_endpoint = process.env.VUE_APP_API;
+const config = {
+    headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
+};
 
 export default {
     [COURSES_REQUEST]: ({commit}, payload) => {
@@ -52,7 +56,6 @@ export default {
     [COURSE_REQUEST]: ({commit}, courseId) => {
         return new Promise((resolve, reject) => {
             commit(COURSE_REQUEST);
-            // commit(COURSE_SUCCESS, courseId);
             axios.get(api_endpoint + '/api/courses/' + courseId)
                 .then(res => {
                     commit(COURSE_SUCCESS, res);
@@ -67,9 +70,6 @@ export default {
     [INSTR_COURSES_REQUEST]: ({commit}, instructorID) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_COURSES_REQUEST);
-            const config = {
-                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-            };
             axios.get(api_endpoint + `/api/instructor/${instructorID}/courses`, config)
                 .then(res => {
                     commit(INSTR_COURSES_SUCCESS, res);
@@ -84,9 +84,6 @@ export default {
     [INSTR_COURSE_REQUEST]: ({commit}, { instructorID, courseId }) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_COURSE_REQUEST);
-            const config = {
-                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-            };
             axios.get(api_endpoint + `/api/instructor/${instructorID}/courses/${courseId}`, config)
                 .then(res => {
                     commit(INSTR_COURSE_SUCCESS, res);
@@ -101,9 +98,6 @@ export default {
     [INSTR_COURSE_CREATE_REQUEST]: ({commit}, newCourse) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_COURSE_CREATE_REQUEST);
-            const config = {
-                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-            };
             axios.post(api_endpoint + `/api/courses`, newCourse, config)
                 .then(res => {
                     commit(INSTR_COURSE_CREATE_SUCCESS, res);
@@ -118,9 +112,6 @@ export default {
     [INSTR_COURSE_UPDATE_REQUEST]: ({commit}, { courseId, updateCourse }) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_COURSE_UPDATE_REQUEST);
-            const config = {
-                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-            };
             axios.put(api_endpoint + `/api/courses/${courseId}`, updateCourse, config)
                 .then(res => {
                     commit(INSTR_COURSE_UPDATE_SUCCESS, res);
@@ -135,9 +126,6 @@ export default {
     [INSTR_COURSE_TARGET_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_COURSE_TARGET_REQUEST);
-            const config = {
-                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-            };
             axios.get(api_endpoint + `/api/courses/${payload.courseId}/target`, config)
                 .then(res => {
                     commit(INSTR_COURSE_TARGET_SUCCESS, res);
@@ -152,9 +140,6 @@ export default {
     [INSTR_CREATE_COURSE_TARGET_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_CREATE_COURSE_TARGET_REQUEST);
-            const config = {
-                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-            };
             axios.post(api_endpoint + `/api/courses/target`, payload, config)
                 .then(res => {
                     commit(INSTR_CREATE_COURSE_TARGET_SUCCESS, res);
@@ -169,9 +154,6 @@ export default {
     [INSTR_DELETE_COURSE_REQ_GOAL_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_DELETE_COURSE_REQ_GOAL_REQUEST);
-            const config = {
-                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-            };
             let url = '';
             if ('reqName' in payload) { // payload.hasOwnProperty('reqName')
                 url = `${api_endpoint}/api/courses/${payload.courseId}/req/${payload.reqName}`;
@@ -192,9 +174,6 @@ export default {
     [INSTR_STUDENTS_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_STUDENTS_REQUEST);
-            const config = {
-                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-            };
             axios.get(`${api_endpoint}/api/instructor/${payload.instructorId}/courses/${payload.courseId}/students`, config)
                 .then(res => {
                     commit(INSTR_STUDENTS_SUCCESS, res);
@@ -209,9 +188,6 @@ export default {
     [ADD_COURSE_TO_CART_REQUEST]: ({commit, rootState}, payload) => {
         return new Promise((resolve, reject) => {
             commit(ADD_COURSE_TO_CART_REQUEST);
-            const config = {
-                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-            };
             axios.post(api_endpoint + `/api/user/${payload.userId}/cart/${payload.courseId}`, config)
                 .then(res => {
                     const mutationPayload = {
@@ -230,9 +206,6 @@ export default {
     [CART_COURSES_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(CART_COURSES_REQUEST);
-            const config = {
-                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-            };
             axios.get(api_endpoint + `/api/user/${payload.userId}/cart`, config)
                 .then(res => {
                     commit(CART_COURSES_SUCCESS, res);
@@ -247,9 +220,6 @@ export default {
     [DELETE_COURSE_FROM_CART_REQUEST]: ({commit, rootState}, payload) => {
         return new Promise((resolve, reject) => {
             commit(DELETE_COURSE_FROM_CART_REQUEST);
-            const config = {
-                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-            };
             axios.delete(api_endpoint + `/api/user/${payload.userId}/cart/${payload.courseId}`, config)
                 .then(res => {
                     const mutationPayload = {
@@ -278,9 +248,6 @@ export default {
     [REGISTER_TO_COURSE_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(REGISTER_TO_COURSE_REQUEST);
-            const config = {
-                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-            };
             console.log(payload);
             axios.post(`${api_endpoint}/api/courses/register`, payload, config)
                 .then(res => {
@@ -296,9 +263,6 @@ export default {
     [MY_COURSES_REQUEST]: ({commit, rootState}, payload) => {
         return new Promise((resolve, reject) => {
             commit(MY_COURSES_REQUEST);
-            const config = {
-                headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-            };
             axios.get(`${api_endpoint}/api/user/${payload.studentId}/courses`, config)
                 .then(res => {
                     commit(MY_COURSES_SUCCESS, res);
@@ -309,6 +273,48 @@ export default {
                     reject(err);
                 });
         });
+    },
+    [ADD_COURSE_SECTION_REQUEST]: ({commit, rootState}, payload) => {
+        return new Promise((resolve, reject) => {
+            commit(ADD_COURSE_SECTION_REQUEST);
+            axios.post(`${api_endpoint}/api/courses/${payload.courseId}/section`, { name: payload.name }, config)
+                .then(res => {
+                    commit(ADD_COURSE_SECTION_SUCCESS, res);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(ADD_COURSE_SECTION_ERROR);
+                    reject(err);
+                });
+        });
+    },
+    [EDIT_COURSE_SECTION_REQUEST]: ({commit}, payload) => {
+        return new Promise((resolve, reject) => {
+            commit(EDIT_COURSE_SECTION_REQUEST);
+            axios.put(`${api_endpoint}/api/courses/${payload.courseId}/section/${payload.sectionId}`, { name: payload.name }, config)
+                .then(res => {
+                    commit(EDIT_COURSE_SECTION_SUCCESS, res);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(EDIT_COURSE_SECTION_ERROR);
+                    reject(err);
+                });
+        })
+    },
+    [DELETE_COURSE_SECTION_REQUEST]: ({commit}, payload) => {
+        return new Promise((resolve, reject) => {
+            commit(DELETE_COURSE_SECTION_REQUEST);
+            axios.delete(`${api_endpoint}/api/courses/${payload.courseId}/section/${payload.sectionId}`, config)
+                .then(res => {
+                    commit(DELETE_COURSE_SECTION_SUCCESS);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(DELETE_COURSE_SECTION_ERROR);
+                    reject(err);
+                });
+        })
     },
 
 }
