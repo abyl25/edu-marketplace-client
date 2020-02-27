@@ -6,10 +6,10 @@
         </div>
         <div class="main-content-container">
             <div class="sections-container">
-                <draggable :list="sections" handle=".handle"> <!-- course.courseSections  -->
-                    <div class="empty-section" v-if="sections.length === 0"></div> <!-- !isObjEmpty(course) &&   sections.length, section.sectionID  -->
+                <draggable :list="sections" handle=".handle">
+                    <div class="empty-section" v-if="sections.length === 0"></div>
                     <template v-else>
-                        <div class="section" :key="section.id" v-for="(section, i) in sections"> <!-- course.courseSections  -->
+                        <div class="section" :key="section.id" v-for="(section, i) in sections">
                             <!-- Show New Section -->
                             <div class="add-section-container" v-if="activeSection === section.id">
                                 <p class="section-label">New section:</p>
@@ -21,8 +21,8 @@
                                 </div>
                             </div>
                             <!-- Show Edit Section -->
-                            <div class="add-section-container" v-if="editSectionId === section.id">
-                                <p class="section-label">Section:</p>
+                            <div class="add-section-container" v-else-if="editSectionId === section.id">
+                                <p class="section-label">Section: {{ i + 1 }}</p>
                                 <input type="text" class="form-control" v-model="section.name" placeholder="Enter a title"/>
                                 <div class="buttons-container">
                                     <button @click="editSection(section)" class="save-section-btn btn-sm mr-10">Save</button>
@@ -36,7 +36,7 @@
                                         <svg v-if="sectionHoveredId === section.id" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="16" height="16" viewBox="0 0 172 172"
                                             style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#535961"><path d="M86,0l-28.66667,43h21.5v35.83333h-35.83333v-21.5l-43,28.66667l43,28.66667v-21.5h35.83333v35.83333h-21.5l28.66667,43l28.66667,-43h-21.5v-35.83333h35.83333v21.5l43,-28.66667l-43,-28.66667v21.5h-35.83333v-35.83333h21.5z"></path></g></g></svg>
                                     </span>
-                                    <span class="section-id">Section {{ section.id }}: </span>
+                                    <span class="section-id">Section {{ i + 1 }}: </span>
                                     <span class="section-title">{{ section.name }}</span>
                                     <template v-if="sectionHoveredId === section.id">
                                         <span class="section-control-btn" @click="showEditSection(section)">
@@ -69,7 +69,7 @@
                                                 <svg v-if="lectureHoveredId === lecture.id" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="16" height="16" viewBox="0 0 172 172"
                                                      style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#535961"><path d="M86,0l-28.66667,43h21.5v35.83333h-35.83333v-21.5l-43,28.66667l43,28.66667v-21.5h35.83333v35.83333h-21.5l28.66667,43l28.66667,-43h-21.5v-35.83333h35.83333v21.5l43,-28.66667l-43,-28.66667v21.5h-35.83333v-35.83333h21.5z"></path></g></g></svg>
                                             </span>
-                                            <span class="lecture-id">Lecture {{ lecture.id }}: </span>
+                                            <span class="lecture-id">Lecture {{ idx + 1 }}: </span>
                                             <span class="section-title">{{ lecture.name }}</span>
                                             <template v-if="lectureHoveredId === lecture.id">
                                                 <span class="section-control-btn">
@@ -107,12 +107,7 @@
     import draggable from 'vuedraggable';
     import axios from 'axios';
     import Button from "@/components/Button";
-    import {
-        ADD_COURSE_SECTION_REQUEST,
-        DELETE_COURSE_SECTION_REQUEST,
-        EDIT_COURSE_SECTION_REQUEST,
-        INSTR_COURSE_REQUEST
-    } from "@/store/actions";
+    import { ADD_COURSE_SECTION_REQUEST, DELETE_COURSE_SECTION_REQUEST, EDIT_COURSE_SECTION_REQUEST, INSTR_COURSE_REQUEST } from "@/store/actions";
     import {mapGetters} from "vuex";
 
     export default {
@@ -124,28 +119,7 @@
         data() {
             return {
                 course: {},
-                sections: [
-                    // {
-                    //     sectionID: 1,
-                    //     title: 'section 1',
-                    //     objective: 'objective 1',
-                    //     lectures: [
-                    //         { name: "lectures 1", text: "", id: 1 },
-                    //         { name: "lectures 2", text: "", id: 2 },
-                    //         { name: "lectures 3", text: "", id: 3 },
-                    //     ]
-                    // },
-                    // {
-                    //     sectionID: 2,
-                    //     title: 'section 2',
-                    //     objective: 'objective 2',
-                    //     lectures: [
-                    //         { name: "lectures 4", text: "", id: 4 },
-                    //         { name: "lectures 5", text: "", id: 5 },
-                    //         { name: "lectures 6", text: "", id: 6 },
-                    //     ]
-                    // }
-                ],
+                sections: [],
                 dragging: false,
                 creatingNewSection: false,
                 activeSection: 0,
@@ -197,25 +171,21 @@
                     });
             },
             addSectionInput() {
-                // console.log('adding section input');
                 if (this.sections.length === 0) {
-                    // const newInput = { sectionID: 1, title: '', objective: ''};
-                    const newInput = { id: 1, sectionID: 1, name: ''};
+                    const newInput = { id: 1, sectionID: 1, name: '', lectures: [] };
                     this.sections = this.sections.concat([newInput]);
-                    this.activeSection = this.getLastSection.id; // sectionID
+                    this.activeSection = this.getLastSection.id;
                 } else {
                     let lastSection = this.getLastSection;
                     if (lastSection.name) {
-                        const newInput = { id: lastSection.id + 1, sectionID: lastSection.id + 1, name: '' }; //
+                        const newInput = { id: lastSection.id + 1, sectionID: lastSection.id + 1, name: '', lectures: [] };
                         this.sections = this.sections.concat([newInput]);
-                        this.activeSection = lastSection.id + 1 // sectionID
+                        this.activeSection = lastSection.id + 1
                     }
                 }
             },
             addLectureInput(section) {
-                console.log(section);
                 const lastLecture = section.lectures[section.lectures.length-1];
-                console.log(lastLecture);
                 let newLectureInput;
                 if (lastLecture === undefined) {
                     newLectureInput = { id: 1, name: ''}; // , objective: ''
@@ -230,7 +200,6 @@
                 }
             },
             saveSection(section) {
-                console.log(section);
                 if (section.name) {
                     const payload = {
                         courseId: this.$route.params.id,
@@ -252,8 +221,6 @@
                 this.activeSection = 0;
             },
             showEditSection(section) {
-                console.log('show edit');
-                console.log(section);
                 this.editSectionId = section.id;
             },
             editSection(section) {
