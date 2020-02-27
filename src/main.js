@@ -11,15 +11,6 @@ import VuePlyr from 'vue-plyr';
 import uploader from 'vue-simple-uploader';
 import Multiselect from 'vue-multiselect';
 import Vuelidate from 'vuelidate';
-
-// import Antd from 'ant-design-vue';
-// import 'ant-design-vue/dist/antd.css';
-// import "vue-navigation-bar/dist/vue-navigation-bar.css";
-// import VueNavigationBar from "vue-navigation-bar";
-
-// Vue.component("vue-navigation-bar", VueNavigationBar);
-// Vue.use(Antd);
-
 //Import Froala Editor
 import 'froala-editor/js/plugins.pkgd.min.js';
 import 'froala-editor/js/third_party/embedly.min';
@@ -43,7 +34,7 @@ Vue.use(VuePlyr, {
   emit: ['ended']
 });
 
-//
+// toast
 import VueNotifications from 'vue-notifications';
 import toastr from 'toastr';    // https://github.com/CodeSeven/toastr
 import 'jquery';
@@ -61,6 +52,16 @@ const options = {
 };
 Vue.use(VueNotifications, options);
 
+// i18n
+import VueI18n from 'vue-i18n';
+import messages from "@/data/messages";
+Vue.use(VueI18n);
+const i18n = new VueI18n({
+  locale: localStorage.getItem('locale') || 'en',
+  fallbackLocale: 'en',
+  messages,
+});
+
 Vue.config.productionTip = false;
 
 
@@ -75,5 +76,6 @@ axios.interceptors.response.use(resp => resp, err => {
 new Vue({
   router,
   store,
+  i18n,
   render: h => h(App)
 }).$mount('#app');

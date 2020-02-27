@@ -67,6 +67,11 @@
                         <Dropdown :name="user.userName" :items="instructorItems" :onClick="onClick" />
                     </template>
                 </template>
+                <template>
+                    <select id="locale" v-model="$root.$i18n.locale" @change="onLocaleSelected($event)">
+                        <option v-for="(lang, i) in languages" :key="`Lang${i}`" :value="lang">{{ lang }}</option>
+                    </select>
+                </template>
             </ul>
         </nav>
         <div class="menu-toggle" v-on:click="toggle"><i class="fa fa-bars" aria-hidden="true"></i></div>
@@ -89,6 +94,7 @@ export default {
     },
     data() {
         return {
+            languages: ['en', 'kz', 'ru'],
             searchText: '',
             studentItems: [
                 {
@@ -122,6 +128,11 @@ export default {
             ]
         }
     },
+    watch: {
+        locale (val) {
+            this.$i18n.locale = val;
+        }
+    },
     methods: {
         onClick(item) {
             if (item.link === '/logout') {
@@ -141,6 +152,9 @@ export default {
             if (this.searchText) {
                 this.$router.push({ path: '/courses/search', query: { q: this.searchText } });
             }
+        },
+        onLocaleSelected(e) {
+            localStorage.setItem('locale', e.target.value);
         }
     },
     computed: {

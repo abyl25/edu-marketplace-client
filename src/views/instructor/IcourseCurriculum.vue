@@ -2,6 +2,7 @@
     <div>
         <div class="sub-header">
             <h1 class="title">Course Curriculum</h1>
+            <p>{{ $t('message.hello') }}</p>
         </div>
         <div class="main-content-container">
             <div class="sections-container">
@@ -9,8 +10,7 @@
                     <div class="empty-section" v-if="sections.length === 0"></div>
                     <template v-else>
                         <div class="section" v-bind:key="section.sectionID" v-for="(section, i) in sections">
-                            <!--  v-show="sectionHovered"   -->
-                            <template v-if="activeSection === section.sectionID">
+                            <div class="add-section-container" v-if="activeSection === section.sectionID">
                                 <p class="section-label">New section:</p>
                                 <input type="text" class="form-control" v-model="section.title" placeholder="Enter a title"/>
                                 <div class="buttons-container">
@@ -18,7 +18,7 @@
                                     <!-- <v-button :onClick="saveSection(section)" myClass="save-section-btn btn-sm">Save</v-button>-->
                                     <v-button :onClick="cancelSection" myClass="btn-tertiary btn-sm">Cancel</v-button>
                                 </div>
-                            </template>
+                            </div>
                             <div class="section-list" v-else>
                                 <div class="section-header" @mouseover="sectionHoveredId=section.sectionID" @mouseleave="sectionHoveredId=0">
                                     <span class="handle">
@@ -155,17 +155,29 @@
 
 <style scoped>
     .sub-header {
-        padding: 20px 50px;
+        padding: 20px 7%;
         border-bottom: 1px solid #dedfe0;  /* #fff; #dedfe0   */
         text-align: left;
+        transition: all ease-in-out .4s;
     }
     .title {
         font-size: 24px;
         font-weight: 300;
+        transition: all ease-in-out .4s;
+    }
+    @media only screen and (max-width: 800px) {
+        .sub-header {
+            padding: 18px 5%;
+            transition: all ease-in-out .4s;
+        }
+        .title {
+            font-size: 20px;
+            transition: all ease-in-out .4s;
+        }
     }
 
     .main-content-container {
-        padding: 30px 1em;
+        padding: 30px 4% 120px 4%;
     }
 
     .sections-container {
@@ -186,11 +198,20 @@
         background-color: #f2f3f5;
     }
 
+    /* create new section */
+    .add-section-container {
+        display: flex;
+        flex-direction: column;
+        padding: 10px 5%;
+    }
     .section-label {
         margin-bottom: 5px;
         text-align: left;
         /*font-size: 15px;*/
         /*letter-spacing: -1px;*/
+    }
+    .buttons-container {
+        display: flex;
     }
 
     /*    */
@@ -212,7 +233,7 @@
 
     .form-control {
         display: inline-block;
-        width: 50%;
+        width: 70%;
         height: calc(1.5em + 2px);
         padding: .375em .75em;
         font-size: 0.9em;
@@ -223,10 +244,6 @@
         background-clip: padding-box;
         border: 1px solid #ced4da;
         border-radius: 2px;
-    }
-
-    .buttons-container {
-        display: flex;
     }
 
     .section-header {
@@ -289,7 +306,7 @@
     }
 
     .add-section-btn-container {
-        padding: 0 4%;
+        padding: 0 1%;
         text-align: left;
     }
 
