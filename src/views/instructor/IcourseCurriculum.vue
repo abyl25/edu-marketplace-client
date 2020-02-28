@@ -302,7 +302,8 @@
     }
 
     .empty-section {
-        height: 40px;
+        height: 50px;
+        margin-bottom: 20px;
         border: 1px solid #cacbcc;
         background-color: #f2f3f5;
     }

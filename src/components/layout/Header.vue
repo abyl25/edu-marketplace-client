@@ -67,11 +67,11 @@
                         <Dropdown :name="user.userName" :items="instructorItems" :onClick="onClick" />
                     </template>
                 </template>
-                <template>
-                    <select id="locale" v-model="$root.$i18n.locale" @change="onLocaleSelected($event)">
-                        <option v-for="(lang, i) in languages" :key="`Lang${i}`" :value="lang">{{ lang }}</option>
-                    </select>
-                </template>
+<!--                <template>-->
+<!--                    <select id="locale" v-model="$root.$i18n.locale" @change="onLocaleSelected($event)">-->
+<!--                        <option v-for="(lang, i) in languages" :key="`Lang${i}`" :value="lang">{{ lang }}</option>-->
+<!--                    </select>-->
+<!--                </template>-->
             </ul>
         </nav>
         <div class="menu-toggle" v-on:click="toggle"><i class="fa fa-bars" aria-hidden="true"></i></div>
@@ -155,7 +155,7 @@ export default {
     computed: {
         ...mapGetters(['isAuthenticated', 'authStatus', 'user', 'isInstructor', 'homePage']),
         cartItemsLength() {
-            if (this.user != null) {
+            if (this.user != null) { // && this.user.cart != null ??
                 return this.user.cart.cartItems.length;
             }
             return 0;

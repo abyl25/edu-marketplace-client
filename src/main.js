@@ -64,6 +64,15 @@ const i18n = new VueI18n({
 
 Vue.config.productionTip = false;
 
+// set axios auth token header
+(function() {
+  const token = localStorage.getItem('token');
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = 'Bearer ' + token;
+  } else {
+    delete axios.defaults.headers.common['Authorization'];
+  }
+})();
 
 // 401 response interceptor
 axios.interceptors.response.use(resp => resp, err => {

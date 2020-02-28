@@ -14,9 +14,9 @@ import {
 import axios from "axios";
 
 const api_endpoint = process.env.VUE_APP_API;
-const config = {
-    headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
-};
+// const config = {
+//     headers: {'Authorization': "Bearer " + localStorage.getItem('token')}
+// };
 
 export default {
     [COURSES_REQUEST]: ({commit}, payload) => {
@@ -70,7 +70,7 @@ export default {
     [INSTR_COURSES_REQUEST]: ({commit}, instructorID) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_COURSES_REQUEST);
-            axios.get(api_endpoint + `/api/instructor/${instructorID}/courses`, config)
+            axios.get(api_endpoint + `/api/instructor/${instructorID}/courses`)
                 .then(res => {
                     commit(INSTR_COURSES_SUCCESS, res);
                     resolve(res);
@@ -84,7 +84,7 @@ export default {
     [INSTR_COURSE_REQUEST]: ({commit}, { instructorID, courseId }) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_COURSE_REQUEST);
-            axios.get(api_endpoint + `/api/instructor/${instructorID}/courses/${courseId}`, config)
+            axios.get(api_endpoint + `/api/instructor/${instructorID}/courses/${courseId}`)
                 .then(res => {
                     commit(INSTR_COURSE_SUCCESS, res);
                     resolve(res);
@@ -98,7 +98,7 @@ export default {
     [INSTR_COURSE_CREATE_REQUEST]: ({commit}, newCourse) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_COURSE_CREATE_REQUEST);
-            axios.post(api_endpoint + `/api/courses`, newCourse, config)
+            axios.post(api_endpoint + `/api/courses`, newCourse)
                 .then(res => {
                     commit(INSTR_COURSE_CREATE_SUCCESS, res);
                     resolve(res);
@@ -112,7 +112,7 @@ export default {
     [INSTR_COURSE_UPDATE_REQUEST]: ({commit}, { courseId, updateCourse }) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_COURSE_UPDATE_REQUEST);
-            axios.put(api_endpoint + `/api/courses/${courseId}`, updateCourse, config)
+            axios.put(api_endpoint + `/api/courses/${courseId}`, updateCourse)
                 .then(res => {
                     commit(INSTR_COURSE_UPDATE_SUCCESS, res);
                     resolve(res);
@@ -126,7 +126,7 @@ export default {
     [INSTR_COURSE_TARGET_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_COURSE_TARGET_REQUEST);
-            axios.get(api_endpoint + `/api/courses/${payload.courseId}/target`, config)
+            axios.get(api_endpoint + `/api/courses/${payload.courseId}/target`)
                 .then(res => {
                     commit(INSTR_COURSE_TARGET_SUCCESS, res);
                     resolve(res);
@@ -140,7 +140,7 @@ export default {
     [INSTR_CREATE_COURSE_TARGET_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_CREATE_COURSE_TARGET_REQUEST);
-            axios.post(api_endpoint + `/api/courses/target`, payload, config)
+            axios.post(api_endpoint + `/api/courses/target`, payload)
                 .then(res => {
                     commit(INSTR_CREATE_COURSE_TARGET_SUCCESS, res);
                     resolve(res);
@@ -160,7 +160,7 @@ export default {
             } else if ('goalName' in payload) {
                 url = `${api_endpoint}/api/courses/${payload.courseId}/goal/${payload.goalName}`;
             }
-            axios.delete(url, config)
+            axios.delete(url)
                 .then(res => {
                     commit(INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, res);
                     resolve(res);
@@ -174,7 +174,7 @@ export default {
     [INSTR_STUDENTS_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(INSTR_STUDENTS_REQUEST);
-            axios.get(`${api_endpoint}/api/instructor/${payload.instructorId}/courses/${payload.courseId}/students`, config)
+            axios.get(`${api_endpoint}/api/instructor/${payload.instructorId}/courses/${payload.courseId}/students`)
                 .then(res => {
                     commit(INSTR_STUDENTS_SUCCESS, res);
                     resolve(res);
@@ -188,7 +188,7 @@ export default {
     [ADD_COURSE_TO_CART_REQUEST]: ({commit, rootState}, payload) => {
         return new Promise((resolve, reject) => {
             commit(ADD_COURSE_TO_CART_REQUEST);
-            axios.post(api_endpoint + `/api/user/${payload.userId}/cart/${payload.courseId}`, config)
+            axios.post(api_endpoint + `/api/user/${payload.userId}/cart/${payload.courseId}`)
                 .then(res => {
                     const mutationPayload = {
                         auth: rootState.auth,
@@ -206,7 +206,7 @@ export default {
     [CART_COURSES_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(CART_COURSES_REQUEST);
-            axios.get(api_endpoint + `/api/user/${payload.userId}/cart`, config)
+            axios.get(api_endpoint + `/api/user/${payload.userId}/cart`)
                 .then(res => {
                     commit(CART_COURSES_SUCCESS, res);
                     resolve(res);
@@ -220,7 +220,7 @@ export default {
     [DELETE_COURSE_FROM_CART_REQUEST]: ({commit, rootState}, payload) => {
         return new Promise((resolve, reject) => {
             commit(DELETE_COURSE_FROM_CART_REQUEST);
-            axios.delete(api_endpoint + `/api/user/${payload.userId}/cart/${payload.courseId}`, config)
+            axios.delete(api_endpoint + `/api/user/${payload.userId}/cart/${payload.courseId}`)
                 .then(res => {
                     const mutationPayload = {
                         auth: rootState.auth,
@@ -249,7 +249,7 @@ export default {
         return new Promise((resolve, reject) => {
             commit(REGISTER_TO_COURSE_REQUEST);
             console.log(payload);
-            axios.post(`${api_endpoint}/api/courses/register`, payload, config)
+            axios.post(`${api_endpoint}/api/courses/register`, payload)
                 .then(res => {
                     commit(REGISTER_TO_COURSE_SUCCESS, payload.courseId);
                     resolve(res);
@@ -263,7 +263,7 @@ export default {
     [MY_COURSES_REQUEST]: ({commit, rootState}, payload) => {
         return new Promise((resolve, reject) => {
             commit(MY_COURSES_REQUEST);
-            axios.get(`${api_endpoint}/api/user/${payload.studentId}/courses`, config)
+            axios.get(`${api_endpoint}/api/user/${payload.studentId}/courses`)
                 .then(res => {
                     commit(MY_COURSES_SUCCESS, res);
                     resolve(res);
@@ -277,7 +277,7 @@ export default {
     [ADD_COURSE_SECTION_REQUEST]: ({commit, rootState}, payload) => {
         return new Promise((resolve, reject) => {
             commit(ADD_COURSE_SECTION_REQUEST);
-            axios.post(`${api_endpoint}/api/courses/${payload.courseId}/section`, { name: payload.name }, config)
+            axios.post(`${api_endpoint}/api/courses/${payload.courseId}/section`, { name: payload.name })
                 .then(res => {
                     commit(ADD_COURSE_SECTION_SUCCESS, res);
                     resolve(res);
@@ -291,7 +291,7 @@ export default {
     [EDIT_COURSE_SECTION_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(EDIT_COURSE_SECTION_REQUEST);
-            axios.put(`${api_endpoint}/api/courses/${payload.courseId}/section/${payload.sectionId}`, { name: payload.name }, config)
+            axios.put(`${api_endpoint}/api/courses/${payload.courseId}/section/${payload.sectionId}`, { name: payload.name })
                 .then(res => {
                     commit(EDIT_COURSE_SECTION_SUCCESS, res);
                     resolve(res);
@@ -305,7 +305,7 @@ export default {
     [DELETE_COURSE_SECTION_REQUEST]: ({commit}, payload) => {
         return new Promise((resolve, reject) => {
             commit(DELETE_COURSE_SECTION_REQUEST);
-            axios.delete(`${api_endpoint}/api/courses/${payload.courseId}/section/${payload.sectionId}`, config)
+            axios.delete(`${api_endpoint}/api/courses/${payload.courseId}/section/${payload.sectionId}`)
                 .then(res => {
                     commit(DELETE_COURSE_SECTION_SUCCESS);
                     resolve(res);

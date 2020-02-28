@@ -15,7 +15,7 @@ export default {
                     console.log(res.data); // eslint-disable-line no-console
                     localStorage.setItem('token', res.data.token);
                     localStorage.setItem('user', JSON.stringify(res.data.user));
-                    axios.defaults.headers.common['Authorization'] = res.data.token;
+                    axios.defaults.headers.common['Authorization'] = 'Bearer ' + res.data.token;
                     commit(LOGIN_SUCCESS, res);
                     resolve(res);
                 })
