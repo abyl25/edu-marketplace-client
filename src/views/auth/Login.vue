@@ -38,6 +38,11 @@
           userType: this.userType.trim()
         };
         this.$store.dispatch(AUTH_LOGIN, credentials).then(() => {
+          const redirect = this.$route.query.redirect;
+          if (redirect) {
+            this.$router.push(redirect);
+            return;
+          }
           let role = this.user.roles[0];
           if (role.name === 'Instructor') {
             this.$router.push('/instructor/home');

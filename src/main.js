@@ -64,8 +64,8 @@ const i18n = new VueI18n({
 
 Vue.config.productionTip = false;
 
-console.log(process.env.NODE_ENV);
-console.log(process.env.VUE_APP_API);
+// console.log(process.env.NODE_ENV);
+// console.log(process.env.VUE_APP_API);
 
 // set axios auth token header
 (function() {
