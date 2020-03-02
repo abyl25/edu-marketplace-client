@@ -9,7 +9,9 @@ import {
     INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, REGISTER_TO_COURSE_REQUEST, REGISTER_TO_COURSE_SUCCESS, REGISTER_TO_COURSE_ERROR, MY_COURSES_REQUEST,
     MY_COURSES_SUCCESS, MY_COURSES_ERROR, INSTR_STUDENTS_REQUEST, INSTR_STUDENTS_SUCCESS, INSTR_STUDENTS_ERROR, EMPTY_CART_REQUEST, EMPTY_CART_SUCCESS,
     EMPTY_CART_ERROR, ADD_COURSE_SECTION_REQUEST, ADD_COURSE_SECTION_SUCCESS, ADD_COURSE_SECTION_ERROR, EDIT_COURSE_SECTION_REQUEST, EDIT_COURSE_SECTION_SUCCESS,
-    EDIT_COURSE_SECTION_ERROR, DELETE_COURSE_SECTION_REQUEST, DELETE_COURSE_SECTION_SUCCESS, DELETE_COURSE_SECTION_ERROR,
+    EDIT_COURSE_SECTION_ERROR, DELETE_COURSE_SECTION_REQUEST, DELETE_COURSE_SECTION_SUCCESS, DELETE_COURSE_SECTION_ERROR, ADD_COURSE_LECTURE_REQUEST,
+    ADD_COURSE_LECTURE_SUCCESS, ADD_COURSE_LECTURE_ERROR, EDIT_COURSE_LECTURE_REQUEST, EDIT_COURSE_LECTURE_SUCCESS, EDIT_COURSE_LECTURE_ERROR,
+    DELETE_COURSE_LECTURE_REQUEST, DELETE_COURSE_LECTURE_SUCCESS, DELETE_COURSE_LECTURE_ERROR
 } from './index';
 import axios from "axios";
 
@@ -316,5 +318,46 @@ export default {
                 });
         })
     },
-
+    [ADD_COURSE_LECTURE_REQUEST]: ({commit}, payload) => {
+        return new Promise((resolve, reject) => {
+            commit(ADD_COURSE_LECTURE_REQUEST);
+            axios.post(`${api_endpoint}/api/courses/${payload.courseId}/section/${payload.sectionId}/lecture`, { name: payload.name })
+                .then(res => {
+                    commit(ADD_COURSE_LECTURE_SUCCESS, res);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(ADD_COURSE_LECTURE_ERROR);
+                    reject(err);
+                });
+        });
+    },
+    [EDIT_COURSE_LECTURE_REQUEST]: ({commit}, payload) => {
+        return new Promise((resolve, reject) => {
+            commit(EDIT_COURSE_LECTURE_REQUEST);
+            axios.put(`${api_endpoint}/api/courses/${payload.courseId}/section/${payload.sectionId}/lecture/${payload.lectureId}`, { name: payload.name })
+                .then(res => {
+                    commit(EDIT_COURSE_LECTURE_SUCCESS, res);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(EDIT_COURSE_LECTURE_ERROR);
+                    reject(err);
+                });
+        });
+    },
+    [DELETE_COURSE_LECTURE_REQUEST]: ({commit}, payload) => {
+        return new Promise((resolve, reject) => {
+            commit(DELETE_COURSE_LECTURE_REQUEST);
+            axios.delete(`${api_endpoint}/api/courses/${payload.courseId}/section/${payload.sectionId}/lecture/${payload.lectureId}`, { name: payload.name })
+                .then(res => {
+                    commit(DELETE_COURSE_LECTURE_SUCCESS, res);
+                    resolve(res);
+                })
+                .catch(err => {
+                    commit(DELETE_COURSE_LECTURE_ERROR);
+                    reject(err);
+                });
+        });
+    },
 }

@@ -9,8 +9,9 @@ import {
     INSTR_DELETE_COURSE_REQ_GOAL_SUCCESS, REGISTER_TO_COURSE_REQUEST, REGISTER_TO_COURSE_SUCCESS, REGISTER_TO_COURSE_ERROR, MY_COURSES_REQUEST,
     MY_COURSES_SUCCESS, MY_COURSES_ERROR, INSTR_STUDENTS_REQUEST, INSTR_STUDENTS_SUCCESS, INSTR_STUDENTS_ERROR, EMPTY_CART_REQUEST, EMPTY_CART_SUCCESS,
     EMPTY_CART_ERROR, ADD_COURSE_SECTION_REQUEST, ADD_COURSE_SECTION_SUCCESS, ADD_COURSE_SECTION_ERROR, EDIT_COURSE_SECTION_REQUEST, EDIT_COURSE_SECTION_SUCCESS,
-    EDIT_COURSE_SECTION_ERROR, DELETE_COURSE_SECTION_REQUEST, DELETE_COURSE_SECTION_SUCCESS, DELETE_COURSE_SECTION_ERROR,
-
+    EDIT_COURSE_SECTION_ERROR, DELETE_COURSE_SECTION_REQUEST, DELETE_COURSE_SECTION_SUCCESS, DELETE_COURSE_SECTION_ERROR, ADD_COURSE_LECTURE_REQUEST,
+    ADD_COURSE_LECTURE_SUCCESS, ADD_COURSE_LECTURE_ERROR, EDIT_COURSE_LECTURE_REQUEST, EDIT_COURSE_LECTURE_SUCCESS, EDIT_COURSE_LECTURE_ERROR,
+    DELETE_COURSE_LECTURE_REQUEST, DELETE_COURSE_LECTURE_SUCCESS, DELETE_COURSE_LECTURE_ERROR
 } from '../actions';
 
 export default {
@@ -215,7 +216,7 @@ export default {
     [EDIT_COURSE_SECTION_REQUEST]: (state) => {
         state.status = 'Edit Course Section Request';
     },
-    [EDIT_COURSE_SECTION_SUCCESS]: (state,res) => {
+    [EDIT_COURSE_SECTION_SUCCESS]: (state, res) => {
         state.status = 'Edit Course Section Success';
         // state.instructorCourses = res.data;
     },
@@ -226,11 +227,40 @@ export default {
     [DELETE_COURSE_SECTION_REQUEST]: (state) => {
         state.status = 'Delete Course Section Request';
     },
-    [DELETE_COURSE_SECTION_SUCCESS]: (state,res) => {
+    [DELETE_COURSE_SECTION_SUCCESS]: (state, res) => {
         state.status = 'Delete Course Section Success';
     },
     [DELETE_COURSE_SECTION_ERROR]: (state) => {
         state.status = 'Delete Course Section Error';
     },
-
+    // Add Course Lecture
+    [ADD_COURSE_LECTURE_REQUEST]: (state) => {
+        state.status = 'Add Course Lecture Request';
+    },
+    [ADD_COURSE_LECTURE_SUCCESS]: (state, res) => {
+        state.status = 'Add Course Lecture Success';
+    },
+    [ADD_COURSE_LECTURE_ERROR]: (state) => {
+        state.status = 'Add Course Lecture Error';
+    },
+    // Edit Course Lecture
+    [EDIT_COURSE_LECTURE_REQUEST]: (state) => {
+        state.status = 'Edit Course Lecture Request';
+    },
+    [EDIT_COURSE_LECTURE_SUCCESS]: (state, res) => {
+        state.status = 'Edit Course Lecture Success';
+    },
+    [EDIT_COURSE_LECTURE_ERROR]: (state) => {
+        state.status = 'Edit Course Lecture Error';
+    },
+    // Delete Course Lecture
+    [DELETE_COURSE_LECTURE_REQUEST]: (state) => {
+        state.status = 'Delete Course Lecture Request';
+    },
+    [DELETE_COURSE_LECTURE_SUCCESS]: (state, res) => {
+        state.status = 'Delete Course Lecture Success';
+    },
+    [DELETE_COURSE_LECTURE_ERROR]: (state) => {
+        state.status = 'Delete Course Lecture Error';
+    },
 }

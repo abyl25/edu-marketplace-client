@@ -58,8 +58,18 @@
                                             <p class="section-label">New lecture:</p>
                                             <input type="text" class="form-control" v-model="lecture.name" placeholder="Enter title"/>
                                             <div class="buttons-container">
-                                                <button @click="saveLecture(lecture, i)" class="save-section-btn btn-sm mr-10">Save</button>
+                                                <button @click="saveLecture(lecture, section.id)" class="save-section-btn btn-sm mr-10">Save</button>
                                                 <button @click="cancelLecture(section)" class="btn-tertiary btn-sm">Cancel</button>
+                                            </div>
+                                        </div>
+
+                                        <!-- Show Edit Lecture -->
+                                        <div class="add-section-container" v-else-if="editLectureId === lecture.id">
+                                            <p class="section-label">Lecture: {{ i + 1 }}</p>
+                                            <input type="text" class="form-control" v-model="lecture.name" placeholder="Enter a title"/>
+                                            <div class="buttons-container">
+                                                <button @click="editLecture(lecture, section)" class="save-section-btn btn-sm mr-10">Save</button>
+                                                <v-button :onClick="cancelEditLecture" myClass="btn-tertiary btn-sm">Cancel</v-button>
                                             </div>
                                         </div>
 
@@ -72,11 +82,11 @@
                                             <span class="lecture-id">Lecture {{ idx + 1 }}: </span>
                                             <span class="section-title">{{ lecture.name }}</span>
                                             <template v-if="lectureHoveredId === lecture.id">
-                                                <span class="section-control-btn">
+                                                <span class="section-control-btn" @click="showEditLecture(lecture)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="14" height="14" viewBox="0 0 172 172"
                                                          style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#686f7a"><path d="M121.38542,7.61458l-93.61458,93.61458l-20.07227,63.07226l63.07227,-20.07226l93.61458,-93.61458c0,0 -0.71667,-15.05717 -14.33333,-28.66667c-13.61667,-13.61667 -28.66667,-14.33333 -28.66667,-14.33333zM124.07292,19.26042c7.68267,1.462 13.7993,4.71645 18.51855,9.56022c4.71925,4.84377 8.04111,11.27686 10.14811,19.10645l-12.98958,12.98958l-28.66667,-28.66667l10.30208,-10.30208zM35.67936,108.40983c0.08473,0.02134 8.61749,2.17868 17.1748,10.736c9.31667,8.6 10.75,16.48893 10.75,16.48893l0.30794,0.36393l-25.43327,8.18848l-10.722,-10.72201z"></path></g></g></svg>
                                                 </span>
-                                                <span class="section-control-btn">
+                                                <span class="section-control-btn" @click="deleteLecture(lecture, section)">
                                                     <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="14" height="14" viewBox="0 0 172 172"
                                                          style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#686f7a"><path d="M72.76923,-0.20673c-5.53004,0 -10.95673,1.08534 -14.88462,4.96154c-3.92788,3.87621 -5.16827,9.38041 -5.16827,15.09135h-26.25481c-3.64363,0 -6.61538,2.97176 -6.61538,6.61538h-6.61538v13.23077h145.53846v-13.23077h-6.61538c0,-3.64363 -2.97176,-6.61538 -6.61538,-6.61538h-26.25481c0,-5.71094 -1.24038,-11.21514 -5.16827,-15.09135c-3.92788,-3.8762 -9.35456,-4.96154 -14.88462,-4.96154zM72.76923,13.4375h26.46154c3.61779,0 4.75481,0.85276 5.16827,1.24038c0.41346,0.38762 1.24038,1.47296 1.24038,5.16827h-39.27885c0,-3.69531 0.82692,-4.78065 1.24038,-5.16827c0.41346,-0.38762 1.55048,-1.24038 5.16827,-1.24038zM26.46154,46.30769v105.84615c0,10.93089 8.91526,19.84615 19.84615,19.84615h79.38462c10.93089,0 19.84615,-8.91526 19.84615,-19.84615v-105.84615zM52.92308,66.15385h13.23077v79.38462h-13.23077zM79.38462,66.15385h13.23077v79.38462h-13.23077zM105.84615,66.15385h13.23077v79.38462h-13.23077z"></path></g></g></svg>
                                                 </span>
@@ -107,7 +117,9 @@
     import draggable from 'vuedraggable';
     import axios from 'axios';
     import Button from "@/components/Button";
-    import { ADD_COURSE_SECTION_REQUEST, DELETE_COURSE_SECTION_REQUEST, EDIT_COURSE_SECTION_REQUEST, INSTR_COURSE_REQUEST } from "@/store/actions";
+    import {
+        ADD_COURSE_LECTURE_REQUEST, ADD_COURSE_SECTION_REQUEST, DELETE_COURSE_SECTION_REQUEST, EDIT_COURSE_SECTION_REQUEST, INSTR_COURSE_REQUEST, EDIT_COURSE_LECTURE_REQUEST, DELETE_COURSE_LECTURE_REQUEST
+    } from "@/store/actions";
     import {mapGetters} from "vuex";
 
     export default {
@@ -125,6 +137,7 @@
                 activeSection: 0,
                 activeLecture: 0,
                 editSectionId: 0,
+                editLectureId: 0,
                 sectionHoveredId: 0,
                 lectureHoveredId: 0
             }
@@ -133,13 +146,7 @@
             ...mapGetters(['user', 'instrCourse']),
             getLastSection() {
                 return this.sections[this.sections.length-1];
-            },
-            getLastSection1() {
-                return this.course.courseSections[this.course.courseSections.length-1];
-            },
-            // emptySection() {
-            //     return this.course.courseSections.length === 0; // this.course.hasOwnProperty('courseSections') ?
-            // }
+            }
         },
         created() {
             this.getInstructorCourse();
@@ -257,16 +264,68 @@
                         console.log(err.response.data);
                     });
             },
-            saveLecture(lecture) {
-                console.log(lecture);
+            // Lecture Methods
+            saveLecture(lecture, sectionId) {
                 if (lecture.name) {
                     this.activeLecture = 0;
+                    const payload = {
+                        courseId: this.$route.params.id,
+                        sectionId: sectionId,
+                        name: lecture.name
+                    };
+                    this.$store.dispatch(ADD_COURSE_LECTURE_REQUEST, payload)
+                        .then(res => {
+                            console.log(res.data);
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            console.log(err.response.data);
+                        });
                 }
             },
             cancelLecture(section) {
                 section.lectures = section.lectures.slice(0, section.lectures.length-1);
                 this.activeLecture = 0;
-            }
+            },
+            showEditLecture(lecture) {
+                this.editLectureId = lecture.id;
+            },
+            editLecture(lecture, section) {
+                const payload = {
+                    courseId: this.$route.params.id,
+                    sectionId: section.id,
+                    lectureId: lecture.id,
+                    name: lecture.name
+                };
+                this.$store.dispatch(EDIT_COURSE_LECTURE_REQUEST, payload)
+                    .then(res => {
+                        console.log(res.data);
+                        this.editLectureId = 0;
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        console.log(err.response.data);
+                    });
+            },
+            cancelEditLecture() {
+                this.editLectureId = 0;
+            },
+            deleteLecture(lecture, section) {
+                section.lectures = section.lectures.filter(l => l.id !== lecture.id);
+                const payload = {
+                    courseId: this.$route.params.id,
+                    sectionId: section.id,
+                    lectureId: lecture.id
+                };
+                this.$store.dispatch(DELETE_COURSE_LECTURE_REQUEST, payload)
+                    .then(res => {
+                        console.log(res.data);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        console.log(err.response.data);
+                    });
+            },
         }
     }
 </script>
