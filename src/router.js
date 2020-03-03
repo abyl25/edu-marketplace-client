@@ -25,6 +25,7 @@ import NotFound from "@/views/NotFound";
 import NotAuthorized from "@/views/NotAuthorized";
 import LearnPage from "@/views/student/LearnPage";
 import FileUpload from "@/views/instructor/FileUpload";
+import Auth from "@/views/auth/Auth";
 
 Vue.use(Router);
 
@@ -70,6 +71,14 @@ const router = new Router({
       meta: {
         guest: true
       }
+    },
+    {
+      path: '/auth',
+      name: 'Auth',
+      component: Auth,
+      meta: {
+        guest: true
+      },
     },
     {
       path: '/confirm',
@@ -242,7 +251,8 @@ router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!store.getters.isAuthenticated) {
       next({
-        path: '/login',
+        // path: '/login',
+        path: '/auth',
         query: { redirect: to.fullPath }
       });
     } else {

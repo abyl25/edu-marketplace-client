@@ -48,8 +48,8 @@
                 <template v-if="!this.isAuthenticated">
 <!--                    <li><router-link to="/login">Sign in</router-link></li>-->
 <!--                    <li><router-link to="/login">Sign in</router-link></li>-->
-                    <li><router-link to="/login">{{ $t('message.login') }}</router-link></li>
-                    <li><router-link to="/signup">{{ $t('message.signup') }}</router-link></li>
+                    <li><router-link to="/auth" @click.native="setAuthIndex(1)">{{ $t('message.login') }}</router-link></li>
+                    <li><router-link to="/auth" @click.native="setAuthIndex(2)">{{ $t('message.signup') }}</router-link></li>
                 </template>
                 <template v-if="this.isAuthenticated">
                     <template v-if="isStudent"> <!--  -->
@@ -144,6 +144,9 @@ export default {
         },
         logout() {
             this.$store.dispatch(AUTH_LOGOUT).then(() => this.$router.push('/login'));
+        },
+        setAuthIndex(index) {
+            localStorage.setItem('authTab', index);
         },
         searchCourses(e) {
             e.preventDefault();

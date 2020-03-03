@@ -33,11 +33,19 @@
 </script>
 
 <style>
+  /*html {*/
+  /*  width: 100vw;*/
+  /*}*/
   * {
     margin: 0;
     padding: 0;
     line-height: 1.4;
+    box-sizing: border-box;
   }
+  body {
+    /*width: calc(100vw - 34px);*/
+  }
+
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
