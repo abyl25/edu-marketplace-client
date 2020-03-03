@@ -69,7 +69,7 @@
             }
         },
         created() {
-            console.log('CourseTarget created');
+            // console.log('CourseTarget created');
             this.getCourseTarget();
         },
         methods: {

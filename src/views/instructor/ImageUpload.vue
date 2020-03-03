@@ -50,11 +50,11 @@
                 this.uploadError = null;
             },
             onFileSelected(e) {
-                console.log('onFileSelected');
+                // console.log('onFileSelected');
                 this.selectedFile = e.target.files[0];
             },
             preview(e) {
-                console.log('previewing');
+                // console.log('previewing');
                 const reader = new FileReader();
                 reader.onload = function(){
                     const my_image = document.getElementById('my_image');
@@ -68,7 +68,8 @@
                 fd.append('uploadFile', this.selectedFile, this.selectedFile.name);
 
                 // const url = `http://192.168.43.59:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
-                const url = `http://178.170.221.108:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
+                // const url = `http://178.170.221.108:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
+                const url = `http://10.10.4.27:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
                 const headers = {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'Authorization': 'Bearer ' + this.$store.getters.token

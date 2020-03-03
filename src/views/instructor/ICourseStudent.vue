@@ -45,7 +45,7 @@
             }
         },
         created() {
-            console.log('ICourseStudent created');
+            // console.log('ICourseStudent created');
             this.getInstructorStudents();
         },
         methods: {
@@ -54,7 +54,6 @@
                     instructorId: this.user.id,
                     courseId: this.$route.params.id
                 };
-                console.log(payload);
                 this.$store.dispatch(INSTR_STUDENTS_REQUEST, payload)
                     .then(res => {
                         console.log(res.data);
