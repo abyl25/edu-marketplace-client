@@ -12,14 +12,19 @@
                 <div class="price">
                     <h2>Price: ${{ this.course.price }}</h2>
                 </div>
-                <template v-if="isStudent">
+                <template v-if="!this.isAuthenticated">
+                    <div class="b1">
+                        <button class="addtocart" @click="addToCart">Add to cart</button>
+                    </div>
+                </template>
+                <template v-else-if="this.isAuthenticated && isStudent">
                     <div class="b1">
                         <button v-if="!alreadyAddedToCart" class="addtocart" @click="addToCart">Add to cart</button>
                         <router-link to="/cart" v-else class="addtocart">Go to cart</router-link>
                     </div>
-                    <div class="b2">
-                        <button class="buynow" @click="registerToCourse">Register</button>
-                    </div>
+<!--                    <div class="b2">-->
+<!--                        <button class="buynow" @click="registerToCourse">Register</button>-->
+<!--                    </div>-->
                 </template>
             </div>
         </div>
@@ -82,11 +87,13 @@ export default {
     },
     methods: {
         checkIfAlreadyAddedToCart() {
-            console.log(this.user.cart);
-            const exists = this.user.cart.cartItems.filter(i => i.course.id === this.course.id).length > 0;
-            console.log(exists);
-            if (exists) {
-                this.alreadyAddedToCart = true;
+            if (this.isAuthenticated) {
+                console.log(this.user.cart);
+                const exists = this.user.cart.cartItems.filter(i => i.course.id === this.course.id).length > 0;
+                console.log(exists);
+                if (exists) {
+                    this.alreadyAddedToCart = true;
+                }
             }
         },
         getCourseDetails() {
@@ -107,6 +114,11 @@ export default {
             });
         },
         addToCart() {
+            if (!this.isAuthenticated) {
+                this.$router.push({ path:'/auth', query: { redirect: this.$route.path } });
+                console.log('executing after router redirect');
+                return;
+            }
             const payload = {
                 userId: this.user.id,
                 courseId: this.$route.params.id
@@ -163,7 +175,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['user', 'courses']),
+        ...mapGetters(['isAuthenticated', 'user', 'courses']),
         isStudent() {
             return this.user.roles[0].name === 'Student';
         }

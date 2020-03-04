@@ -80,7 +80,7 @@ Vue.config.productionTip = false;
 // 401 response interceptor
 axios.interceptors.response.use(resp => resp, err => {
   if (err.response.status === 401) {
-    store.dispatch(AUTH_LOGOUT).then(() => router.push({ path: '/login', query: {logout: '1'}}));
+    store.dispatch(AUTH_LOGOUT).then(() => router.push({ path: '/auth', query: {logout: '1'}}));
   }
   return Promise.reject(err);
 });

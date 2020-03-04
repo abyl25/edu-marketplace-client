@@ -115,9 +115,16 @@
             this.authIndex = parseInt(localStorage.getItem('authTab')) || 1;
         },
         methods: {
+            resetErrorFields() {
+                this.errors = {};
+                this.usernameError = '';
+                this.passwordError = '';
+                this.confirmError = '';
+            },
             setAuthTab(index) {
                 this.authIndex = index;
                 localStorage.setItem('authTab', index);
+                this.resetErrorFields();
             },
             login(e) {
                 e.preventDefault();
@@ -283,15 +290,15 @@
         padding-bottom:5px;
         margin-right: 15px;
         display: inline-block;
-        border-bottom: 2px solid #1161ee;
+        border-bottom: 2px solid #fff;
         text-transform: uppercase;
-        color: #98ccfa; /* #fff; */
+        color: #fff;  /* #98ccfa; */
         cursor: pointer;
         user-select: none;
     }
     .activeAuthTab {
-        color: #fff;
-        border-color: #fff;
+        /*color: #fff;*/
+        border-color: #1161ee;
     }
     .group {
         margin-bottom: 15px;

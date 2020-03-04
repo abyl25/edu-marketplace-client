@@ -49,29 +49,29 @@ const router = new Router({
         guest: true
       }
     },
-    {
-      path: '/login',
-      name: 'Login',
-      component: Login,
-      meta: {
-        guest: true
-      },
-      beforeEnter: (to, from, next) => {
-        if (store.getters.isAuthenticated) {
-          next('/');
-        } else {
-          next();
-        }
-      }
-    },
-    {
-      path: '/signup',
-      name: 'SignUp',
-      component: SignUp,
-      meta: {
-        guest: true
-      }
-    },
+    // {
+    //   path: '/login',
+    //   name: 'Login',
+    //   component: Login,
+    //   meta: {
+    //     guest: true
+    //   },
+    //   beforeEnter: (to, from, next) => {
+    //     if (store.getters.isAuthenticated) {
+    //       next('/');
+    //     } else {
+    //       next();
+    //     }
+    //   }
+    // },
+    // {
+    //   path: '/signup',
+    //   name: 'SignUp',
+    //   component: SignUp,
+    //   meta: {
+    //     guest: true
+    //   }
+    // },
     {
       path: '/auth',
       name: 'Auth',
