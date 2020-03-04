@@ -6,7 +6,6 @@ import StudentHome from "@/views/student/StudentHome";
 import Login from '@/views/auth/Login';
 import SignUp from '@/views/auth/SignUp';
 import AccountConfirmation from '@/views/auth/AccountConfirmation';
-import CarouselContainer from "@/components/carousel/CarouselContainer";
 import CourseList from '@/views/courses/CourseList';
 import CourseDetails from "@/views/courses/CourseDetails";
 import SearchCourse from "@/views/courses/SearchCourse";
@@ -26,6 +25,7 @@ import NotAuthorized from "@/views/NotAuthorized";
 import LearnPage from "@/views/student/LearnPage";
 import FileUpload from "@/views/instructor/FileUpload";
 import Auth from "@/views/auth/Auth";
+import Carousel from "@/components/Carousel";
 
 Vue.use(Router);
 
@@ -35,8 +35,8 @@ const router = new Router({
   routes: [
     {
       path: '/',
-      name: 'CarouselContainer',
-      component: CarouselContainer,
+      name: 'Carousel',
+      component: Carousel,
       meta: {
         guest: true
       }

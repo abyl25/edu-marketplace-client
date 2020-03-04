@@ -19,6 +19,7 @@
     "v-credit-card": "^1.2.4",
     "v-selectmenu": "^2.0.2",
     "vue": "^2.6.10",
+    "vue-agile": "^1.0.11",
     "vue-froala-wysiwyg": "^3.1.0",
     "vue-i18n": "^8.15.4",
     "vue-multiselect": "^2.1.6",

@@ -48,5 +48,15 @@ export default {
     .slide-img {
         height: 91vh;
         width: 100%;
+        /*max-height: 91vh;*/
+        /*max-width: 100%;*/
+        /*width: 100vw;*/
+        /*padding: 0;*/
+        /*display: block;*/
+        /*margin: 0 auto;*/
+        /*height: auto;*/
+        /*width: 100%;*/
+        /*max-height: 100%;*/
+        /*max-width: 100%;*/
     }
 </style>

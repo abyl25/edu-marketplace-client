@@ -49,7 +49,7 @@
 <!--                    <li><router-link to="/login">Sign in</router-link></li>-->
 <!--                    <li><router-link to="/login">Sign in</router-link></li>-->
                     <li><router-link to="/auth" @click.native="setAuthIndex(1)">{{ $t('message.login') }}</router-link></li>
-                    <li><router-link to="/auth" @click.native="setAuthIndex(2)">{{ $t('message.signup') }}</router-link></li>
+<!--                    <li><router-link to="/auth" @click.native="setAuthIndex(2)">{{ $t('message.signup') }}</router-link></li>-->
                 </template>
                 <template v-if="this.isAuthenticated">
                     <template v-if="isStudent"> <!--  -->
@@ -69,11 +69,11 @@
                         <Dropdown :name="user.userName" :items="instructorItems" :onClick="onClick" />
                     </template>
                 </template>
-                <template>
-                    <select id="locale" v-model="$root.$i18n.locale" @change="onLocaleSelected($event)">
-                        <option v-for="(lang, i) in languages" :key="`Lang${i}`" :value="lang">{{ lang }}</option>
-                    </select>
-                </template>
+<!--                <template>-->
+<!--                    <select id="locale" v-model="$root.$i18n.locale" @change="onLocaleSelected($event)">-->
+<!--                        <option v-for="(lang, i) in languages" :key="`Lang${i}`" :value="lang">{{ lang }}</option>-->
+<!--                    </select>-->
+<!--                </template>-->
             </ul>
         </nav>
         <div class="menu-toggle" v-on:click="toggle"><i class="fa fa-bars" aria-hidden="true"></i></div>
