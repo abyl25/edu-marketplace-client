@@ -111,7 +111,6 @@
             ...mapGetters(['user', 'isInstructor', 'homePage', 'authStatus', 'signupSuccess'])
         },
         updated() {
-            console.log('updated');
             this.authIndex = parseInt(localStorage.getItem('authTab')) || 1;
         },
         methods: {

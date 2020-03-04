@@ -116,7 +116,6 @@ export default {
         addToCart() {
             if (!this.isAuthenticated) {
                 this.$router.push({ path:'/auth', query: { redirect: this.$route.path } });
-                console.log('executing after router redirect');
                 return;
             }
             const payload = {

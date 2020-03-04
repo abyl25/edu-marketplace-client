@@ -143,7 +143,7 @@ export default {
             document.getElementById("navbar").classList.toggle('active');
         },
         logout() {
-            this.$store.dispatch(AUTH_LOGOUT).then(() => this.$router.push('/login'));
+            this.$store.dispatch(AUTH_LOGOUT).then(() => this.$router.push('/auth'));
         },
         setAuthIndex(index) {
             localStorage.setItem('authTab', index);
