@@ -54,11 +54,11 @@
                     <tab name="Announcements">
                         The third tab
                     </tab>
-                    <tab prefix="<span class='glyphicon glyphicon-star'></span> "
-                         name="Prefix and suffix"
-                         suffix=" <span class='badge'>4</span>">
-                        A prefix and a suffix can be added
-                    </tab>
+<!--                    <tab prefix="<span class='glyphicon glyphicon-star'></span> "-->
+<!--                         name="Prefix and suffix"-->
+<!--                         suffix=" <span class='badge'>4</span>">-->
+<!--                        A prefix and a suffix can be added-->
+<!--                    </tab>-->
                 </tabs>
             </div>
         </div>
@@ -71,6 +71,7 @@
     import 'vue-tabs-component/docs/resources/tabs-component.css';
     import QA from "@/views/student/QA";
     import sectionData from "@/data/sectionData";
+    import {COURSE_REQUEST} from "@/store/actions";
 
     export default {
         name: "LearnPage",
@@ -81,6 +82,7 @@
         },
         data() {
             return {
+                course: {},
                 showSectionMenuItems: false,
                 activeSectionId: null,
                 activeLectureId: null,
@@ -92,12 +94,26 @@
         created() {
             this.activeSectionId = parseInt(localStorage.getItem("activeSectionId"));
             this.activeLectureId = parseInt(localStorage.getItem("activeLectureId"));
+            this.getCourseDetails();
         },
         mounted() {
             let player = this.$refs.player.player;
             // console.log(player);
         },
         methods: {
+            getCourseDetails() {
+                const courseId = this.$route.params.course_id;
+                // this.course = this.courses.filter(c => c.id == courseId);
+                this.$store.dispatch(COURSE_REQUEST, courseId)
+                    .then(res => {
+                        console.log(res.data);
+                        this.course = res.data;
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        console.log(err.response.data);
+                    });
+            },
             tabClicked (selectedTab) {
                 // console.log('Current tab re-clicked:' + selectedTab.tab.name);
             },

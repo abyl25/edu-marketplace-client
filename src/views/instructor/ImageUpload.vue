@@ -71,7 +71,8 @@
                 // const url = `http://178.170.221.108:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
                 const url = `http://10.10.4.27:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
                 const headers = {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    // 'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/form-data',
                     'Authorization': 'Bearer ' + this.$store.getters.token
                 };
                 axios({
