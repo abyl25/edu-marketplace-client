@@ -1,17 +1,23 @@
 <template>
   <div id="app">
-    <Header/>
+<!--    <Header/>-->
+    <NewHeader/>
     <router-view/>
+    <Footer/>
   </div>
 </template>
 
 <script>
   import Header from "@/components/layout/Header";
+  import NewHeader from "@/components/layout/NewHeader";
+  import Footer from "@/components/layout/Footer";
   import "vue-navigation-bar/dist/vue-navigation-bar.css";
 
   export default {
     components: {
       Header,
+      NewHeader,
+      Footer
     },
     data() {
       return {

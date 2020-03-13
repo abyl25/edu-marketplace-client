@@ -21,6 +21,14 @@
             </div>
             <button type="button" class="upload-btn" @click="onUpload">Upload</button>
         </form>
+        <hr>
+<!--        <button type="button" @click="downloadImage">Download</button>-->
+        <a href="http://localhost:8081/api/static/image/sample.pdf" target="_blank">Open file</a>
+        <br>
+<!--        <video width="320" height="240" controls>-->
+<!--            <source src="http://localhost:8081/api/static/video1/lesson1.mp4" type="video/mp4">-->
+<!--            Your browser does not support the video tag.-->
+<!--        </video>-->
     </div>
 </template>
 
@@ -65,19 +73,25 @@
             onUpload() {
                 console.log('onUpload');
                 const fd = new FormData();
-                fd.append('uploadFile', this.selectedFile, this.selectedFile.name);
+                // fd.append('uploadFile', this.selectedFile, this.selectedFile.name);
+                fd.append('file', this.selectedFile, this.selectedFile.name);
+                // fd.append('type', 'logo');
+                // fd.append('courseId', this.$route.params.id);
 
                 // const url = `http://192.168.43.59:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
                 // const url = `http://178.170.221.108:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
-                const url = `http://10.10.4.27:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
+                // const url = `http://10.10.4.27:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
+                const url = 'http://localhost:8081/api/static/files';
+                const url2 = 'http://localhost:8081/api/static/files/v2';
+                const url3 = 'http://localhost:8081/api/static';
                 const headers = {
                     // 'Content-Type': 'application/x-www-form-urlencoded',
                     'Content-Type': 'application/form-data',
-                    'Authorization': 'Bearer ' + this.$store.getters.token
+                    // 'Authorization': 'Bearer ' + this.$store.getters.token
                 };
                 axios({
                     method: 'post',
-                    url: url,
+                    url: url2,
                     data: fd,
                     headers: headers
                 }).then(res => {
@@ -88,6 +102,27 @@
                 });
 
             },
+            downloadImage() {
+                const fileName = "angular.png";
+                const fileName2 = "ticket.pdf";
+                const video = "lesson1.mp4";
+                const url = 'http://localhost:8081/api/static/image/' + fileName;
+                const url2 = 'http://localhost:8081/api/static/download/' + fileName;
+                const url3 = 'http://localhost:8081/api/static/download/' + fileName2;
+                const headers = {
+                    'Accept': "*/*"
+                };
+                axios({
+                    method: 'get',
+                    url: url3,
+                    headers: headers
+                }).then(res => {
+                    console.log('downloaded');
+                    // console.log(res.data);
+                }) .catch(err => {
+                    console.log(err.response.data)
+                });
+            }
         },
         computed: {
             isInitial() {

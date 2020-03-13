@@ -22,17 +22,19 @@
                 <template slot="nextButton"><i class="fas fa-chevron-right"></i></template>
             </agile>
         </div>
+        <main-page-body/>
     </div>
 </template>
 
 <script>
     import { VueAgile } from 'vue-agile';
-    // import 'vue-agile/dist/VueAgile.css';
+    import MainPageBody from "@/components/MainPageBody";
 
     export default {
         name: "Carousel",
         components: {
-            agile: VueAgile
+            agile: VueAgile,
+            mainPageBody: MainPageBody
         }
     }
 </script>

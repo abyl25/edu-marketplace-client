@@ -36,7 +36,9 @@
             <div class="video-player">
                 <vue-plyr ref="player" >
                     <transition name="video">
-                        <video src="https://vs2.coursehunter.net/udemy-ru-react-redux/lesson1.mp4"></video>
+<!--                        <video src="https://vs2.coursehunter.net/udemy-ru-react-redux/lesson1.mp4"></video>-->
+<!--                        <video src="http://localhost:8081/api/static/video1/lesson1.mp4"></video>-->
+                        <video src="http://localhost:8081/api/static/video/sample"></video>
                         <!-- <video poster="../../assets/1.png" :src="activeVideoLink"></video>-->
                     </transition>
                 </vue-plyr>

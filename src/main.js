@@ -11,6 +11,9 @@ import VuePlyr from 'vue-plyr';
 import uploader from 'vue-simple-uploader';
 import Multiselect from 'vue-multiselect';
 import Vuelidate from 'vuelidate';
+import Transitions from 'vue2-transitions';
+import ScrollAnimation from './directives/scrollAnimation';
+
 //Import Froala Editor
 import 'froala-editor/js/plugins.pkgd.min.js';
 import 'froala-editor/js/third_party/embedly.min';
@@ -20,6 +23,8 @@ import 'froala-editor/js/third_party/image_tui.min';
 import 'froala-editor/css/froala_editor.pkgd.min.css';
 import VueFroala from 'vue-froala-wysiwyg';
 
+Vue.use(Transitions);
+Vue.directive('scrollanimation', ScrollAnimation);
 Vue.use(Vuelidate);
 Vue.use(VueFroala);
 Vue.use(vClickOutside);
@@ -55,6 +60,7 @@ Vue.use(VueNotifications, options);
 // i18n
 import VueI18n from 'vue-i18n';
 import messages from "@/data/messages";
+import scrollAnimation from "@/directives/scrollAnimation";
 Vue.use(VueI18n);
 const i18n = new VueI18n({
   locale: localStorage.getItem('locale') || 'en',

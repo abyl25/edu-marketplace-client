@@ -13,7 +13,7 @@ import CreateCourse from "@/views/instructor/CreateCourse";
 import ICourseManage from "@/views/instructor/ICourseManage";
 import ICourseInfo from "@/views/instructor/ICourseInfo";
 import CourseTarget from "@/views/instructor/CourseTarget";
-import ICourseCurriculum from "@/views/instructor/IcourseCurriculum";
+import ICourseCurriculum from "@/views/instructor/ICourseCurriculum";
 import ICourseSetting from "@/views/instructor/ICourseSetting";
 import Cart from "@/views/student/Cart";
 import Checkout from "@/views/student/Checkout";
