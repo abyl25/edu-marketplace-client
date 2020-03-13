@@ -23,7 +23,6 @@ import ImageUpload from "@/views/instructor/ImageUpload";
 import NotFound from "@/views/NotFound";
 import NotAuthorized from "@/views/NotAuthorized";
 import LearnPage from "@/views/student/LearnPage";
-import FileUpload from "@/views/instructor/FileUpload";
 import Auth from "@/views/auth/Auth";
 import Carousel from "@/components/Carousel";
 
@@ -158,10 +157,6 @@ const router = new Router({
         {
           path: 'image',
           component: ImageUpload
-        },
-        {
-          path: 'files',
-          component: FileUpload
         },
         {
           path: 'target',

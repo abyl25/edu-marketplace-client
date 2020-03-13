@@ -109,28 +109,35 @@
                                         <div class="lecture-body" v-show="isLectureTabOpen(lecture.id)">
                                             <div class="content-upload-btn-container">
                                                 <span class="upload-btn--edit">
-                                                    <button class="btn btn-default btn-sm" @click="console.log()">
-                                                        <span class="plus-sign"><i class="fas fa-plus"></i></span> Video
+                                                    <button class="btn btn-default btn-sm" @click="setUploadFileType('videos')">
+                                                        <span class="plus-sign"><i class="fas fa-plus"></i></span>Video
                                                     </button>
                                                 </span>
                                                 <span class="upload-btn--edit">
-                                                    <button class="btn btn-default btn-sm" @click="console.log()">
+                                                    <button class="btn btn-default btn-sm" @click="setUploadFileType('files')">
                                                         <span class="plus-sign"><i class="fas fa-plus"></i></span>File
                                                     </button>
                                                 </span>
                                             </div>
-<!--                                            <div class="file-upload-container">-->
-<!--                                                <label for="file-upload" class="custom-file-upload">-->
-<!--                                                    <input type="file" id="file-upload" accept=".avi,.mpg,.mpeg,.flv,.mov,.m2v,.m4v,.mp4,.rm,.ram,.vob,.ogv,.webm,.wmv"-->
-<!--                                                           @change="onFileSelected($event)">-->
-<!--                                                    <span class="file-custom"></span>-->
-<!--                                                </label>-->
-<!--                                            </div>-->
-                                            <div class="file-upload-wrapper">
-                                                <file-pond
+
+                                            <div class="file-upload-wrapper" v-show="uploadFileType">
+                                                <file-pond v-if="uploadFileType === 'videos'"
+                                                    name="file"
+                                                    ref="pond"
+                                                    label-idle="Drop or select a video"
+                                                    accepted-file-types="video/*"
+                                                    :allow-multiple="false"
+                                                    :instant-upload="false"
+                                                    :files="myFiles"
+                                                    :server="{process}"
+                                                    @init="handleFilePondInit"
+                                                    @addfile="onAddFile"
+                                                    @processfile="processFile"/>
+                                                <file-pond v-if="uploadFileType === 'files'"
                                                     name="file"
                                                     ref="pond"
                                                     label-idle="Drop or select a file"
+                                                    accepted-file-types="application/pdf, application/msword, application/vnd.ms-powerpoint"
                                                     :allow-multiple="false"
                                                     :instant-upload="false"
                                                     :files="myFiles"
@@ -139,7 +146,7 @@
                                                     @addfile="onAddFile"
                                                     @processfile="processFile"/>
                                             </div>
-
+<!--                                            accepted-file-types="image/jpeg, image/png"-->
                                         </div>
                                     </li>
                                 </draggable>
@@ -178,24 +185,6 @@
     } from "@/store/actions";
     import {mapGetters} from "vuex";
 
-
-    // setOptions({
-    //     server: {
-    //         url: process.env.VUE_APP_API,
-    //         process: {
-    //             url: './api/static/files',
-    //             method: 'POST',
-    //             ondata: (formData) => {
-    //                 console.log('adding additional params to formData');
-    //                 formData.append('type', 'logo');
-    //                 formData.append('courseId', this.$route.params.id);
-    //                 console.log(formData);
-    //                 return formData;
-    //             }
-    //         }
-    //     }
-    // });
-
     const FilePond = vueFilePond(FilePondPluginFileValidateType, FilePondPluginImagePreview);
 
     export default {
@@ -220,7 +209,7 @@
                 openTabLectureIds: [],
                 selectedFile: null,
                 myFiles: [],
-                server: `${process.env.VUE_APP_API}/api/static/files/v2`,
+                uploadFileType: ''
             }
         },
         computed: {
@@ -455,6 +444,9 @@
             isLectureTabOpen(lectureId) {
                 return this.openTabLectureIds.includes(lectureId);
             },
+            setUploadFileType(type) {
+                this.uploadFileType = type;
+            }
         }
     }
 </script>
@@ -620,21 +612,22 @@
     .lecture-body {
         margin-top: 10px;
         border: 1px solid #cacbcc;
+        transition: all 0.6s ease-in-out;
     }
     .content-upload-btn-container {
         display: flex;
-        flex-direction: column;
-        justify-content: start;
+        /*flex-direction: column;*/
+        /*justify-content: start;*/
         padding: 20px;
     }
     .upload-btn--edit {
-        margin-bottom: 10px;
+        margin-right: 10px;
         align-self: start;
     }
 
     /**/
     .file-upload-wrapper {
-        padding: 20px;
+        padding: 0 20px;
         cursor: pointer;
     }
     .file-upload-container {
