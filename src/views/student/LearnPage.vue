@@ -37,9 +37,7 @@
             <div class="video-player">
                 <vue-plyr ref="player" >
                     <transition name="video">
-<!--                        <video src="https://vs2.coursehunter.net/udemy-ru-react-redux/lesson1.mp4"></video>-->
-<!--                        <video src="http://localhost:8081/api/static/video1/lesson1.mp4"></video>-->
-                        <video src="http://localhost:8081/api/static/video/sample"></video>
+                        <video :src="this.activeVideoLink"></video>
                         <!-- <video poster="../../assets/1.png" :src="activeVideoLink"></video>-->
                     </transition>
                 </vue-plyr>
@@ -90,7 +88,8 @@
                 activeSectionId: null,
                 activeLectureId: null,
                 settingVideoLink: false,
-                activeVideoLink: 'https://vs2.coursehunter.net/udemy-ru-react-redux/lesson1.mp4',
+                activeVideoLink: '',
+                activeVideoThumbnail: '',
                 // sections: sectionData.sections
             }
         },
@@ -109,9 +108,11 @@
             this.activeSectionId = parseInt(localStorage.getItem("activeSectionId"));
             this.activeLectureId = parseInt(localStorage.getItem("activeLectureId"));
             this.getCourseDetails();
+            // this.getVideoDuration(3910);
         },
         mounted() {
-            let player = this.$refs.player.player;
+            // let player = this.$refs.player.player;
+            // player.media.src = '';
             // console.log(player);
         },
         methods: {
@@ -122,34 +123,45 @@
                     .then(res => {
                         console.log(res.data);
                         this.course = res.data;
+                        this.setFirstVideoLecture();
                     })
                     .catch(err => {
                         console.log(err);
                         console.log(err.response.data);
                     });
             },
-            getVideoLink(title, lecture) {
-                return `${process.env.VUE_APP_API}/${title}/videos/${lecture.videoName}.${lecture.videoFormat}`;
-            },
             setActiveSection(sectionId) {
                 this.activeSectionId = this.activeSectionId === sectionId ? null : sectionId;
                 localStorage.setItem("activeSectionId", this.activeSectionId);
             },
             setActiveLecture(lectureId) {
+                this.getVideoDuration();
                 if (this.activeLectureId === lectureId) return;
                 this.settingVideoLink = true;
                 this.activeLectureId = lectureId;
                 localStorage.setItem("activeLectureId", this.activeLectureId);
 
-                // let nestedLectures = this.nestedLectures;
-                // console.log(nestedLectures);
-                let lecture = this.lectures.flat().filter(l => l.id === lectureId)[0];
-                console.log(lecture);
-                this.activeVideoLink = lecture.video_link;
-
-                let player = this.$refs.player.player;
-                player.media.src = this.getVideoLink(this.course.title, lecture);
+                let lecture = this.lectures.filter(l => l.id === lectureId)[0];
+                this.activeVideoLink = this.getVideoLink(this.course.title, lecture);
                 this.settingVideoLink = false;
+            },
+            setFirstVideoLecture() {
+                let firstVideoLecture = this.lectures[0];
+                this.activeVideoLink = this.getVideoLink(this.course.title, firstVideoLecture);
+                // activeVideoThumbnail = firstVideoLecture
+            },
+            getVideoLink(title, lecture) {
+                return `${process.env.VUE_APP_API}/${title}/videos/${lecture.videoName}.${lecture.videoFormat}`;
+            },
+            getVideoDuration() {
+                let duration = this.$refs.player.player.media.duration;
+                console.log("duration: " + duration);
+                let hours = Math.floor(duration / 3600);
+                let minutes = Math.floor((duration % 3600) / 60);
+                let seconds = Math.floor(duration % 60);
+                console.log("hours: " + hours);
+                console.log("minutes: " + minutes);
+                console.log("seconds: " + seconds);
             },
             tabClicked (selectedTab) {
                 // console.log('Current tab re-clicked:' + selectedTab.tab.name);
@@ -224,8 +236,10 @@
         position: relative;
         display: flex;
         justify-content: space-between;
+        /*align-items: center;*/
         flex-wrap: wrap;
         flex-direction: column;
+        /*height: 70px;*/
         padding: 16px;
         background-color: #f7f8fa;
         user-select: none;
@@ -239,7 +253,7 @@
         text-align: left;
         font-size: 15px;
         font-weight: 600;
-        line-height: 1.43em;
+        line-height: 1.5em;
         max-width: 100%;
         margin-right: 24px;
     }

@@ -143,7 +143,8 @@
                                                     :server="{process}"
                                                     @init="handleFilePondInit"
                                                     @addfile="onAddFile"
-                                                    @processfile="processFileFinish"/>
+                                                    @processfile="processFileFinish"
+                                                    @click.native="setUploadFileType(lecture.id, 'videos')"/>
                                                 <file-pond v-show="uploadFile.uploadFileType === 'files'"
                                                     name="file"
                                                     ref="pond"
@@ -155,7 +156,8 @@
                                                     :server="{process}"
                                                     @init="handleFilePondInit"
                                                     @addfile="onAddFile"
-                                                    @processfile="processFileFinish"/>
+                                                    @processfile="processFileFinish"
+                                                    @click.native="setUploadFileType(lecture.id, 'files')"/>
                                             </div>
 <!--                                            accepted-file-types="image/jpeg, image/png"-->
                                         </div>
