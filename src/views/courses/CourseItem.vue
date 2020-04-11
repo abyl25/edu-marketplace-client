@@ -4,8 +4,7 @@
             <div class="course-cardcontainer">
                 <div class="course-card-imagecontainer">
                     <img class="course-image" src="../../assets/1.png" v-if="!hasImage" width="240" height="135">
-                    <img :src="'http://37.18.30.105:6600/upload_images/' + course.image_name + '.png'" alt="" v-else width="180" height="120">
-<!--                    <img :src="'http://178.170.221.108:6600/upload_images/' + course.image_name + '.png'" alt="" v-else width="180" height="120">-->
+                    <img :src="imagePath" alt="logo" v-else width="180" height="120">
                 </div>
                 <div class="course-card-content">
                     <div class="course-card-content-title">
@@ -48,6 +47,9 @@ export default {
     computed: {
         hasImage() {
             return this.course.image_name;
+        },
+        imagePath() {
+            return `${process.env.VUE_APP_API}/${this.course.title}/logo/${this.course.image_name}.${this.course.image_format}`;
         }
     }
 }

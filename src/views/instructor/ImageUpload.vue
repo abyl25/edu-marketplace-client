@@ -23,7 +23,7 @@
         </form>
         <hr>
 <!--        <button type="button" @click="downloadImage">Download</button>-->
-        <a href="http://localhost:8081/api/static/image/sample.pdf" target="_blank">Open file</a>
+        <a href="http://localhost:8081/api/static/files/sample.pdf" target="_blank">Open file</a>
         <br>
 <!--        <video width="320" height="240" controls>-->
 <!--            <source src="http://localhost:8081/api/static/video1/lesson1.mp4" type="video/mp4">-->
@@ -73,17 +73,12 @@
             onUpload() {
                 console.log('onUpload');
                 const fd = new FormData();
-                // fd.append('uploadFile', this.selectedFile, this.selectedFile.name);
                 fd.append('file', this.selectedFile, this.selectedFile.name);
-                // fd.append('type', 'logo');
-                // fd.append('courseId', this.$route.params.id);
+                fd.append('type', 'logo');
+                fd.append('courseId', this.$route.params.id);
 
-                // const url = `http://192.168.43.59:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
-                // const url = `http://178.170.221.108:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
                 // const url = `http://10.10.4.27:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
-                const url = 'http://localhost:8081/api/static/files';
-                const url2 = 'http://localhost:8081/api/static/files/v2';
-                const url3 = 'http://localhost:8081/api/static';
+                const url = `${process.env.VUE_APP_API}/api/static/files`;
                 const headers = {
                     // 'Content-Type': 'application/x-www-form-urlencoded',
                     'Content-Type': 'application/form-data',
@@ -91,7 +86,7 @@
                 };
                 axios({
                     method: 'post',
-                    url: url2,
+                    url: url,
                     data: fd,
                     headers: headers
                 }).then(res => {
@@ -100,7 +95,6 @@
                 }) .catch(err => {
                     console.log(err.response.data)
                 });
-
             },
             downloadImage() {
                 const fileName = "angular.png";

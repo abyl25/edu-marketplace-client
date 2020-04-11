@@ -6,12 +6,12 @@
         <div class="courses-form-header">
             <v-button class="add-course-btn green" :on-click="navigateToCreateCoursePage">New Course</v-button>
             <form class="courses-search-form" @submit="searchCourses">
-                <input type="text" class="courses-search-input" placeholder="Search your courses">
+                <input type="text" class="courses-search-input" placeholder="Search your courses" v-model="searchKeyword">
                 <button type="button" class="search-btn" @click="searchCourses">
                     <i class="fas fa-search"></i>
                 </button>
             </form>
-            <select name="" id="filter" class="select" @change="applyFilter($event)">
+            <select name="" id="filter" class="select" @change="applySorting($event)">
                 <option value="filter" selected>Sort</option>
                 <option value="sort-1">A-Z</option>
                 <option value="sort-2">Z-A</option>
@@ -24,7 +24,7 @@
         </div>
         <transition name="fade">
             <div v-if="fetched" class="instructor-courses-list">
-                <div v-bind:key="course.id" v-for="course in this.courses">
+                <div v-bind:key="course.id" v-for="course in this.filteredCourses">
                     <ICourseListItem v-bind:course="course"/>
                 </div>
                 <paginate
@@ -59,6 +59,18 @@ export default {
             selectedPage: 1,
             count: 0,
             courses: [],
+            searchKeyword: '',
+        }
+    },
+    computed: {
+        ...mapGetters(['user', 'isAuthenticated', 'instrCourses']),
+        coursesLength() {
+            return this.instrCourses.length;
+        },
+        filteredCourses() {
+            return this.courses.filter(course => {
+                return course.title.toLowerCase().includes(this.searchKeyword.toLowerCase())
+            });
         }
     },
     created() {
@@ -117,17 +129,17 @@ export default {
                     this.fetched = true;
                 });
         },
-        applyFilter(e) {
+        applySorting(e) {
             const selectedFilter = e.target.value;
             console.log(selectedFilter);
             if (selectedFilter === 'sort-1') {
-                this.instrCourses.sort((a, b) => a.title.localeCompare(b.title));
+                this.courses.sort((a, b) => a.title.localeCompare(b.title));
             } else if (selectedFilter === 'sort-2') {
-                this.instrCourses.sort((a, b) => b.title.localeCompare(a.title));
+                this.courses.sort((a, b) => b.title.localeCompare(a.title));
             } else if (selectedFilter === 'newest') {
-                this.instrCourses.sort((a, b) => b.id - a.id);
+                this.courses.sort((a, b) => b.id - a.id);
             } else if (selectedFilter === 'oldest') {
-                this.instrCourses.sort((a, b) => a.id - b.id);
+                this.courses.sort((a, b) => a.id - b.id);
             }
         }
     },
@@ -141,12 +153,6 @@ export default {
     //         }
     //     }
     // },
-    computed: {
-        ...mapGetters(['user', 'isAuthenticated', 'instrCourses']),
-        coursesLength() {
-            return this.instrCourses.length;
-        }
-    }
   }
 </script>
 

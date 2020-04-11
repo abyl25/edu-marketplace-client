@@ -107,21 +107,32 @@
                                         </div>
 
                                         <div class="lecture-body" v-show="isLectureTabOpen(lecture.id)">
+                                            <div class="lecture-content">
+                                                <template v-if="lecture.hasOwnProperty('files')">
+                                                    <div :key="file.id" v-for="file in lecture.files">
+<!--                                                        <p>lecture: {{ file.fileName }}</p>-->
+<!--                                                        <a :href="href + file.fileName" target="_blank">{{ file.fileName }}</a>-->
+                                                        <a @click="openFile(file.fileName)">{{ file.fileName }}</a>
+                                                    </div>
+
+                                                </template>
+                                            </div>
+
                                             <div class="content-upload-btn-container">
                                                 <span class="upload-btn--edit">
-                                                    <button class="btn btn-default btn-sm" @click="setUploadFileType('videos')">
+                                                    <button class="btn btn-default btn-sm" @click="setUploadFileType(lecture.id, 'videos')">
                                                         <span class="plus-sign"><i class="fas fa-plus"></i></span>Video
                                                     </button>
                                                 </span>
                                                 <span class="upload-btn--edit">
-                                                    <button class="btn btn-default btn-sm" @click="setUploadFileType('files')">
+                                                    <button class="btn btn-default btn-sm" @click="setUploadFileType(lecture.id, 'files')">
                                                         <span class="plus-sign"><i class="fas fa-plus"></i></span>File
                                                     </button>
                                                 </span>
                                             </div>
 
-                                            <div class="file-upload-wrapper" v-show="uploadFileType">
-                                                <file-pond v-if="uploadFileType === 'videos'"
+                                            <div class="file-upload-wrapper" v-show="uploadFile.uploadFileType">
+                                                <file-pond v-show="uploadFile.uploadFileType === 'videos'"
                                                     name="file"
                                                     ref="pond"
                                                     label-idle="Drop or select a video"
@@ -132,8 +143,8 @@
                                                     :server="{process}"
                                                     @init="handleFilePondInit"
                                                     @addfile="onAddFile"
-                                                    @processfile="processFile"/>
-                                                <file-pond v-if="uploadFileType === 'files'"
+                                                    @processfile="processFileFinish"/>
+                                                <file-pond v-show="uploadFile.uploadFileType === 'files'"
                                                     name="file"
                                                     ref="pond"
                                                     label-idle="Drop or select a file"
@@ -144,7 +155,7 @@
                                                     :server="{process}"
                                                     @init="handleFilePondInit"
                                                     @addfile="onAddFile"
-                                                    @processfile="processFile"/>
+                                                    @processfile="processFileFinish"/>
                                             </div>
 <!--                                            accepted-file-types="image/jpeg, image/png"-->
                                         </div>
@@ -196,6 +207,7 @@
         },
         data() {
             return {
+                href: `${process.env.VUE_APP_API}/api/static/files/`,
                 course: {},
                 sections: [],
                 dragging: false,
@@ -209,7 +221,10 @@
                 openTabLectureIds: [],
                 selectedFile: null,
                 myFiles: [],
-                uploadFileType: ''
+                uploadFile: {
+                    uploadFileLectureId: 0,
+                    uploadFileType: ''
+                }
             }
         },
         computed: {
@@ -250,23 +265,26 @@
             },
             // handle file upload with file pond
             handleFilePondInit() {
-                console.log('FilePond has initialized');
+                // console.log('FilePond has initialized');
                 // this.$refs.pond.getFiles();
             },
             onAddFile(error, file) {
-                console.log('onAddFile');
+                // console.log('onAddFile');
             },
             process(fieldName, file, metadata, load, error, progress, abort) {
                 console.log('processing');
                 let formData = new FormData();
                 formData.append('file', file);
-                formData.append('type', 'logo');
                 formData.append('courseId', this.$route.params.id);
-                axios.post(`${process.env.VUE_APP_API}/api/static/files`, formData, {
+                formData.append('type', this.uploadFile.uploadFileType);
+                formData.append('lectureId', this.uploadFile.uploadFileLectureId);
+                // ${process.env.VUE_APP_API}
+                axios.post(`http://localhost:80/api/static/files`, formData, {
                     onUploadProgress: (e) => {
                         progress(e.lengthComputable, e.loaded, e.total);
                     }
-                }).then(res => {
+                })
+                .then(res => {
                     console.log(res.data);
                     load(res.data);
                 }).catch(err => {
@@ -280,10 +298,41 @@
                     }
                 };
             },
-            processFile() {
-                console.log('Finished processing a file');
+            processFileFinish() {
+                // console.log('Finished processing a file');
             },
+            openFile(fileName) {
+                console.log('opening pdf file in new tab');
+                // window.open(this.href + fileName,'_blank');
+                axios.get(this.href + fileName, {
+                    responseType: 'arraybuffer', // blob
+                    headers: {
+                        'Accept': 'application/pdf'
+                    }
+                })
+                    .then(res => {
+                        // console.log(res.data);
 
+                        // var windowUrl = window.URL || window.webkitURL;
+                        // var url = windowUrl.createObjectURL(res.data);
+                        // anchor.prop('href', url);
+                        // anchor.prop('download', fileName);
+                        // anchor.get(0).click();
+                        // windowUrl.revokeObjectURL(url);
+
+                        // 1)
+                        // let pdfWindow = window.open("");
+                        // pdfWindow.document.write(
+                        //     "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
+                        //     encodeURI(res.data) + "'></iframe>"
+                        // );
+
+                        // 2)
+                        let file = new Blob([res.data], { type: 'application/pdf' });
+                        let fileURL = window.URL.createObjectURL(file);
+                        window.open(fileURL, '_blank'); // '_blank'
+                    })
+            },
             //
             addSectionInput() {
                 if (this.sections.length === 0) {
@@ -444,8 +493,9 @@
             isLectureTabOpen(lectureId) {
                 return this.openTabLectureIds.includes(lectureId);
             },
-            setUploadFileType(type) {
-                this.uploadFileType = type;
+            setUploadFileType(lectureId, type) {
+                this.uploadFile.uploadFileLectureId = lectureId;
+                this.uploadFile.uploadFileType = type;
             }
         }
     }

@@ -5,9 +5,10 @@
                 <h2>Course content</h2>
             </div>
             <div class="sidebar-content">
-                <div class="course-section" v-bind:key="section.id" v-for="section in sections">
+<!--                <template v-if="this.course."></template>-->
+                <div class="course-section" v-bind:key="section.id" v-for="section in this.course.sections">
                     <div class="section-heading" @click="setActiveSection(section.id)">
-                        <h3 class="section-title">{{ section.title }}</h3>
+                        <h3 class="section-title">{{ section.name }}</h3>
                         <span class="section-chevron">
                             <img src="../../assets/chevron-down.png" alt="" class="arrow" :class="{'arrow--rotate': section.id === activeSectionId}">
                         </span>
@@ -16,8 +17,8 @@
                     <transition-group name="items">
                         <ul class="section-lecture-list" v-bind:key="lecture.id" v-for="lecture in section.lectures" v-show="section.id === activeSectionId ">
                             <li class="section-lecture-list-item" :class="{'active-lecture': lecture.id === activeLectureId}" @click="setActiveLecture(lecture.id)">
-                                <router-link class="item-link" :to="lecture.link">
-                                    <p class="lecture-title">{{ lecture.title }}</p>
+                                <router-link class="item-link" to="">  <!--  :to="lecture.link"  -->
+                                    <p class="lecture-title">{{ lecture.name }}</p>
                                     <div class="lecture-type-container">
                                         <span class="lecture-type">
                                             <img src="../../assets/icons8-play-14.png" alt="" style="vertical-align: -2px">
@@ -90,7 +91,18 @@
                 activeLectureId: null,
                 settingVideoLink: false,
                 activeVideoLink: 'https://vs2.coursehunter.net/udemy-ru-react-redux/lesson1.mp4',
-                sections: sectionData.sections
+                // sections: sectionData.sections
+            }
+        },
+        computed: {
+            sections() {
+                return this.course.sections;
+            },
+            nestedLectures() {
+                return this.sections.map(s => s.lectures);
+            },
+            lectures() {
+                return this.nestedLectures.flat();
             }
         },
         created() {
@@ -116,11 +128,8 @@
                         console.log(err.response.data);
                     });
             },
-            tabClicked (selectedTab) {
-                // console.log('Current tab re-clicked:' + selectedTab.tab.name);
-            },
-            tabChanged (selectedTab) {
-                // console.log('Tab changed to:' + selectedTab.tab.name);
+            getVideoLink(title, lecture) {
+                return `${process.env.VUE_APP_API}/${title}/videos/${lecture.videoName}.${lecture.videoFormat}`;
             },
             setActiveSection(sectionId) {
                 this.activeSectionId = this.activeSectionId === sectionId ? null : sectionId;
@@ -132,14 +141,22 @@
                 this.activeLectureId = lectureId;
                 localStorage.setItem("activeLectureId", this.activeLectureId);
 
-                let lectures = this.sections.map(s => s.lectures);
-                let lecture = lectures.flat().filter(l => l.id === lectureId)[0];
+                // let nestedLectures = this.nestedLectures;
+                // console.log(nestedLectures);
+                let lecture = this.lectures.flat().filter(l => l.id === lectureId)[0];
+                console.log(lecture);
                 this.activeVideoLink = lecture.video_link;
 
                 let player = this.$refs.player.player;
-                player.media.src = lecture.video_link;
+                player.media.src = this.getVideoLink(this.course.title, lecture);
                 this.settingVideoLink = false;
-            }
+            },
+            tabClicked (selectedTab) {
+                // console.log('Current tab re-clicked:' + selectedTab.tab.name);
+            },
+            tabChanged (selectedTab) {
+                // console.log('Tab changed to:' + selectedTab.tab.name);
+            },
         }
     }
 </script>

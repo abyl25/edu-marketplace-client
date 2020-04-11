@@ -1,7 +1,8 @@
 <template>
     <div class="course-item">
         <img src="../../assets/1.png" alt="" v-if="!hasImage" width="180" height="120">
-        <img :src="'http://37.18.30.105:6600/upload_images/' + course.image_name + '.png'" alt="" v-else width="180" height="120">
+<!--        <img :src="'http://37.18.30.105:6600/upload_images/' + course.image_name + '.png'" alt="" v-else width="180" height="120">-->
+        <img :src="imagePath" alt="logo" v-else width="180" height="120">
         <router-link :to="{ path: '/instructor/course/' + course.id + '/main' }">
             <div class="course-card-right">
                 <div class="title-wrapper">
@@ -22,6 +23,9 @@
         computed: {
             hasImage() {
                 return this.course.image_name;
+            },
+            imagePath() {
+                return `${process.env.VUE_APP_API}/${this.course.title}/logo/${this.course.image_name}.${this.course.image_format}`;
             }
         }
     }

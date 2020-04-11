@@ -235,10 +235,10 @@ const router = new Router({
         guest: true
       }
     },
-    {
-      path: '*',
-      redirect: '/404'
-    }
+    // {
+    //   path: '*',
+    //   redirect: '/404'
+    // }
   ]
 });
 

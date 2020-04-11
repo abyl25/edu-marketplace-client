@@ -2,7 +2,9 @@
   <div id="app">
 <!--    <Header/>-->
     <NewHeader/>
-    <router-view/>
+    <div class="body">
+      <router-view/>
+    </div>
     <Footer/>
   </div>
 </template>
@@ -39,14 +41,13 @@
 </script>
 
 <style>
-  /*html {*/
-  /*  width: 100vw;*/
-  /*}*/
   * {
     margin: 0;
     padding: 0;
     line-height: 1.4;
     box-sizing: border-box;
+  }
+  html {
   }
   body {
     /*width: calc(100vw - 34px);*/
@@ -61,10 +62,8 @@
     /*margin-top: 60px;*/
   }
 
-  /* .ant-dropdown-menu-item */
-  .QWERTY {
-    width: 120px;
-    font-size: 17px;
+  .body {
+      min-height: 100vh;
   }
 
   /* Pagination Component style */
