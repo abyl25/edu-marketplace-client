@@ -23,7 +23,7 @@
                                         <span class="lecture-type">
                                             <img src="../../assets/icons8-play-14.png" alt="" style="vertical-align: -2px">
                                         </span>
-                                        <span class="lecture-duration">2min</span>
+                                        <span class="lecture-duration">{{ getVideoDuration(lecture.duration) }}</span>
                                     </div>
                                 </router-link>
                             </li>
@@ -37,8 +37,7 @@
             <div class="video-player">
                 <vue-plyr ref="player" >
                     <transition name="video">
-                        <video :src="this.activeVideoLink"></video>
-                        <!-- <video poster="../../assets/1.png" :src="activeVideoLink"></video>-->
+                        <video :poster="this.activeVideoThumbnail" :src="this.activeVideoLink"></video>
                     </transition>
                 </vue-plyr>
             </div>
@@ -135,7 +134,6 @@
                 localStorage.setItem("activeSectionId", this.activeSectionId);
             },
             setActiveLecture(lectureId) {
-                this.getVideoDuration();
                 if (this.activeLectureId === lectureId) return;
                 this.settingVideoLink = true;
                 this.activeLectureId = lectureId;
@@ -143,25 +141,26 @@
 
                 let lecture = this.lectures.filter(l => l.id === lectureId)[0];
                 this.activeVideoLink = this.getVideoLink(this.course.title, lecture);
+                this.activeVideoThumbnail = this.getThumbnailLink(this.course.title, lecture.videoThumbnail);
                 this.settingVideoLink = false;
             },
             setFirstVideoLecture() {
                 let firstVideoLecture = this.lectures[0];
                 this.activeVideoLink = this.getVideoLink(this.course.title, firstVideoLecture);
-                // activeVideoThumbnail = firstVideoLecture
+                this.activeVideoThumbnail = this.getThumbnailLink(this.course.title, firstVideoLecture.videoThumbnail);
             },
             getVideoLink(title, lecture) {
                 return `${process.env.VUE_APP_API}/${title}/videos/${lecture.videoName}.${lecture.videoFormat}`;
             },
-            getVideoDuration() {
-                let duration = this.$refs.player.player.media.duration;
-                console.log("duration: " + duration);
+            getThumbnailLink(title, videoThumbnail) {
+                return `${process.env.VUE_APP_API}/${title}/videos/${videoThumbnail}`;
+            },
+            getVideoDuration(duration) {
+                // let duration = this.$refs.player.player.media.duration;
                 let hours = Math.floor(duration / 3600);
                 let minutes = Math.floor((duration % 3600) / 60);
                 let seconds = Math.floor(duration % 60);
-                console.log("hours: " + hours);
-                console.log("minutes: " + minutes);
-                console.log("seconds: " + seconds);
+                return minutes + ':' + seconds;
             },
             tabClicked (selectedTab) {
                 // console.log('Current tab re-clicked:' + selectedTab.tab.name);
