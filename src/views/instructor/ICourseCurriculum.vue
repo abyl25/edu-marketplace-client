@@ -23,7 +23,7 @@
                             <!-- Show Edit Section -->
                             <div class="add-section-container" v-else-if="editSectionId === section.id">
                                 <p class="section-label">Section: {{ i + 1 }}</p>
-                                <input type="text" class="form-control" v-model="section.name" placeholder="Enter a title"/>
+                                <input type="text" class="form-control" v-model="section.name" placeholder="Enter a title" @keyup.enter="editSection(section)" @keyup.esc="cancelEditSection" />
                                 <div class="buttons-container">
                                     <button @click="editSection(section)" class="save-section-btn btn-sm mr-10">Save</button>
                                     <v-button :onClick="cancelEditSection" myClass="btn-tertiary btn-sm">Cancel</v-button>
@@ -107,32 +107,21 @@
                                         </div>
 
                                         <div class="lecture-body" v-show="isLectureTabOpen(lecture.id)">
-                                            <div class="lecture-content">
-                                                <template v-if="lecture.hasOwnProperty('files')">
-                                                    <div :key="file.id" v-for="file in lecture.files">
-<!--                                                        <p>lecture: {{ file.fileName }}</p>-->
-<!--                                                        <a :href="href + file.fileName" target="_blank">{{ file.fileName }}</a>-->
-                                                        <a @click="openFile(file.fileName)">{{ file.fileName }}</a>
-                                                    </div>
-
-                                                </template>
-                                            </div>
-
                                             <div class="content-upload-btn-container">
                                                 <span class="upload-btn--edit">
-                                                    <button class="btn btn-default btn-sm" @click="setUploadFileType(lecture.id, 'videos')">
+                                                    <button class="btn btn-default btn-sm" @click="setActiveUploadFiles(lecture.id, 'videos')">
                                                         <span class="plus-sign"><i class="fas fa-plus"></i></span>Video
                                                     </button>
                                                 </span>
                                                 <span class="upload-btn--edit">
-                                                    <button class="btn btn-default btn-sm" @click="setUploadFileType(lecture.id, 'files')">
+                                                    <button class="btn btn-default btn-sm" @click="setActiveUploadFiles(lecture.id, 'files')">
                                                         <span class="plus-sign"><i class="fas fa-plus"></i></span>File
                                                     </button>
                                                 </span>
                                             </div>
 
-                                            <div class="file-upload-wrapper" v-show="uploadFile.uploadFileType">
-                                                <file-pond v-show="uploadFile.uploadFileType === 'videos'"
+                                            <div class="file-upload-wrapper" v-show="getUploadingButton(lecture.id)">
+                                                <file-pond v-show="getFileUploadType(lecture.id) === 'videos'"
                                                     name="file"
                                                     ref="pond"
                                                     label-idle="Drop or select a video"
@@ -144,8 +133,8 @@
                                                     @init="handleFilePondInit"
                                                     @addfile="onAddFile"
                                                     @processfile="processFileFinish"
-                                                    @click.native="setUploadFileType(lecture.id, 'videos')"/>
-                                                <file-pond v-show="uploadFile.uploadFileType === 'files'"
+                                                    @click.native="setCurrentUploadFile(lecture.id, 'videos')"/>
+                                                <file-pond v-show="getFileUploadType(lecture.id) === 'files'"
                                                     name="file"
                                                     ref="pond"
                                                     label-idle="Drop or select a file"
@@ -157,9 +146,26 @@
                                                     @init="handleFilePondInit"
                                                     @addfile="onAddFile"
                                                     @processfile="processFileFinish"
-                                                    @click.native="setUploadFileType(lecture.id, 'files')"/>
+                                                    @click.native="setCurrentUploadFile(lecture.id, 'files')"/>
                                             </div>
-<!--                                            accepted-file-types="image/jpeg, image/png"-->
+
+                                            <div class="video-player" v-if="hasVideo(lecture)">
+                                                <vue-plyr ref="player" >
+                                                    <video :src="getVideoLink(course.title, lecture)" :poster="getThumbnailLink(course.title, lecture.videoThumbnail)"></video>
+                                                </vue-plyr>
+                                            </div>
+
+                                            <!-- files -->
+                                            <div class="lecture-content">
+                                                <template v-if="lecture.files.length > 0">
+                                                    <p class="files-header">Files</p>
+                                                    <div :key="file.id" v-for="file in lecture.files">
+                                                        <img src="../../assets/file-02.png" height="28px" width="28px" alt="">
+                                                        <a :href="getFileLink(course.title, file.fileName, file.fileFormat)" target="_blank">{{ `${file.fileName}.${file.fileFormat}` }}</a>
+                                                    </div>
+                                                </template>
+                                            </div>
+
                                         </div>
                                     </li>
                                 </draggable>
@@ -224,6 +230,7 @@
                 selectedFile: null,
                 myFiles: [],
                 uploadFile: {
+                    activeUploadLectureIds: [],
                     uploadFileLectureId: 0,
                     uploadFileType: ''
                 }
@@ -239,6 +246,18 @@
             this.getInstructorCourse();
         },
         methods: {
+            hasVideo(lecture) {
+                return lecture.videoName !== null || lecture.videoName;
+            },
+            getVideoLink(title, lecture) {
+                return `${process.env.VUE_APP_API}/${title}/videos/${lecture.videoName}.${lecture.videoFormat}`;
+            },
+            getThumbnailLink(title, videoThumbnail) {
+                return `${process.env.VUE_APP_API}/${title}/videos/${videoThumbnail}`;
+            },
+            getFileLink(title, fileName, fileFormat) {
+                return `${process.env.VUE_APP_API}/${title}/files/${fileName}.${fileFormat}`;
+            },
             isObjEmpty(myObj) {
                 return Object.entries(myObj).length === 0 && myObj.constructor === Object
             },
@@ -495,10 +514,35 @@
             isLectureTabOpen(lectureId) {
                 return this.openTabLectureIds.includes(lectureId);
             },
-            setUploadFileType(lectureId, type) {
+            // file upload button
+            setActiveUploadFiles(lectureId, type) {
+                // let lecture = this.uploadFile.activeUploadLectureIds.find(l => l.id === lectureId);
+                if (this.uploadFile.activeUploadLectureIds.find(l => l.id === lectureId && l.type === type)) {
+                    this.uploadFile.activeUploadLectureIds = this.uploadFile.activeUploadLectureIds.filter(l => l.id !== lectureId);
+                } else if (this.uploadFile.activeUploadLectureIds.find(l => l.id === lectureId && l.type !== type)) {
+                    if (this.uploadFile.activeUploadLectureIds.find(l => l.id === lectureId).type === 'videos') {
+                        this.uploadFile.activeUploadLectureIds = this.uploadFile.activeUploadLectureIds.filter(l => l.id !== lectureId);
+                        this.uploadFile.activeUploadLectureIds = this.uploadFile.activeUploadLectureIds.concat([{ id: lectureId, type: 'files' }]);
+                    } else {
+                        this.uploadFile.activeUploadLectureIds = this.uploadFile.activeUploadLectureIds.filter(l => l.id !== lectureId);
+                        this.uploadFile.activeUploadLectureIds = this.uploadFile.activeUploadLectureIds.concat([{ id: lectureId, type: 'videos' }]);
+                    }
+                } else {
+                    this.uploadFile.activeUploadLectureIds = this.uploadFile.activeUploadLectureIds.concat([{ id: lectureId, type: type }]);
+                }
+                // this.uploadFile.uploadFileLectureId = this.uploadFile.uploadFileLectureId ? 0 : lectureId;
+            },
+            setCurrentUploadFile(lectureId, type) {
                 this.uploadFile.uploadFileLectureId = lectureId;
                 this.uploadFile.uploadFileType = type;
-            }
+            },
+            getUploadingButton(lectureId) {
+                return this.uploadFile.activeUploadLectureIds.find(l => l.id === lectureId);
+            },
+            getFileUploadType(lectureId) {
+                let a = this.getUploadingButton(lectureId);
+                return a ? a.type : "";
+            },
         }
     }
 </script>
@@ -682,6 +726,32 @@
         padding: 0 20px;
         cursor: pointer;
     }
+
+    .video-player {
+        width: 50%;
+        padding: 0 20px 20px 20px;
+    }
+
+    .lecture-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: start;
+        padding: 0 20px 20px 20px;
+    }
+    .lecture-content img {
+        vertical-align: -6px;
+        margin-right: 2px;
+    }
+    .lecture-content a {
+        text-decoration: none;
+        color: #253e44;
+    }
+    .files-header {
+        margin-bottom: 5px;
+    }
+
+        /**/
     .file-upload-container {
         padding: 20px;
         text-align: left;

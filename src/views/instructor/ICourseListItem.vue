@@ -38,7 +38,7 @@
         border-radius: 2px;
         margin: 30px 0;
         /*flex-basis: 200px;*/
-        width: 80%;
+        width: 90%;
     }
 
     .course-item a {

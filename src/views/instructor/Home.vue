@@ -168,7 +168,7 @@ export default {
     /*  */
     .container {
         font-family: open sans,helvetica neue,Helvetica,Arial,sans-serif;
-        padding: 40px 90px;
+        padding: 40px 9%;
         /*background-color: #f0f3f5; !*  #edf2f5; #dadfe3;  *!*/
         background-color: #fff;  /*  #f5f6f7  */
     }

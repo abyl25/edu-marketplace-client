@@ -21,10 +21,6 @@
             </div>
             <button type="button" class="upload-btn" @click="onUpload">Upload</button>
         </form>
-        <hr>
-<!--        <button type="button" @click="downloadImage">Download</button>-->
-        <a href="http://localhost:8081/api/static/files/sample.pdf" target="_blank">Open file</a>
-        <br>
 <!--        <video width="320" height="240" controls>-->
 <!--            <source src="http://localhost:8081/api/static/video1/lesson1.mp4" type="video/mp4">-->
 <!--            Your browser does not support the video tag.-->
