@@ -44,6 +44,14 @@
                 uploadFinished: false
             }
         },
+        notifications: {
+            showToast: {
+                title: 'Success',
+                message: 'Course logo uploaded',
+                type: 'success', // You also can use 'VueNotifications.types.error' instead of 'error'
+                timeout: 2000
+            }
+        },
         mounted() {
             this.reset();
         },
@@ -88,8 +96,20 @@
                 }).then(res => {
                     console.log('uploaded');
                     console.log(res.data);
+                    this.showToast({
+                        title: 'Success',
+                        message: 'Course logo uploaded',
+                        type: 'success',
+                        timeout: 2000
+                    });
                 }) .catch(err => {
-                    console.log(err.response.data)
+                    console.log(err.response.data);
+                    this.showToast({
+                        title: 'Error',
+                        message: 'Course logo upload failed',
+                        type: 'error',
+                        timeout: 2000
+                    });
                 });
             },
             downloadImage() {

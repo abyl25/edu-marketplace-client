@@ -138,8 +138,8 @@
                                                     name="file"
                                                     ref="pond"
                                                     label-idle="Drop or select a file"
-                                                    accepted-file-types="application/pdf, application/msword, application/vnd.ms-powerpoint"
-                                                    :allow-multiple="false"
+                                                    accepted-file-types=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .csv, .txt"
+                                                    :allow-multiple="true"
                                                     :instant-upload="false"
                                                     :files="myFiles"
                                                     :server="{process}"
@@ -147,23 +147,22 @@
                                                     @addfile="onAddFile"
                                                     @processfile="processFileFinish"
                                                     @click.native="setCurrentUploadFile(lecture.id, 'files')"/>
+<!--                                                accepted-file-types="application/pdf, application/msword, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, .csv, .txt"-->
                                             </div>
 
                                             <div class="video-player" v-if="hasVideo(lecture)">
                                                 <vue-plyr ref="player" >
-                                                    <video :src="getVideoLink(course.title, lecture)" :poster="getThumbnailLink(course.title, lecture.videoThumbnail)"></video>
+                                                    <video :src="getVideoLink(course.title, lecture)" :poster="getThumbnailLink(course.title, lecture.video.thumbnail)"></video>
                                                 </vue-plyr>
                                             </div>
 
                                             <!-- files -->
-                                            <div class="lecture-content">
-                                                <template v-if="lecture.files.length > 0">
-                                                    <p class="files-header">Files</p>
-                                                    <div :key="file.id" v-for="file in lecture.files">
-                                                        <img src="../../assets/file-02.png" height="28px" width="28px" alt="">
-                                                        <a :href="getFileLink(course.title, file.fileName, file.fileFormat)" target="_blank">{{ `${file.fileName}.${file.fileFormat}` }}</a>
-                                                    </div>
-                                                </template>
+                                            <div class="lecture-content" v-if="lecture.files.length > 0">
+                                                <p class="files-header">Files</p> 
+                                                <div :key="file.id" v-for="file in lecture.files">
+                                                    <img src="../../assets/file-02.png" height="28px" width="28px" alt="">
+                                                    <a :href="getFileLink(course.title, file.fileName, file.fileFormat)" target="_blank">{{ `${file.fileName}.${file.fileFormat}` }}</a>
+                                                </div>
                                             </div>
 
                                         </div>
@@ -240,17 +239,24 @@
             ...mapGetters(['user', 'instrCourse']),
             getLastSection() {
                 return this.sections[this.sections.length-1];
-            }
+            },
+            nestedLectures() {
+                return this.sections.map(s => s.lectures);
+            },
+            lectures() {
+                return this.nestedLectures.flat();
+            },
         },
         created() {
             this.getInstructorCourse();
         },
         methods: {
             hasVideo(lecture) {
-                return lecture.videoName !== null || lecture.videoName;
+                return lecture.video != null && !this.isObjEmpty(lecture.video);
+                // return (lecture.video.hasOwnProperty('name') && lecture.video.name !== null) || lecture.videoName;
             },
             getVideoLink(title, lecture) {
-                return `${process.env.VUE_APP_API}/${title}/videos/${lecture.videoName}.${lecture.videoFormat}`;
+                return `${process.env.VUE_APP_API}/${title}/videos/${lecture.video.name}.${lecture.video.extension}`;
             },
             getThumbnailLink(title, videoThumbnail) {
                 return `${process.env.VUE_APP_API}/${title}/videos/${videoThumbnail}`;
@@ -299,15 +305,34 @@
                 formData.append('courseId', this.$route.params.id);
                 formData.append('type', this.uploadFile.uploadFileType);
                 formData.append('lectureId', this.uploadFile.uploadFileLectureId);
-                // ${process.env.VUE_APP_API}
-                axios.post(`http://localhost:80/api/static/files`, formData, {
+                axios.post(`${process.env.VUE_APP_API}/api/static/files`, formData, {
                     onUploadProgress: (e) => {
                         progress(e.lengthComputable, e.loaded, e.total);
                     }
                 })
                 .then(res => {
-                    console.log(res.data);
-                    load(res.data);
+                    let data = res.data;
+                    console.log(data);
+                    load(data);
+                    let lecture = this.lectures.find(l => l.id === data.lectureId);
+                    if (data.type === 'videos') {
+                        if (lecture.video === null) {
+                            lecture.video = {};
+                        }
+                        lecture.video.name = data.fileName;
+                        lecture.video.extension = data.fileFormat;
+                        lecture.video.thumbnail = data.fileName + '.png';
+                    } else if (data.type === 'files') {
+                        const file = {
+                            id: data.lectureId,
+                            name: '',
+                            fileName: data.fileName,
+                            fileFormat: data.fileFormat,
+                            filePath: '',
+                        }
+                        lecture.files.push(file);
+                    }
+
                 }).catch(err => {
                     console.log(err);
                     error(err.response.data);
@@ -359,7 +384,7 @@
                 if (this.sections.length === 0) {
                     const newInput = { id: 1, sectionID: 1, name: '', lectures: [] };
                     this.sections = this.sections.concat([newInput]);
-                    this.activeSection = this.getLastSection.id;
+                    this.activeSection = this.getLastSection.id; // ?
                 } else {
                     let lastSection = this.getLastSection;
                     if (lastSection.name) {
@@ -373,12 +398,19 @@
                 const lastLecture = section.lectures[section.lectures.length-1];
                 let newLectureInput;
                 if (lastLecture === undefined) {
-                    newLectureInput = { id: 1, name: ''}; // , objective: ''
+                    newLectureInput = {
+                        id: 1, name: '',
+                        files: [], video: {},
+                    };
                     section.lectures = section.lectures.concat([newLectureInput]);
                     this.activeLecture = 1;
                 } else {
                     if (lastLecture.name) {
-                        newLectureInput = { id: lastLecture.id + 1, name: '' };
+                        newLectureInput = {
+                            id: lastLecture.id + 1, name: '',
+                            files: [], video: {},
+                            // videoFormat: null, videoName: null, videoPath: null, duration: 0, videoThumbnail: null
+                        };
                         section.lectures = section.lectures.concat([newLectureInput]);
                         this.activeLecture = section.lectures[section.lectures.length-1].id;
                     }
@@ -393,6 +425,7 @@
                     this.$store.dispatch(ADD_COURSE_SECTION_REQUEST, payload)
                         .then(res => {
                             console.log(res.data);
+                            section.id = res.data.section.id;
                         })
                         .catch(err => {
                             console.log(err);
@@ -454,6 +487,7 @@
                     this.$store.dispatch(ADD_COURSE_LECTURE_REQUEST, payload)
                         .then(res => {
                             console.log(res.data);
+                            lecture.id = res.data.lecture.id;
                         })
                         .catch(err => {
                             console.log(err);
@@ -741,7 +775,7 @@
     }
     .lecture-content img {
         vertical-align: -6px;
-        margin-right: 2px;
+        /*margin-right: 2px;*/
     }
     .lecture-content a {
         text-decoration: none;
