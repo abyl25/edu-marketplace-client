@@ -2,7 +2,7 @@
     <div class="dropdown" v-click-outside="onClickOutside">
         <!--  @click="toggleShow"  -->
         <button class="anchor" @click="toggleShow" >{{ name }}  <!--  @mouseover="showMenu=true"  -->
-            <img src="../../assets/chevron-down.png" alt="" class="arrow" :class="{'arrow--rotate': showMenu}">
+            <img src="../../assets/chevron-down.png" alt="" class="arrow" :class="{'arrow--rotate': showMenu}" draggable="false">
         </button>
         <transition name="dropdown">
             <div v-if="showMenu" class="menu"  > <!-- @mouseleave="showMenu=false" -->
@@ -69,6 +69,7 @@
         max-height: 5px;
         margin-left: 8px;
         transition: transform 0.2s ease-in-out;
+        user-select: none;
     }
     .arrow--rotate {
         transform: rotate(180deg);

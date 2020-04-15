@@ -14,7 +14,7 @@
             </div>
             <div class="sidebar">
                 <span class="sidebar-el" v-bind:key="item.id" v-for="item in items" :class="{active: activeElementId === item.id}" v-on:click="activate(item.id, item.link)">
-                    <img :src="getImageUrl(item.image)" alt="" style="vertical-align: -5px">
+                    <img :src="getImageUrl(item.image)" alt="" draggable="false" style="vertical-align: -5px" >
                     <span class="long-text">{{ item.text }}</span>
                     <span class="short-text">{{ item.short_text }}</span>
                 </span>

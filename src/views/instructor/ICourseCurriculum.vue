@@ -101,7 +101,7 @@
 <!--                                                    <span class="plus-sign"><i class="fas fa-plus"></i></span>Content-->
 <!--                                                </button>-->
                                                 <span class="chevron" @click="toggleLectureTab(lecture.id)">
-                                                    <img src="../../assets/chevron-down.png" alt="" class="arrow" :class="{'arrow--rotate': isLectureTabOpen(lecture.id) }">
+                                                    <img src="../../assets/chevron-down.png" alt="" class="arrow" :class="{'arrow--rotate': isLectureTabOpen(lecture.id) }" draggable="false">
                                                 </span>
                                             </div>
                                         </div>
@@ -160,7 +160,7 @@
                                             <div class="lecture-content" v-if="lecture.files.length > 0">
                                                 <p class="files-header">Files</p> 
                                                 <div :key="file.id" v-for="file in lecture.files">
-                                                    <img src="../../assets/file-02.png" height="28px" width="28px" alt="">
+                                                    <img src="../../assets/file-02.png" height="28px" width="28px" alt="" draggable="false" style="user-select: none">
                                                     <a :href="getFileLink(course.title, file.fileName, file.fileFormat)" target="_blank">{{ `${file.fileName}.${file.fileFormat}` }}</a>
                                                 </div>
                                             </div>
@@ -734,6 +734,7 @@
     .arrow {
         max-height: 8px;
         transition: transform 0.2s ease-in-out;
+        user-select: none;
     }
     .arrow--rotate {
         transform: rotate(180deg);

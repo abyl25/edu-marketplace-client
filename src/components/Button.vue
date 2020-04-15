@@ -33,7 +33,7 @@
     }
 
     .green {
-        background-color: #4CAF50;
+        background-color: #5cb85c; /* #4CAF50  */
         transition: background-color 0.15s;
     }
     .green:hover {
@@ -59,7 +59,6 @@
     .std-btn {
         border-radius: 4px;
         width: 20%;
-        margin-top: 20px;
         padding: 10px 15px;
     }
 
@@ -118,6 +117,14 @@
     }
     .save-section-btn:hover {
         background-color: #02596b;  /* #00657e; */
+    }
+
+    .comment-btn {
+        flex: 1;
+        border-radius: 4px;
+        width: 15%;
+        padding: 8px 12px;
+        font-size: 14px;
     }
 
     .btn-tertiary {

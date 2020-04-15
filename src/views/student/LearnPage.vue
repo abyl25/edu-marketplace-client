@@ -10,7 +10,7 @@
                     <div class="section-heading" @click="setActiveSection(section.id)">
                         <h3 class="section-title">{{ section.name }}</h3>
                         <span class="section-chevron">
-                            <img src="../../assets/chevron-down.png" alt="" class="arrow" :class="{'arrow--rotate': section.id === activeSectionId}">
+                            <img src="../../assets/chevron-down.png" alt="" class="arrow" :class="{'arrow--rotate': section.id === activeSectionId}" draggable="false">
                         </span>
                         <div class="section-lecture-stats"></div>
                     </div>
@@ -48,7 +48,6 @@
                         The First tab
                     </tab>
                     <tab name="Q&A">
-                        The second tab
                         <qa></qa>
                     </tab>
                     <tab name="Announcements">
@@ -265,6 +264,7 @@
     .arrow {
         max-height: 8px;
         transition: transform 0.2s ease-in-out;
+        user-select: none;
     }
     .arrow--rotate {
         transform: rotate(180deg);
@@ -313,6 +313,10 @@
         background-color: #d5f5f0;
     }
 
+    .content-column {
+        width: 100%;
+    }
+
     /**/
     .video-player {
         width: 100%;
@@ -329,6 +333,9 @@
     /* vue-tabs-component css override */
     .tabs-component {
         margin: 0;
+    }
+    .tabs-component-panels {
+        padding: 10px;
     }
 
 </style>

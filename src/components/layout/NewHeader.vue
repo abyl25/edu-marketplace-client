@@ -2,7 +2,7 @@
     <header class="header">
         <div class="Logo">
             <router-link to="/">
-                <img class="logoimg" src="../../assets/logo.png" height="35">
+                <img class="logoimg" src="../../assets/logo.png" height="35" draggable="false">
             </router-link>
         </div>
         <div class="header-left">
