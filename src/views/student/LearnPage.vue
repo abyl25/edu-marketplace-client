@@ -23,9 +23,13 @@
                                         <span class="lecture-type">
                                             <img src="../../assets/icons8-play-14.png" alt="" style="vertical-align: -2px">
                                         </span>
-                                        <span class="lecture-duration">{{ getVideoDuration(lecture.duration) }}</span>
+                                        <span class="lecture-duration">{{ getVideoDuration(lecture.video.duration) }}</span>
                                     </div>
                                 </router-link>
+                            </li>
+                            <li class="files-content" :key="file.id" v-for="file in lecture.files">
+                                <img src="../../assets/file-02.png" height="25px" width="25px" alt="" draggable="false" style="user-select: none">
+                                <a :href="getFileLink(course.title, file.fileName, file.fileFormat)" target="_blank" :title="`${file.fileName}.${file.fileFormat}`">{{ `${file.fileName}.${file.fileFormat}` }}</a>
                             </li>
                         </ul>
                     </transition-group>
@@ -48,7 +52,9 @@
                         The First tab
                     </tab>
                     <tab name="Q&A">
-                        <qa></qa>
+                        <template v-if="activeLectureId">
+                            <qa :activeLectureId="activeLectureId"></qa>
+                        </template>
                     </tab>
                     <tab name="Announcements">
                         The third tab
@@ -106,7 +112,6 @@
             this.activeSectionId = parseInt(localStorage.getItem("activeSectionId"));
             this.activeLectureId = parseInt(localStorage.getItem("activeLectureId"));
             this.getCourseDetails();
-            // this.getVideoDuration(3910);
         },
         mounted() {
             // let player = this.$refs.player.player;
@@ -121,6 +126,9 @@
                     .then(res => {
                         console.log(res.data);
                         this.course = res.data;
+                        // this.activeSectionId = parseInt(localStorage.getItem("activeSectionId")) || this.sections[0].id;
+                        // this.activeLectureId = parseInt(localStorage.getItem("activeLectureId")) || this.lectures[0].id;
+                        this.setFirstLectureActive();
                         this.setFirstVideoLecture();
                     })
                     .catch(err => {
@@ -140,19 +148,32 @@
 
                 let lecture = this.lectures.filter(l => l.id === lectureId)[0];
                 this.activeVideoLink = this.getVideoLink(this.course.title, lecture);
-                this.activeVideoThumbnail = this.getThumbnailLink(this.course.title, lecture.videoThumbnail);
+                this.activeVideoThumbnail = this.getThumbnailLink(this.course.title, lecture.video.thumbnail);
                 this.settingVideoLink = false;
+            },
+            setFirstLectureActive() {
+                if (localStorage.getItem("activeLectureId") == null) {
+                    localStorage.setItem("activeLectureId", this.lectures[0].id);
+                    this.activeLectureId = this.lectures[0].id;
+                }
+                if (localStorage.getItem("activeSectionId") == null) {
+                    localStorage.setItem("activeSectionId", this.sections[0].id);
+                    this.activeLectureId = this.sections[0].id;
+                }
             },
             setFirstVideoLecture() {
                 let firstVideoLecture = this.lectures[0];
                 this.activeVideoLink = this.getVideoLink(this.course.title, firstVideoLecture);
-                this.activeVideoThumbnail = this.getThumbnailLink(this.course.title, firstVideoLecture.videoThumbnail);
+                this.activeVideoThumbnail = this.getThumbnailLink(this.course.title, firstVideoLecture.video.thumbnail);
             },
             getVideoLink(title, lecture) {
-                return `${process.env.VUE_APP_API}/${title}/videos/${lecture.videoName}.${lecture.videoFormat}`;
+                return `${process.env.VUE_APP_API}/${title}/videos/${lecture.video.name}.${lecture.video.extension}`;
             },
             getThumbnailLink(title, videoThumbnail) {
                 return `${process.env.VUE_APP_API}/${title}/videos/${videoThumbnail}`;
+            },
+            getFileLink(title, fileName, fileFormat) {
+                return `${process.env.VUE_APP_API}/${title}/files/${fileName}.${fileFormat}`;
             },
             getVideoDuration(duration) {
                 // let duration = this.$refs.player.player.media.duration;
@@ -204,6 +225,7 @@
 
     .sidebar-column {
         width: 30%;
+        min-width: 200px;
         /*width: 350px;*/
     }
 
@@ -278,7 +300,7 @@
 
     .section-lecture-list-item {
         color: #14171c;
-        padding: 8px 16px 8px 30px;
+        padding: 8px 16px 8px 25px;
     }
     .section-lecture-list-item:hover {
         background-color: #cbece7;
@@ -297,6 +319,10 @@
         text-decoration: none;
         text-align: left;
     }
+    /*.item-link:hover {*/
+    /*    background-color: #cbece7;*/
+    /*    cursor: pointer;*/
+    /*}*/
 
     .lecture-title {
         color: #14171c;
@@ -313,13 +339,35 @@
         background-color: #d5f5f0;
     }
 
-    .content-column {
-        width: 100%;
+    .files-content {
+        display: flex;
+        align-items: center;
+        padding: 5px 6%;
+    }
+    .files-content:hover {
+        background-color: #cbece7;
+        cursor: pointer;
+    }
+    .files-content a {
+        text-decoration: none;
+        color: #253e44;
+        font-size: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
-    /**/
+    /*  */
+    .content-column {
+        width: 100%;
+        padding: 20px 1.5% 30px 5px;
+    }
+
     .video-player {
         width: 100%;
+        /*height: 90vh;*/
+        border-radius: 3px;
+        overflow: hidden;
     }
 
     .video_placeholder {

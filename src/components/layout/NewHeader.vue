@@ -218,6 +218,7 @@ export default {
         justify-content: start;
         align-items: center;
         height: 60px;
+        margin-left: -10%;
     }
 
     .header-category {
@@ -280,6 +281,7 @@ export default {
         margin-left: 20px;
         background: #FFF;
         display: flex;
+        flex: 2;
         align-items: center;
         border-radius: 4px;
     }
@@ -309,7 +311,8 @@ export default {
     header nav {
         display: flex;
         align-items: center;
-        height: 50px;
+        /*height: 50px;*/
+        /*width: 140px;*/
     }
 
     header nav ul {

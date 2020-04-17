@@ -3,33 +3,40 @@
         <div class="sub-header">
             <h1 class="title">Upload Course Image</h1>
         </div>
-        <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">
-            <div class="image-container" v-if="selectedFile != null">
-                <img id="my_image" class="preview-image" src="" alt="">
-                <p>{{ selectedFile.name }}</p>
-            </div>
-            <div class="dropbox">
-                <input type="file" class="input-file" :name="uploadFieldName" :disabled="isSaving"
-                       @change="onFileSelected($event); preview($event)"
-                       accept="image/*" >
-                <p v-if="isInitial">
-                    Drag your file(s) here to begin<br> or click to browse
-                </p>
-                <p v-if="isSaving">
-                    Uploading {{ fileCount }} files...
-                </p>
-            </div>
-            <button type="button" class="upload-btn" @click="onUpload">Upload</button>
-        </form>
-<!--        <video width="320" height="240" controls>-->
-<!--            <source src="http://localhost:8081/api/static/video1/lesson1.mp4" type="video/mp4">-->
-<!--            Your browser does not support the video tag.-->
-<!--        </video>-->
+        <div class="file-upload-wrapper">
+            <file-pond
+                name="file"
+                ref="pond"
+                label-idle="Drop or select image"
+                accepted-file-types="image/*"
+                :allow-multiple="false"
+                :instant-upload="false"
+                :server="{process}"
+            />
+        </div>
+
+<!--        <form enctype="multipart/form-data" novalidate v-if="isInitial || isSaving">-->
+<!--            <div class="image-container" v-if="selectedFile != null">-->
+<!--                <img id="my_image" class="preview-image" src="" alt="">-->
+<!--                <p>{{ selectedFile.name }}</p>-->
+<!--            </div>-->
+<!--            <div class="dropbox">-->
+<!--                <input type="file" class="input-file" :name="uploadFieldName" :disabled="isSaving"-->
+<!--                       @change="onFileSelected($event); preview($event)"-->
+<!--                       accept="image/*" >-->
+<!--                <p v-if="isInitial">-->
+<!--                    Drag your file(s) here to begin<br> or click to browse-->
+<!--                </p>-->
+<!--                <p v-if="isSaving">-->
+<!--                    Uploading {{ fileCount }} files...-->
+<!--                </p>-->
+<!--            </div>-->
+<!--            <button type="button" class="upload-btn" @click="onUpload">Upload</button>-->
+<!--        </form>-->
     </div>
 </template>
 
 <script>
-    const STATUS_INITIAL = 0, STATUS_SAVING = 1, STATUS_SUCCESS = 2, STATUS_FAILED = 3;
     import axios from 'axios';
 
     export default {
@@ -48,19 +55,11 @@
             showToast: {
                 title: 'Success',
                 message: 'Course logo uploaded',
-                type: 'success', // You also can use 'VueNotifications.types.error' instead of 'error'
+                type: 'success',
                 timeout: 2000
             }
         },
-        mounted() {
-            this.reset();
-        },
         methods: {
-            reset() {
-                this.currentStatus = STATUS_INITIAL;
-                this.uploadedFiles = [];
-                this.uploadError = null;
-            },
             onFileSelected(e) {
                 // console.log('onFileSelected');
                 this.selectedFile = e.target.files[0];
@@ -81,10 +80,8 @@
                 fd.append('type', 'logo');
                 fd.append('courseId', this.$route.params.id);
 
-                // const url = `http://10.10.4.27:6010/api/upload/image?referer=course&course_id=${this.$route.params.id}`;
                 const url = `${process.env.VUE_APP_API}/api/static/files`;
                 const headers = {
-                    // 'Content-Type': 'application/x-www-form-urlencoded',
                     'Content-Type': 'application/form-data',
                     // 'Authorization': 'Bearer ' + this.$store.getters.token
                 };
@@ -97,57 +94,39 @@
                     console.log('uploaded');
                     console.log(res.data);
                     this.showToast({
-                        title: 'Success',
-                        message: 'Course logo uploaded',
-                        type: 'success',
-                        timeout: 2000
+                        title: 'Success', message: 'Course logo uploaded', type: 'success', timeout: 2000
                     });
                 }) .catch(err => {
                     console.log(err.response.data);
                     this.showToast({
-                        title: 'Error',
-                        message: 'Course logo upload failed',
-                        type: 'error',
-                        timeout: 2000
+                        title: 'Error', message: 'Course logo upload failed', type: 'error', timeout: 2000
                     });
                 });
             },
-            downloadImage() {
-                const fileName = "angular.png";
-                const fileName2 = "ticket.pdf";
-                const video = "lesson1.mp4";
-                const url = 'http://localhost:8081/api/static/image/' + fileName;
-                const url2 = 'http://localhost:8081/api/static/download/' + fileName;
-                const url3 = 'http://localhost:8081/api/static/download/' + fileName2;
-                const headers = {
-                    'Accept': "*/*"
-                };
-                axios({
-                    method: 'get',
-                    url: url3,
-                    headers: headers
-                }).then(res => {
-                    console.log('downloaded');
-                    // console.log(res.data);
-                }) .catch(err => {
-                    console.log(err.response.data)
+            process(fieldName, file, metadata, load, error, progress, abort) {
+                console.log('processing');
+                const fd = new FormData();
+                fd.append('file', file);
+                fd.append('type', 'logo');
+                fd.append('courseId', this.$route.params.id);
+                axios.post(`${process.env.VUE_APP_API}/api/static/files`, fd, {
+                    onUploadProgress: (e) => { progress(e.lengthComputable, e.loaded, e.total); }
+                    })
+                    .then(res => {
+                        console.log(res.data);
+                        load(res.data);
+
+                    }).catch(err => {
+                    console.log(err);
+                    error(err.response.data);
                 });
-            }
+                return {
+                    abort: () => {
+                        abort();
+                    }
+                };
+            },
         },
-        computed: {
-            isInitial() {
-                return this.currentStatus === STATUS_INITIAL;
-            },
-            isSaving() {
-                return this.currentStatus === STATUS_SAVING;
-            },
-            isSuccess() {
-                return this.currentStatus === STATUS_SUCCESS;
-            },
-            isFailed() {
-                return this.currentStatus === STATUS_FAILED;
-            }
-        }
     }
 </script>
 
@@ -161,10 +140,14 @@
         border-bottom: 1px solid #dedfe0;  /* #fff; #dedfe0   */
         text-align: left;
     }
-
     .title {
         font-size: 24px;
         font-weight: 300;
+    }
+
+    .file-upload-wrapper {
+        padding: 30px 50px;
+        cursor: pointer;
     }
 
     form {

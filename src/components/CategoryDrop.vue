@@ -99,11 +99,11 @@ nav a {
 .catSt {
    background: none;
    color:#FFF;
-   min-width:190px;
+   min-width: 150px;
    /* transition: background 0.5s, color 0.5s, transform 0.5s; */
    transition: none;
-   margin:0px 6px 6px 0px;
-   padding:15px 40px;
+   /*margin:0px 6px 6px 0px;*/
+   padding: 15px 30px;
    box-sizing:border-box;
    border-radius:3px;
    /* box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.5); */

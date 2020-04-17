@@ -25,8 +25,12 @@
                             <p v-if="passwordError" class="error">{{ passwordError }}</p>
                             <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('password')" class="error">{{ errors.password }} </p>
                         </div>
+<!--                        <button type="button" @click="checkLogin">Log in</button>-->
                         <div class="group">
-                            <input type="button" class="button" value="Sign In" @click="login"> <!--   -->
+                            <button type="button" class="button" :class="logging?'logging':''" @click="login">
+                                <span v-if="!logging">Sign In</span>
+                                <span class="lds-dual-ring" v-if="logging"></span>
+                            </button> <!--   -->
                         </div>
                     </form>
 
@@ -68,7 +72,11 @@
                             <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('userType')" class="error">{{ errors.userType }} </p>
                         </div>
                         <div class="group">
-                            <input type="button" class="button" value="Sign Up" @click="signUp">
+<!--                            <input type="button" class="button" value="Sign Up" @click="signUp"> -->
+                            <button type="button" class="button" :class="logging?'logging':''" @click="login">
+                                <span v-if="!logging">Sign Up</span>
+                                <span class="lds-dual-ring" v-if="logging"></span>
+                            </button>
                         </div>
                     </form>
                 </template>
@@ -94,6 +102,7 @@
         },
         data() {
             return {
+                logging: false, // false true
                 authIndex: 1,
                 firstName: '',
                 lastName: '',
@@ -125,8 +134,14 @@
                 localStorage.setItem('authTab', index);
                 this.resetErrorFields();
             },
-            login(e) {
+            checkLogin(e) {
                 e.preventDefault();
+                this.logging = !this.logging;
+            },
+            login(e) {
+                console.log('logging');
+                e.preventDefault();
+                this.logging = true;
                 const credentials = {
                     userName: this.userName.trim(),
                     password: this.password.trim(),
@@ -152,8 +167,10 @@
                     } else if (role.name === 'Admin'){
                         this.$router.push('/admin/home');
                     }
+                    this.logging = false;
                 }).catch(err => {
                     console.log(err);
+                    this.logging = false;
                     if (err.response) {
                         let data = err.response.data;
                         console.log(data);
@@ -191,6 +208,7 @@
             },
             signUp(e) {
                 e.preventDefault();
+                this.logging = true;
                 const credentials = {
                     firstName: this.firstName.trim(),
                     lastName: this.lastName.trim(),
@@ -208,8 +226,10 @@
                         type: 'success',
                         timeout: 2000
                     });
+                    this.logging = false;
                 }).catch(err => {
                     console.log(err);
+                    this.logging = false;
                     if (err.response) {
                         let data = err.response.data;
                         console.log(data);
@@ -349,6 +369,38 @@
     .button {
         background:#1161ee;
         cursor: pointer;
+    }
+
+    .logging {
+        padding: 9px;
+        background: #3677ea;
+        cursor: wait; /*  not-allowed  */
+    }
+
+    /* login spinner */
+    .lds-dual-ring {
+        display: inline-block;
+        width: 25px;
+        height: 25px;
+    }
+    .lds-dual-ring:after {
+        content: " ";
+        display: block;
+        width: 20px; /* 64px, 64px */
+        height: 20px;
+        /*margin: 8px;*/
+        border-radius: 50%;
+        border: 2px solid #fff;
+        border-color: #fff transparent #fff transparent;
+        animation: lds-dual-ring 1.2s linear infinite;
+    }
+    @keyframes lds-dual-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
     }
 
     .error {

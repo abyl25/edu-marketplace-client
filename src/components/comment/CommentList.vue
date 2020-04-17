@@ -1,8 +1,6 @@
 <template>
-    <div class="comment-container">
-        <Comment :key="post.id" v-for="post in posts" :post="post"/>
-<!--        <Comment :key="post.id" v-for="post in posts" :post="post" :comments="post.comments"/>-->
-<!--        <Comment :key="post.id" v-for="post in parentPosts" :post="post" :comments="getPostComments(post.id)"/>-->
+    <div class="comment-list">
+        <Comment :key="post.id" v-for="post in posts" :post="post" @reply-to-comment="replyToComment"/>
     </div>
 </template>
 
@@ -23,14 +21,11 @@
             }
         },
         computed: {
-            // parentPosts() {
-            //     return this.posts.filter(p => p.parentId === null);
-            // }
         },
         methods: {
-            // getPostComments(postId) {
-            //     return this.posts.filter(p => p.parentId === postId);
-            // }
+            replyToComment(replyComment) {
+                this.$emit('reply-to-comment', replyComment);
+            }
         }
     }
 </script>

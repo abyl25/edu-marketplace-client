@@ -1,6 +1,6 @@
 <template>
-    <div class="container">
-        <textarea name="" id="" placeholder="Ask question" v-model="text"></textarea>
+    <div class="form-container">
+        <textarea name="" id="" :placeholder="placeholder" v-model="content" :class="setTextAreaWH ? 'reply-wh' : ''"></textarea>
         <button class="btn comment-btn green" @click="onClick">Submit</button>
 <!--        <v-button myClass="comment-btn green">Submit</v-button>-->
     </div>
@@ -14,30 +14,28 @@
         components: {
             'v-button': Button
         },
-        props: {
-            placeholder: String
-        },
+        props: ['placeholder', 'setTextAreaWH'],
         data() {
             return {
-                text: '',
+                content: '',
             }
         },
         methods: {
             onClick() {
+                if (!this.content) return;
                 const comment = {
-                    parentId: null,
-                    lectureId: this.$route.params.lecture_id,
                     title: '',
-                    content: this.text
+                    content: this.content
                 }
                 this.$emit('add-comment', comment);
+                this.content = '';
             }
         }
     }
 </script>
 
 <style scoped>
-    .container {
+    .form-container {
         display: flex;
         flex-direction: column;
         width: 100%;
@@ -46,7 +44,7 @@
         border: 1px solid #aaa9a9;
         border-radius: 4px;
         /*width: 90%;*/
-        height: 100px;
+        height: 80px;
         margin-bottom: 8px;
         padding: 10px;
         color: #777777;
@@ -54,6 +52,11 @@
         font-family: Lato;
         resize: vertical;
     }
+    .reply-wh {
+        height: 50px;
+        width: 80%;
+    }
+
     .btn {
         border: none;
         border-radius: 2px;

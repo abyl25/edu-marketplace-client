@@ -1,8 +1,8 @@
 <template>
     <div class="qa-container">
-        <Form/>
+        <Form placeholder="Leave comment" @add-comment="comment"/>
         <div class="comment-container">
-            <CommentList :posts="posts" />
+            <CommentList :posts="arrangedComments" @reply-to-comment="comment"/>
         </div>
     </div>
 </template>
@@ -10,6 +10,8 @@
 <script>
     import Form from "@/components/comment/Form";
     import CommentList from "@/components/comment/CommentList";
+    import axios from "axios";
+    import {mapGetters} from "vuex";
 
     export default {
         name: "QA",
@@ -17,52 +19,94 @@
             Form: Form,
             CommentList: CommentList,
         },
+        props: {
+            activeLectureId: Number
+        },
         data() {
             return {
-                posts: [
-                    {
-                        id: 1, parentId: null, user: 'Abylay Tastanbekov', content: 'Good post!', postedAt: '16 Aug',
-                        comments: [
-                            {
-                                id: 3, parentId: 1, user: 'Abylay Tastanbekov', content: 'Thanks for that', postedAt: '19 Aug' ,
-                                comments: [
-                                    {
-                                        id: 4, parentId: 3, user: 'Abylay Tastanbekov', content: 'Yes, that is awesome', postedAt: '20 Aug',
-                                        comments: [
-                                            {
-                                                id: 9, parentId: 3, user: 'Abylay Tastanbekov', content: 'Wds sda', postedAt: '20 Aug',
-                                            },
-                                        ]
-                                    },
-                                ]
-                            },
-                            {
-                                id: 5, parentId: 1, user: 'Abylay Tastanbekov', content: 'Thanks!', postedAt: '22 Aug'
-                            },
-                            {
-                                id: 6, parentId: 1, user: 'Abylay Tastanbekov', content: 'Waiting for next post', postedAt: '23 Aug'
-                            },
-                        ]
-                    },
-                    { id: 2, parentId: null, user: 'Abylay Tastanbekov', content: 'Keep up good work', postedAt: '18 Aug',
-                        comments: [
-                            {
-                                id: 7, parentId: 2, user: 'Abylay Tastanbekov', content: 'fd sdf asd', postedAt: '24 Aug',
-                                comments: [
-                                    { id: 8, parentId: 7, user: 'Abylay Tastanbekov', content: 'fwiof j fkl ds dx', postedAt: '26 Aug' },
-                                ]
-                            },
-                        ]
-                    },
-                ]
-
+                comments: [],
+                arrangedComments: [],
             }
         },
         computed: {
+            ...mapGetters(['user']),
+        },
+        created() {
+            this.getCommentsByLecture(this.activeLectureId);
         },
         methods: {
-            askQuestion() {
+            getCommentsByLecture(lectureId) {
+                axios.get(`${process.env.VUE_APP_API}/api/lecture/${lectureId}/comments`)
+                    .then(res => {
+                        console.log(res.data);
+                        this.comments = res.data;
+                        let postsClone = JSON.parse(JSON.stringify(this.comments));
+                        this.arrangedComments = this.arrangeComments(postsClone);
+                        console.log(this.arrangedComments);
+                    })
+                    .catch(err => console.log(err));
+            },
+            comment(comment) {
+                if (!comment.hasOwnProperty('parentId')) {
+                    comment.parentId = null;
+                }
+                comment.userId = this.user.id;
+
+                axios.post(`${process.env.VUE_APP_API}/api/lecture/${this.activeLectureId}/comments`, comment)
+                    .then(res => {
+                        console.log(res.data);
+                        this.comments = [...this.comments, res.data];
+                        let postsClone = JSON.parse(JSON.stringify(this.comments));
+                        this.arrangedComments = this.arrangeComments(postsClone);
+                    })
+                    .catch(err => console.log(err));
+            },
+            // code samples
+            getCommentById(commentID, comments_list) {
+                for (let j = 0; j < comments_list.length; j++) {
+                    if (comments_list[j].id == commentID) {
+                        return comments_list[j];
+                    }
+                }
+            },
+            getCommentDepth(theComment, comments_list) {
+                let depthLevel = 0;
+                while (theComment.parentId > 0) {
+                    theComment = this.getCommentById(theComment.parentId, comments_list);
+                    depthLevel++;
+                }
+                return depthLevel;
+            },
+            arrangeComments(commentsList) {
+                let maxDepth = 0;
+                for (let i = 0; i < commentsList.length; i += 1) {
+                    commentsList[i].children = [];
+                    // let date = commentsList[i].date.split(" ").join("T").concat("Z");
+                    // commentsList[i].date = new Date(date);
+                    commentsList[i].comment_depth = this.getCommentDepth(commentsList[i], commentsList);
+                    if (this.getCommentDepth(commentsList[i], commentsList) > maxDepth) {
+                        maxDepth = this.getCommentDepth(commentsList[i], commentsList);
+                    }
+                }
+                for (let i = maxDepth; i > 0; i--) {
+                    for (let j = 0; j < commentsList.length; j++) {
+                        if (commentsList[j].comment_depth == i) {
+                            for (let k = 0; k < commentsList.length; k++) {
+                                if (commentsList[j].parentId == commentsList[k].id) {
+                                    commentsList[k].children.push(commentsList[j])
+                                }
+                            }
+                        }
+                    }
+                }
+                for (let i = commentsList.length - 1; i >= 0; i--) {
+                    if (commentsList[i].parentId > 0) {
+                        commentsList.splice(i, 1);
+                    }
+                }
+                return commentsList;
             }
+
         }
     }
 </script>

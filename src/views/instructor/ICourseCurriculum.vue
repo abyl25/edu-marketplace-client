@@ -138,7 +138,7 @@
                                                     name="file"
                                                     ref="pond"
                                                     label-idle="Drop or select a file"
-                                                    accepted-file-types=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .csv, .txt"
+                                                    accepted-file-types="application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.slideshow, text/plain, .doc, .docx"
                                                     :allow-multiple="true"
                                                     :instant-upload="false"
                                                     :files="myFiles"
@@ -147,7 +147,8 @@
                                                     @addfile="onAddFile"
                                                     @processfile="processFileFinish"
                                                     @click.native="setCurrentUploadFile(lecture.id, 'files')"/>
-<!--                                                accepted-file-types="application/pdf, application/msword, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, .csv, .txt"-->
+<!--                                                accepted-file-types="application/pdf, application/msword, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, .csv, .txt" -->
+<!--                                                accepted-file-types=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .csv, .txt"-->
                                             </div>
 
                                             <div class="video-player" v-if="hasVideo(lecture)">
@@ -159,9 +160,13 @@
                                             <!-- files -->
                                             <div class="lecture-content" v-if="lecture.files.length > 0">
                                                 <p class="files-header">Files</p> 
-                                                <div :key="file.id" v-for="file in lecture.files">
+                                                <div class="files-content" :key="file.id" v-for="file in lecture.files">
                                                     <img src="../../assets/file-02.png" height="28px" width="28px" alt="" draggable="false" style="user-select: none">
                                                     <a :href="getFileLink(course.title, file.fileName, file.fileFormat)" target="_blank">{{ `${file.fileName}.${file.fileFormat}` }}</a>
+                                                    <span class="section-control-btn bg-gr ml pl-rt" @click="deleteFile(file.id, file, lecture.files)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="14" height="14" viewBox="0 0 172 172"
+                                                             style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#686f7a"><path d="M72.76923,-0.20673c-5.53004,0 -10.95673,1.08534 -14.88462,4.96154c-3.92788,3.87621 -5.16827,9.38041 -5.16827,15.09135h-26.25481c-3.64363,0 -6.61538,2.97176 -6.61538,6.61538h-6.61538v13.23077h145.53846v-13.23077h-6.61538c0,-3.64363 -2.97176,-6.61538 -6.61538,-6.61538h-26.25481c0,-5.71094 -1.24038,-11.21514 -5.16827,-15.09135c-3.92788,-3.8762 -9.35456,-4.96154 -14.88462,-4.96154zM72.76923,13.4375h26.46154c3.61779,0 4.75481,0.85276 5.16827,1.24038c0.41346,0.38762 1.24038,1.47296 1.24038,5.16827h-39.27885c0,-3.69531 0.82692,-4.78065 1.24038,-5.16827c0.41346,-0.38762 1.55048,-1.24038 5.16827,-1.24038zM26.46154,46.30769v105.84615c0,10.93089 8.91526,19.84615 19.84615,19.84615h79.38462c10.93089,0 19.84615,-8.91526 19.84615,-19.84615v-105.84615zM52.92308,66.15385h13.23077v79.38462h-13.23077zM79.38462,66.15385h13.23077v79.38462h-13.23077zM105.84615,66.15385h13.23077v79.38462h-13.23077z"></path></g></g></svg>
+                                                    </span>
                                                 </div>
                                             </div>
 
@@ -246,6 +251,14 @@
             lectures() {
                 return this.nestedLectures.flat();
             },
+        },
+        notifications: {
+            showToast: {
+                title: 'Success',
+                message: 'Course logo uploaded',
+                type: 'success',
+                timeout: 2000
+            }
         },
         created() {
             this.getInstructorCourse();
@@ -577,6 +590,20 @@
                 let a = this.getUploadingButton(lectureId);
                 return a ? a.type : "";
             },
+            deleteFile(fileId, file, files) {
+                const fileIndex = files.indexOf(file);
+                files.splice(fileIndex, 1);
+                axios.delete(`${process.env.VUE_APP_API}/api/static/files/${fileId}?type=files`)
+                    .then(res => {
+                        console.log(res.data);
+                        this.showToast({ title: 'Success', message: 'File deleted', type: 'success', timeout: 2000 });
+                        // files = files.filter(f => f.id !== fileId);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        this.showToast({ title: 'Error', message: 'File deletion failure', type: 'error', timeout: 2000 });
+                    });
+            }
         }
     }
 </script>
@@ -711,6 +738,12 @@
     .bg-gr:hover {
         background-color: #f0f3f5;
     }
+    .fl-rt {
+        float: right;
+    }
+    .ml {
+        margin-left: 5px;
+    }
 
     .lecture-header {
         display: flex;
@@ -784,6 +817,12 @@
     }
     .files-header {
         margin-bottom: 5px;
+    }
+    .files-content {
+        display: flex;
+        align-items: center;
+    }
+    .pl-rt {
     }
 
         /**/
