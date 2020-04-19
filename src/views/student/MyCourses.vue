@@ -12,7 +12,8 @@
                     <div class="course-card" v-bind:key="course.id" v-for="course in this.myCourses"> <!--  i in count  -->
                         <router-link :to="{ path: `/course/${course.id}/lecture/1` }" class="course-link">
                             <div class="image-container">
-                                <img class="image" src="../../assets/1.png" alt="">
+                                <img class="image" src="../../assets/1.png" alt="" v-if="!course.imageName">
+                                <img :src="imagePath(course)" alt="logo" v-else width="150" height="120">
                             </div>
                             <div class="course-details">
                                 <p class="course-title">{{ course.title }}</p>
@@ -46,6 +47,9 @@
                 count: 10
             }
         },
+        computed: {
+            ...mapGetters(['user', 'myCourses']),
+        },
         created() {
             this.getMyCourses();
         },
@@ -64,11 +68,11 @@
                         console.log(err.response.data);
                         this.fetched = true;
                     });
+            },
+            imagePath(course) {
+                return `${process.env.VUE_APP_API}/${course.title}/logo/${course.imageName}.${course.imageFormat}`;
             }
         },
-        computed: {
-            ...mapGetters(['user', 'myCourses'])
-        }
     }
 </script>
 

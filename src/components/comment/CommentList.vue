@@ -23,8 +23,8 @@
         computed: {
         },
         methods: {
-            replyToComment(replyComment) {
-                this.$emit('reply-to-comment', replyComment);
+            replyToComment(newComment, parentComment) {
+                this.$emit('reply-to-comment', newComment, parentComment);
             }
         }
     }

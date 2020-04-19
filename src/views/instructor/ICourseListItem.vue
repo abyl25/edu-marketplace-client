@@ -1,7 +1,9 @@
 <template>
     <div class="course-item">
-        <img src="../../assets/1.png" alt="" v-if="!hasImage" width="180" height="120">
-        <img :src="imagePath" alt="logo" v-else width="180" height="120">
+        <div class="image-container">
+            <img src="../../assets/1.png" alt="" class="default-logo" v-if="!hasImage">
+            <img :src="imagePath" alt="logo" class="course-logo" v-else>
+        </div>
         <router-link :to="{ path: '/instructor/course/' + course.id + '/main' }">
             <div class="course-card-right">
                 <div class="title-wrapper">
@@ -37,12 +39,34 @@
         border-radius: 2px;
         margin: 30px 0;
         /*flex-basis: 200px;*/
-        width: 90%;
+        /*width: 90%;*/
+        min-width: 430px;
+    }
+
+    .image-container {
+        /*min-width: 120px;*/
+        width: 170px;
+        height: 120px;
+    }
+    .default-logo {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .course-logo {
+        max-width: 100%;
+        max-height: 100%;
+        /* or */
+        /*width: 100%;*/
+        /*height: 100%;*/
+        /*object-fit: contain; !*  cover; contain;  *!*/
     }
 
     .course-item a {
         display: block;
         flex: 1;
+        min-width: 0;
+        /*min-width: 300px;*/
         text-align: left;
         text-decoration: none;
         background-color: #f5f6f7;
@@ -50,18 +74,19 @@
     }
 
     .course-card-right {
+        display: flex;
+        flex-direction: column;
+        min-width: 280px;
         padding: 10px 15px;
     }
 
     .title-wrapper {
-        min-width: 0;
         height: 26px;
-        /*white-space: nowrap;*/
-        overflow: hidden;
-        text-overflow: ellipsis;
     }
     .title {
-        /*text-overflow: ellipsis;*/
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .subtitle-wrapper {

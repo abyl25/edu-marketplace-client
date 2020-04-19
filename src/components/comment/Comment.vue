@@ -10,7 +10,7 @@
                     <p class="posted-at">{{ parseTime(post.date) }}</p>
                 </div>
                 <div class="comment-body">
-                    <p>{{ post.id + '. '}} {{ post.content }}</p>
+                    <p>{{ post.content }}</p>
                 </div>
                 <div class="comment-actions-container">
                     <span class="message reply" @click="setReplyToId(post.id)">Reply</span>
@@ -19,9 +19,9 @@
             </div>
         </div>
 
-        <div class="comment-lp vertical-line">  <!-- v-if="post.children && post.children.length > 0" -->
+        <div class="comment-lp vertical-line">
             <div class="comment-form-wrapper" v-if="replyToId === post.id">
-                <Form placeholder="Reply" setTextAreaWH="true" @add-comment="replyToComment($event, post.id)"/>
+                <Form placeholder="Reply" setTextAreaWH="true" @add-comment="replyToComment($event, post)"/>
             </div>
             <Comment :key="comment.id" v-for="comment in post.children" :post="comment" @reply-to-comment="reply"/>
         </div>
@@ -52,18 +52,18 @@
             setReplyToId(toPostId) {
                 this.replyToId = this.replyToId ? null: toPostId;
             },
-            replyToComment(comment, toCommentId) {
-                const replyComment = {
-                    parentId: toCommentId,
+            replyToComment(comment, parentComment) {
+                const newComment = {
+                    parentId: parentComment.id,
                     userId: null,
                     title: comment.title,
                     content: comment.content
                 };
-                this.$emit('reply-to-comment', replyComment);
-                this.setReplyToId(toCommentId);
+                this.$emit('reply-to-comment', newComment, parentComment);
+                this.setReplyToId(parentComment.id);
             },
-            reply(replyComment) {
-                this.$emit('reply-to-comment', replyComment);
+            reply(newComment, parentComment) {
+                this.$emit('reply-to-comment', newComment, parentComment);
             },
             parseTime(postTime) {
                 let time = new Date(postTime);

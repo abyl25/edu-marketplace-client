@@ -2,7 +2,7 @@
     <div>
         <div class="sub-header">
             <h1 class="title">Course Curriculum</h1>
-            <p>{{ $t('message.hello') }}</p>
+<!--            <p>{{ $t('message.hello') }}</p>-->
         </div>
         <div class="main-content-container">
             <div class="sections-container">
@@ -337,7 +337,7 @@
                         lecture.video.thumbnail = data.fileName + '.png';
                     } else if (data.type === 'files') {
                         const file = {
-                            id: data.lectureId,
+                            id: data.id,
                             name: '',
                             fileName: data.fileName,
                             fileFormat: data.fileFormat,
@@ -345,12 +345,10 @@
                         }
                         lecture.files.push(file);
                     }
-
                 }).catch(err => {
                     console.log(err);
                     error(err.response.data);
                 });
-
                 return {
                     abort: () => {
                         abort();
@@ -359,38 +357,6 @@
             },
             processFileFinish() {
                 // console.log('Finished processing a file');
-            },
-            openFile(fileName) {
-                console.log('opening pdf file in new tab');
-                // window.open(this.href + fileName,'_blank');
-                axios.get(this.href + fileName, {
-                    responseType: 'arraybuffer', // blob
-                    headers: {
-                        'Accept': 'application/pdf'
-                    }
-                })
-                    .then(res => {
-                        // console.log(res.data);
-
-                        // var windowUrl = window.URL || window.webkitURL;
-                        // var url = windowUrl.createObjectURL(res.data);
-                        // anchor.prop('href', url);
-                        // anchor.prop('download', fileName);
-                        // anchor.get(0).click();
-                        // windowUrl.revokeObjectURL(url);
-
-                        // 1)
-                        // let pdfWindow = window.open("");
-                        // pdfWindow.document.write(
-                        //     "<iframe width='100%' height='100%' src='data:application/pdf;base64, " +
-                        //     encodeURI(res.data) + "'></iframe>"
-                        // );
-
-                        // 2)
-                        let file = new Blob([res.data], { type: 'application/pdf' });
-                        let fileURL = window.URL.createObjectURL(file);
-                        window.open(fileURL, '_blank'); // '_blank'
-                    })
             },
             //
             addSectionInput() {
@@ -464,10 +430,12 @@
                     .then(res => {
                         console.log(res.data);
                         this.editSectionId = 0;
+                        this.showToast({ title: 'Success', message: 'Section edited', type: 'success', timeout: 2000 });
                     })
                     .catch(err => {
                         console.log(err);
                         console.log(err.response.data);
+                        this.showToast({ title: 'Error', message: 'Section edition failed', type: 'error', timeout: 2000 });
                     });
             },
             cancelEditSection() {
@@ -482,10 +450,12 @@
                 this.$store.dispatch(DELETE_COURSE_SECTION_REQUEST, payload)
                     .then(res => {
                         console.log(res.data);
+                        this.showToast({ title: 'Success', message: 'Section deleted', type: 'success', timeout: 2000 });
                     })
                     .catch(err => {
                         console.log(err);
                         console.log(err.response.data);
+                        this.showToast({ title: 'Error', message: 'Section deletion failed', type: 'error', timeout: 2000 });
                     });
             },
             // Lecture Methods
@@ -526,10 +496,12 @@
                     .then(res => {
                         console.log(res.data);
                         this.editLectureId = 0;
+                        this.showToast({ title: 'Success', message: 'Lecture edited', type: 'success', timeout: 2000 });
                     })
                     .catch(err => {
                         console.log(err);
                         console.log(err.response.data);
+                        this.showToast({ title: 'Error', message: 'Lecture edition failed', type: 'error', timeout: 2000 });
                     });
             },
             cancelEditLecture() {
@@ -545,10 +517,12 @@
                 this.$store.dispatch(DELETE_COURSE_LECTURE_REQUEST, payload)
                     .then(res => {
                         console.log(res.data);
+                        this.showToast({ title: 'Success', message: 'Lecture deleted', type: 'success', timeout: 2000 });
                     })
                     .catch(err => {
                         console.log(err);
                         console.log(err.response.data);
+                        this.showToast({ title: 'Error', message: 'Lecture deletion failed', type: 'error', timeout: 2000 });
                     });
             },
             toggleLectureTab(lectureId) {
@@ -601,7 +575,7 @@
                     })
                     .catch(err => {
                         console.log(err);
-                        this.showToast({ title: 'Error', message: 'File deletion failure', type: 'error', timeout: 2000 });
+                        this.showToast({ title: 'Error', message: 'File deletion failed', type: 'error', timeout: 2000 });
                     });
             }
         }

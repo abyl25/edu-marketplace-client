@@ -2,9 +2,9 @@
     <div class="course">
         <router-link class="course-link" :to="{ path: '/course/' + course.id }">
             <div class="course-cardcontainer">
-                <div class="course-card-imagecontainer">
-                    <img class="course-image" src="../../assets/1.png" v-if="!hasImage" width="240" height="135">
-                    <img :src="imagePath" alt="logo" v-else width="180" height="120">
+                <div class="course-card-image-container">
+                    <img class="course-image" src="../../assets/1.png" v-if="!hasImage">
+                    <img class="course-logo" :src="imagePath" alt="logo" v-else>
                 </div>
                 <div class="course-card-content">
                     <div class="course-card-content-title">
@@ -46,10 +46,10 @@ export default {
     props: ["course"],
     computed: {
         hasImage() {
-            return this.course.image_name;
+            return this.course.imageName;
         },
         imagePath() {
-            return `${process.env.VUE_APP_API}/${this.course.title}/logo/${this.course.image_name}.${this.course.image_format}`;
+            return `${process.env.VUE_APP_API}/${this.course.title}/logo/${this.course.imageName}.${this.course.imageFormat}`;
         }
     }
 }
@@ -90,17 +90,21 @@ export default {
         padding: 15px 8px 5px 8px;
     }
 
-    .course-card-imagecontainer {
-        width: 210px;
-        height: 100px;
+    .course-card-image-container {
+        width: 180px;
+        height: 120px;
         margin-bottom: 16px;
+        text-align: center;
     }
-
     .course-image {
         box-shadow: 0 0 0 1px #e8e8eB;
         object-fit: cover;
         width: 100%;
         height: 100%;
+    }
+    .course-logo {
+        max-width: 100%;
+        max-height: 100%;
     }
 
     .course-card-content {

@@ -22,10 +22,10 @@
         },
         methods: {
             onClick() {
-                if (!this.content) return;
+                if (!this.content.trim()) return;
                 const comment = {
                     title: '',
-                    content: this.content
+                    content: this.content.trim()
                 }
                 this.$emit('add-comment', comment);
                 this.content = '';

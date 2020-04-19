@@ -14,11 +14,12 @@
                         </span>
                         <div class="section-lecture-stats"></div>
                     </div>
+
                     <transition-group name="items">
-                        <ul class="section-lecture-list" v-bind:key="lecture.id" v-for="lecture in section.lectures" v-show="section.id === activeSectionId ">
+                        <ul class="section-lecture-list" v-bind:key="lecture.id" v-for="(lecture, i) in section.lectures" v-show="section.id === activeSectionId ">
                             <li class="section-lecture-list-item" :class="{'active-lecture': lecture.id === activeLectureId}" @click="setActiveLecture(lecture.id)">
                                 <router-link class="item-link" to="">  <!--  :to="lecture.link"  -->
-                                    <p class="lecture-title">{{ lecture.name }}</p>
+                                    <p class="lecture-title">{{ i+1 + '. ' + lecture.name }}</p>
                                     <div class="lecture-type-container">
                                         <span class="lecture-type">
                                             <img src="../../assets/icons8-play-14.png" alt="" style="vertical-align: -2px">
@@ -158,7 +159,7 @@
                 }
                 if (localStorage.getItem("activeSectionId") == null) {
                     localStorage.setItem("activeSectionId", this.sections[0].id);
-                    this.activeLectureId = this.sections[0].id;
+                    this.activeSectionId = this.sections[0].id;
                 }
             },
             setFirstVideoLecture() {
