@@ -76,7 +76,7 @@
     }
 
     .dropdown {
-        position:relative;
+        position: relative;
     }
 
     .anchor {
@@ -84,8 +84,8 @@
         align-items: center;
         justify-content: center;
         border: 1px solid #27AE60;
-        padding: 10px 20px;
-        font-size: 16px;
+        padding: 10px 6%;
+        font-size: 15px;
         border-radius: 4px;
         transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         color: #fff;

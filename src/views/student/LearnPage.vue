@@ -27,6 +27,14 @@
                                         <span class="lecture-duration">{{ getVideoDuration(lecture.video.duration) }}</span>
                                     </div>
                                 </router-link>
+                                <span class="checkmark-icon-wrapper">
+                                    <input type="checkbox" :id="lecture.id" class="inp-cbx" style="display: none;" :value="lecture.id" v-model="completedLectureIds" @change="toggleComplete($event, lecture)"/>
+                                    <label class="cbx" :for="lecture.id" title="mark complete">
+                                        <span class="cbx-span">
+                                            <svg width="12px" height="9px" viewbox="0 0 12 9"><polyline points="1 5 4 8 11 1"></polyline></svg>
+                                        </span>
+                                    </label>
+                                </span>
                             </li>
                             <li class="files-content" :key="file.id" v-for="file in lecture.files">
                                 <img src="../../assets/file-02.png" height="25px" width="25px" alt="" draggable="false" style="user-select: none">
@@ -35,6 +43,10 @@
                         </ul>
                     </transition-group>
                 </div>
+            </div>
+
+            <div class="rating-wrapper">
+                <Rating :courseId="this.$route.params.course_id"/>
             </div>
         </div>
 
@@ -48,11 +60,11 @@
             </div>
 
             <div class="menu-tab-container">
-                <tabs :options="{ useUrlFragment: false }" @clicked="tabClicked" @changed="tabChanged">
+                <tabs :options="{ useUrlFragment: false, defaultTabHash: 'qa' }" @clicked="tabClicked" @changed="tabChanged">
                     <tab name="Overview">
                         The First tab
                     </tab>
-                    <tab name="Q&A">
+                    <tab id="qa" name="Q&A">
                         <template v-if="activeLectureId">
                             <qa :activeLectureId="activeLectureId"></qa>
                         </template>
@@ -76,15 +88,17 @@
     import {Tabs, Tab} from 'vue-tabs-component';
     import 'vue-tabs-component/docs/resources/tabs-component.css';
     import QA from "@/views/student/QA";
-    import sectionData from "@/data/sectionData";
+    import Rating from "@/components/Rating";
     import {COURSE_REQUEST} from "@/store/actions";
+    import { mapGetters } from "vuex";
+    import axios from 'axios';
 
     export default {
         name: "LearnPage",
         components: {
-            Tabs,
-            Tab,
-            'qa': QA
+            Tabs, Tab,
+            'qa': QA,
+            Rating,
         },
         data() {
             return {
@@ -95,10 +109,12 @@
                 settingVideoLink: false,
                 activeVideoLink: '',
                 activeVideoThumbnail: '',
+                completedLectureIds: [],
                 // sections: sectionData.sections
             }
         },
         computed: {
+            ...mapGetters(['user']),
             sections() {
                 return this.course.sections;
             },
@@ -114,11 +130,6 @@
             this.activeLectureId = parseInt(localStorage.getItem("activeLectureId"));
             this.getCourseDetails();
         },
-        mounted() {
-            // let player = this.$refs.player.player;
-            // player.media.src = '';
-            // console.log(player);
-        },
         methods: {
             getCourseDetails() {
                 const courseId = this.$route.params.course_id;
@@ -131,6 +142,7 @@
                         // this.activeLectureId = parseInt(localStorage.getItem("activeLectureId")) || this.lectures[0].id;
                         this.setFirstLectureActive();
                         this.setFirstVideoLecture();
+                        this.getCompletedLectures();
                     })
                     .catch(err => {
                         console.log(err);
@@ -183,6 +195,34 @@
                 let seconds = Math.floor(duration % 60);
                 return minutes + ':' + seconds;
             },
+            //
+            toggleComplete(e, lecture) {
+                if (e.target.checked) {
+                    console.log('checked id: ' + lecture.id);
+                } else {
+                    console.log('unchecked id: ' + lecture.id);
+                }
+                axios.post(`${process.env.VUE_APP_API}/api/user/${this.user.id}/lectures/${lecture.id}`)
+                    .then(res => {
+                        console.log(res.data);
+                    })
+                    .catch(err => console.log(err));
+            },
+            getCompletedLectures() {
+                axios.get(`${process.env.VUE_APP_API}/api/user/${this.user.id}/course/${this.course.id}/lectures`)
+                    .then(res => {
+                        console.log(res.data);
+                        this.completedLectureIds = res.data;
+                    })
+                    .catch(err => console.log(err));
+            },
+            mapCompletedLectures() {
+                this.completedLectureIds = this.user.completedLectures.map(l => l.id);
+            },
+            isLectureCompleted(lectureId) {
+                return this.user.completedLectures.filter(l => l.id === lectureId).length !== 0;
+            },
+            // tabs
             tabClicked (selectedTab) {
                 // console.log('Current tab re-clicked:' + selectedTab.tab.name);
             },
@@ -241,6 +281,11 @@
         border-right: none;
     }
 
+    .sidebar-header h2 {
+        font-size: 16px;
+        line-height: 1.5em;
+    }
+
     .sidebar-content {
         /*z-index: 1;*/
         /*background-color: #fff;*/
@@ -251,6 +296,7 @@
 
     .course-section {
         border-bottom: 1px solid #dedfe0;
+        overflow: hidden;
     }
 
     .section-heading {
@@ -300,14 +346,16 @@
     }
 
     .section-lecture-list-item {
+        display: flex;
+        /*flex: 2;*/
+        /*flex-basis: ;*/
         color: #14171c;
-        padding: 8px 16px 8px 25px;
+        padding: 8px 7.5%;
     }
     .section-lecture-list-item:hover {
         background-color: #cbece7;
         cursor: pointer;
     }
-
     .curriculum-item {
         /*display: flex;*/
         /*justify-content: space-between;*/
@@ -315,7 +363,9 @@
         /*padding: 8px 16px;*/
     }
 
+    /**/
     .item-link {
+        flex: 2;
         display: block;
         text-decoration: none;
         text-align: left;
@@ -335,6 +385,87 @@
         color: #007791;
         font-size: 14px;
     }
+
+    .checkmark-icon-wrapper {
+        /*display: flex;*/
+        /*align-items: flex-start;*/
+        /*padding: 7px;*/
+        /*vertical-align: -5px;*/
+        position: relative;
+        top: 2px;
+    }
+
+    /* checkbox style */
+    .cbx {
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        cursor: pointer;
+    }
+    .cbx span {
+        display: inline-block;
+        vertical-align: middle;
+        transform: translate3d(0, 0, 0);
+    }
+    .cbx span {
+        position: relative;
+        width: 23px;
+        height: 23px;
+        border-radius: 50%;
+        transform: scale(1);
+        vertical-align: middle;
+        border: 1px solid #B9B8C3;
+        transition: all 0.2s ease;
+    }
+    .cbx span svg {
+        position: absolute;
+        z-index: 1;
+        top: 6px;
+        left: 5px;
+        fill: none;
+        stroke: white;
+        stroke-width: 2;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-dasharray: 16px;
+        stroke-dashoffset: 16px;
+        transition: all 0.3s ease;
+        transition-delay: 0.1s;
+        transform: translate3d(0, 0, 0);
+    }
+    .cbx span:before {
+        content: "";
+        width: 100%;
+        height: 100%;
+        background: #506EEC;
+        display: block;
+        transform: scale(0);
+        opacity: 1;
+        border-radius: 50%;
+        transition-delay: 0.2s;
+    }
+    .cbx:hover span {
+        border-color: #3c53c7;
+    }
+    .inp-cbx:checked + .cbx span {
+        border-color: #3c53c7;
+        background: #3c53c7;
+        animation: check 0.6s ease;
+    }
+    .inp-cbx:checked + .cbx span svg {
+        stroke-dashoffset: 0;
+    }
+    .inp-cbx:checked + .cbx span:before {
+        transform: scale(2.2);
+        opacity: 0;
+        transition: all 0.6s ease;
+    }
+    @keyframes check {
+        50% {
+            transform: scale(1.2);
+        }
+    }
+    /* checkbox style end */
 
     .active-lecture {
         background-color: #d5f5f0;
@@ -356,6 +487,10 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+    }
+
+    .rating-wrapper {
+        padding: 15px 5px;
     }
 
     /*  */

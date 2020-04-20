@@ -97,7 +97,7 @@
     }
 
     .my-courses-container {
-        padding: 25px 60px;
+        padding: 25px 4.5%;
     }
 
     .card-wrapper {
@@ -107,7 +107,7 @@
     }
 
     .course-card {
-        flex: 0 1 22%;
+        flex: 0 1 20%;
         /*flex-basis: 230px;*/
         position: relative;
         height: 280px;

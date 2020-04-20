@@ -25,7 +25,6 @@
                             <p v-if="passwordError" class="error">{{ passwordError }}</p>
                             <p v-if="!isObjEmpty(errors) && errors.hasOwnProperty('password')" class="error">{{ errors.password }} </p>
                         </div>
-<!--                        <button type="button" @click="checkLogin">Log in</button>-->
                         <div class="group">
                             <button type="button" class="button" :class="logging?'logging':''" @click="login">
                                 <span v-if="!logging">Sign In</span>
@@ -133,10 +132,6 @@
                 this.authIndex = index;
                 localStorage.setItem('authTab', index);
                 this.resetErrorFields();
-            },
-            checkLogin(e) {
-                e.preventDefault();
-                this.logging = !this.logging;
             },
             login(e) {
                 console.log('logging');

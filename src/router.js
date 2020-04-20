@@ -25,6 +25,7 @@ import NotAuthorized from "@/views/NotAuthorized";
 import LearnPage from "@/views/student/LearnPage";
 import Auth from "@/views/auth/Auth";
 import Carousel from "@/components/Carousel";
+import Rating from "@/components/Rating";
 
 Vue.use(Router);
 
