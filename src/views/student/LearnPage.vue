@@ -10,13 +10,13 @@
                     <div class="section-heading" @click="setActiveSection(section.id)">
                         <h3 class="section-title">{{ section.name }}</h3>
                         <span class="section-chevron">
-                            <img src="../../assets/chevron-down.png" alt="" class="arrow" :class="{'arrow--rotate': section.id === activeSectionId}" draggable="false">
+                            <img src="../../assets/chevron-down.png" alt="" class="arrow" :class="{'arrow--rotate': isSectionActive(section.id)}" draggable="false">
                         </span>
                         <div class="section-lecture-stats"></div>
                     </div>
 
                     <transition-group name="items">
-                        <ul class="section-lecture-list" v-bind:key="lecture.id" v-for="(lecture, i) in section.lectures" v-show="section.id === activeSectionId ">
+                        <ul class="section-lecture-list" v-bind:key="lecture.id" v-for="(lecture, i) in section.lectures" v-show="isSectionActive(section.id)">
                             <li class="section-lecture-list-item" :class="{'active-lecture': lecture.id === activeLectureId}" @click="setActiveLecture(lecture.id)">
                                 <router-link class="item-link" to="">  <!--  :to="lecture.link"  -->
                                     <p class="lecture-title">{{ i+1 + '. ' + lecture.name }}</p>
@@ -46,8 +46,20 @@
             </div>
 
             <div class="rating-wrapper">
-                <Rating :courseId="this.$route.params.course_id"/>
+                <template v-if="courseFetched">
+                    <Rating :courseId="this.$route.params.course_id" :review="this.course.reviewDto"/>
+                </template>
+                <template class="cert-wrapper" v-if="courseFetched && canGetCertificate()">
+                    <a :href="getCertificateLink()" class="cert-link">Get certificate</a>
+                </template>
             </div>
+
+            <sweet-modal ref="modal" overlay-theme="dark">
+                <div class="cert-wrapper">
+                    <h2>Congratulations! You have finished the course</h2>
+                    <a :href="getCertificateLink()" class="cert-link-2" @click="closeCertificateModal">Get your certificate</a>
+                </div>
+            </sweet-modal>
         </div>
 
         <div class="content-column">
@@ -87,6 +99,7 @@
 <script>
     import {Tabs, Tab} from 'vue-tabs-component';
     import 'vue-tabs-component/docs/resources/tabs-component.css';
+    import { SweetModal } from 'sweet-modal-vue';
     import QA from "@/views/student/QA";
     import Rating from "@/components/Rating";
     import {COURSE_REQUEST} from "@/store/actions";
@@ -96,21 +109,22 @@
     export default {
         name: "LearnPage",
         components: {
-            Tabs, Tab,
+            Tabs, Tab, SweetModal,
             'qa': QA,
             Rating,
         },
         data() {
             return {
                 course: {},
+                courseFetched: false,
                 showSectionMenuItems: false,
                 activeSectionId: null,
+                activeSectionIds: JSON.parse(localStorage.getItem("activeSectionIds")) || [],
                 activeLectureId: null,
                 settingVideoLink: false,
                 activeVideoLink: '',
                 activeVideoThumbnail: '',
                 completedLectureIds: [],
-                // sections: sectionData.sections
             }
         },
         computed: {
@@ -133,25 +147,32 @@
         methods: {
             getCourseDetails() {
                 const courseId = this.$route.params.course_id;
-                // this.course = this.courses.filter(c => c.id == courseId);
-                this.$store.dispatch(COURSE_REQUEST, courseId)
+                axios.get(`${process.env.VUE_APP_API}/api/user/${this.user.id}/courses/${courseId}`)
                     .then(res => {
                         console.log(res.data);
                         this.course = res.data;
-                        // this.activeSectionId = parseInt(localStorage.getItem("activeSectionId")) || this.sections[0].id;
-                        // this.activeLectureId = parseInt(localStorage.getItem("activeLectureId")) || this.lectures[0].id;
+                        this.initializeReviewDto();
                         this.setFirstLectureActive();
                         this.setFirstVideoLecture();
-                        this.getCompletedLectures();
+                        this.completedLectureIds = this.course.completedLectures;
+                        this.courseFetched = true;
                     })
                     .catch(err => {
                         console.log(err);
                         console.log(err.response.data);
                     });
             },
+            isSectionActive(sectionId) {
+                return this.activeSectionIds.includes(sectionId);
+            },
             setActiveSection(sectionId) {
-                this.activeSectionId = this.activeSectionId === sectionId ? null : sectionId;
-                localStorage.setItem("activeSectionId", this.activeSectionId);
+                // this.activeSectionId = this.activeSectionId === sectionId ? null : sectionId;
+                if (this.isSectionActive(sectionId)) {
+                    this.activeSectionIds = this.activeSectionIds.filter(s => s !== sectionId);
+                } else {
+                    this.activeSectionIds = this.activeSectionIds.concat([sectionId]);
+                }
+                localStorage.setItem("activeSectionIds", JSON.stringify(this.activeSectionIds));
             },
             setActiveLecture(lectureId) {
                 if (this.activeLectureId === lectureId) return;
@@ -205,6 +226,9 @@
                 axios.post(`${process.env.VUE_APP_API}/api/user/${this.user.id}/lectures/${lecture.id}`)
                     .then(res => {
                         console.log(res.data);
+                        if (this.canGetCertificate()) {
+                            this.openCertificateModal();
+                        }
                     })
                     .catch(err => console.log(err));
             },
@@ -213,14 +237,44 @@
                     .then(res => {
                         console.log(res.data);
                         this.completedLectureIds = res.data;
+                        console.log(this.getLecturesCount());
                     })
                     .catch(err => console.log(err));
+            },
+            getLecturesCount() {
+                let count = 0;
+                this.course.sections.forEach(s => {
+                    count += s.lectures.length;
+                })
+                return count;
+            },
+            initializeReviewDto() {
+                if (this.course.reviewDto === null) {
+                    this.course.reviewDto = {
+                        id: 0,
+                        content: '',
+                        rating: 0
+                    }
+                }
             },
             mapCompletedLectures() {
                 this.completedLectureIds = this.user.completedLectures.map(l => l.id);
             },
             isLectureCompleted(lectureId) {
-                return this.user.completedLectures.filter(l => l.id === lectureId).length !== 0;
+                return this.completedLectureIds.filter(l => l.id === lectureId).length !== 0;
+            },
+            canGetCertificate() {
+                return this.completedLectureIds.length === this.getLecturesCount();
+            },
+            getCertificateLink() {
+                return `${process.env.VUE_APP_API}/api/user/${this.user.id}/courses/${this.course.id}/certificate`;
+            },
+            // modal
+            openCertificateModal() {
+                this.$refs.modal.open();
+            },
+            closeCertificateModal() {
+                this.$refs.modal.close();
             },
             // tabs
             tabClicked (selectedTab) {
@@ -268,6 +322,7 @@
         width: 30%;
         min-width: 200px;
         /*width: 350px;*/
+        /*overflow-y: auto;*/
     }
 
     .sidebar-header {
@@ -276,7 +331,7 @@
         line-height: 1.5em;
         display: flex;
         justify-content: space-between;
-        padding: 16px;
+        padding: 12px 16px;
         border: 1px solid #dedfe0;
         border-right: none;
     }
@@ -287,11 +342,12 @@
     }
 
     .sidebar-content {
+        max-height: 80vh;
         /*z-index: 1;*/
         /*background-color: #fff;*/
         border: 1px solid #e8e9eb;
-        overflow-x: hidden;
         overflow-y: auto;
+        /*overflow-x: hidden;*/
     }
 
     .course-section {
@@ -490,7 +546,37 @@
     }
 
     .rating-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         padding: 15px 5px;
+    }
+
+    .cert-link {
+        display: block;
+        border: 1px solid #8e9e9b;
+        border-radius: 2px;
+        width: 135px;
+        margin-top: 10px;
+        padding: 7px 10px;
+        color: #13428a;
+        font-size: 15px;
+        text-decoration: none;
+    }
+    .cert-wrapper h2 {
+        margin-bottom: 20px;
+    }
+    .cert-link-2 {
+        border: 1px solid #039BE5;  /*  #8e9e9b;  */
+        border-radius: 2px;
+        padding: 10px 15px;
+        color: #22334c;;
+        text-decoration: none;
+    }
+    .cert-link-2:hover {
+        color: #0e356f;
+        background-color: #f1f1f1;
+        transition: .1s;
     }
 
     /*  */

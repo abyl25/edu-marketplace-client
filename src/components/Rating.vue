@@ -4,7 +4,7 @@
         <sweet-modal ref="modal" overlay-theme="dark">
             <div class="content">
                 <h3>Rate the course</h3>
-                <div class="star-rating-wrapper">
+                <div class="star-rating-wrapper" >
                     <star-rating :increment="0.5" :star-size="40" :glow="1" active-color="#ffc838"  v-model="rating" @rating-selected="setRating"></star-rating>
                 </div>
                 <h4>Leave review</h4>
@@ -27,11 +27,12 @@
             StarRating,
             SweetModal,
         },
-        props: ['courseId'],
+        props: ['courseId', 'review'],
         data() {
             return {
-                rating: 0,
-                content: ''
+                rating: this.review.rating,
+                content: this.review.content,
+                myReview: this.review
             }
         },
         computed: {
@@ -59,12 +60,11 @@
                     studentId: this.user.id,
                     courseId: this.courseId
                 };
-                console.log(review);
                 axios.post(`${process.env.VUE_APP_API}/api/reviews`, review)
                     .then(res => {
                         console.log(res.data);
                         this.$refs.modal.close();
-                        this.showToast({ title: 'Success', message: 'Review added', type: 'success', timeout: 2000 });
+                        this.showToast({ title: 'Success', message: 'Review saved', type: 'success', timeout: 2000 });
                     })
                     .catch(err => {
                         console.log(err);
