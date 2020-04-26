@@ -66,6 +66,28 @@
       min-height: 100vh;
   }
 
+  /* scrollbar */
+  ::-webkit-scrollbar {
+      width: 10px;
+  }
+  ::-webkit-scrollbar-track {
+      /*border-radius: 8px;*/
+      box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  }
+  ::-webkit-scrollbar-thumb {
+      border-radius: 8px;
+      background-color: darkgrey;
+      outline: 1px solid slategrey;
+  }
+  /*::-webkit-scrollbar-button {*/
+  /*    width: 10px;*/
+  /*    height: 10px;*/
+  /*    background-color: #fff;*/
+  /*}*/
+  /*::-webkit-scrollbar-button:hover {*/
+  /*    background-color: #e8e3e3;*/
+  /*}*/
+
   /* Pagination Component style */
   .pagination {
     display: flex;

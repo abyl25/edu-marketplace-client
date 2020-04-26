@@ -153,7 +153,7 @@
 
                                             <div class="video-player" v-if="hasVideo(lecture)">
                                                 <vue-plyr ref="player" >
-                                                    <video :src="getVideoLink(course.title, lecture)" :poster="getThumbnailLink(course.title, lecture.video.thumbnail)"></video>
+                                                    <video :src="getVideoLink(course.permaLink + '-' + course.id, lecture)" :poster="getThumbnailLink(course.permaLink + '-' + course.id, lecture.video.thumbnail)"></video>
                                                 </vue-plyr>
                                             </div>
 
@@ -162,7 +162,7 @@
                                                 <p class="files-header">Files</p> 
                                                 <div class="files-content" :key="file.id" v-for="file in lecture.files">
                                                     <img src="../../assets/file-02.png" height="28px" width="28px" alt="" draggable="false" style="user-select: none">
-                                                    <a :href="getFileLink(course.title, file.fileName, file.fileFormat)" target="_blank">{{ `${file.fileName}.${file.fileFormat}` }}</a>
+                                                    <a :href="getFileLink(course.permaLink + '-' + course.id, file.fileName, file.fileFormat)" target="_blank">{{ `${file.fileName}.${file.fileFormat}` }}</a>
                                                     <span class="section-control-btn bg-gr ml pl-rt" @click="deleteFile(file.id, file, lecture.files)">
                                                         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="14" height="14" viewBox="0 0 172 172"
                                                              style=" fill:#000000;"><g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><path d="M0,172v-172h172v172z" fill="none"></path><g fill="#686f7a"><path d="M72.76923,-0.20673c-5.53004,0 -10.95673,1.08534 -14.88462,4.96154c-3.92788,3.87621 -5.16827,9.38041 -5.16827,15.09135h-26.25481c-3.64363,0 -6.61538,2.97176 -6.61538,6.61538h-6.61538v13.23077h145.53846v-13.23077h-6.61538c0,-3.64363 -2.97176,-6.61538 -6.61538,-6.61538h-26.25481c0,-5.71094 -1.24038,-11.21514 -5.16827,-15.09135c-3.92788,-3.8762 -9.35456,-4.96154 -14.88462,-4.96154zM72.76923,13.4375h26.46154c3.61779,0 4.75481,0.85276 5.16827,1.24038c0.41346,0.38762 1.24038,1.47296 1.24038,5.16827h-39.27885c0,-3.69531 0.82692,-4.78065 1.24038,-5.16827c0.41346,-0.38762 1.55048,-1.24038 5.16827,-1.24038zM26.46154,46.30769v105.84615c0,10.93089 8.91526,19.84615 19.84615,19.84615h79.38462c10.93089,0 19.84615,-8.91526 19.84615,-19.84615v-105.84615zM52.92308,66.15385h13.23077v79.38462h-13.23077zM79.38462,66.15385h13.23077v79.38462h-13.23077zM105.84615,66.15385h13.23077v79.38462h-13.23077z"></path></g></g></svg>
@@ -269,13 +269,13 @@
                 // return (lecture.video.hasOwnProperty('name') && lecture.video.name !== null) || lecture.videoName;
             },
             getVideoLink(title, lecture) {
-                return `${process.env.VUE_APP_API}/${title}/videos/${lecture.video.name}.${lecture.video.extension}`;
+                return `${process.env.VUE_APP_API}/static/${title}/videos/${lecture.video.name}.${lecture.video.extension}`;
             },
             getThumbnailLink(title, videoThumbnail) {
-                return `${process.env.VUE_APP_API}/${title}/videos/${videoThumbnail}`;
+                return `${process.env.VUE_APP_API}/static/${title}/videos/${videoThumbnail}`;
             },
             getFileLink(title, fileName, fileFormat) {
-                return `${process.env.VUE_APP_API}/${title}/files/${fileName}.${fileFormat}`;
+                return `${process.env.VUE_APP_API}/static/${title}/files/${fileName}.${fileFormat}`;
             },
             isObjEmpty(myObj) {
                 return Object.entries(myObj).length === 0 && myObj.constructor === Object

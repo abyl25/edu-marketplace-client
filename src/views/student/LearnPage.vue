@@ -38,7 +38,7 @@
                             </li>
                             <li class="files-content" :key="file.id" v-for="file in lecture.files">
                                 <img src="../../assets/file-02.png" height="25px" width="25px" alt="" draggable="false" style="user-select: none">
-                                <a :href="getFileLink(course.title, file.fileName, file.fileFormat)" target="_blank" :title="`${file.fileName}.${file.fileFormat}`">{{ `${file.fileName}.${file.fileFormat}` }}</a>
+                                <a :href="getFileLink(`${course.permaLink}-${course.id}`, file.fileName, file.fileFormat)" target="_blank" :title="`${file.fileName}.${file.fileFormat}`">{{ `${file.fileName}.${file.fileFormat}` }}</a>
                             </li>
                         </ul>
                     </transition-group>
@@ -50,13 +50,13 @@
                     <Rating :courseId="this.$route.params.course_id" :review="this.course.reviewDto"/>
                 </template>
                 <template class="cert-wrapper" v-if="courseFetched && canGetCertificate()">
-                    <a :href="getCertificateLink()" class="cert-link">Get certificate</a>
+                    <a :href="getCertificateLink()" class="cert-link" download>Get certificate</a>
                 </template>
             </div>
 
             <sweet-modal ref="modal" overlay-theme="dark">
                 <div class="cert-wrapper">
-                    <h2>Congratulations! You have finished the course</h2>
+                    <h2>Congratulations! <br>You have finished the course successfully!</h2>
                     <a :href="getCertificateLink()" class="cert-link-2" @click="closeCertificateModal">Get your certificate</a>
                 </div>
             </sweet-modal>
@@ -181,8 +181,8 @@
                 localStorage.setItem("activeLectureId", this.activeLectureId);
 
                 let lecture = this.lectures.filter(l => l.id === lectureId)[0];
-                this.activeVideoLink = this.getVideoLink(this.course.title, lecture);
-                this.activeVideoThumbnail = this.getThumbnailLink(this.course.title, lecture.video.thumbnail);
+                this.activeVideoLink = this.getVideoLink(`${this.course.permaLink}-${this.course.id}`, lecture);
+                this.activeVideoThumbnail = this.getThumbnailLink(`${this.course.permaLink}-${this.course.id}`, lecture.video.thumbnail);
                 this.settingVideoLink = false;
             },
             setFirstLectureActive() {
@@ -197,17 +197,17 @@
             },
             setFirstVideoLecture() {
                 let firstVideoLecture = this.lectures[0];
-                this.activeVideoLink = this.getVideoLink(this.course.title, firstVideoLecture);
-                this.activeVideoThumbnail = this.getThumbnailLink(this.course.title, firstVideoLecture.video.thumbnail);
+                this.activeVideoLink = this.getVideoLink(`${this.course.permaLink}-${this.course.id}`, firstVideoLecture);
+                this.activeVideoThumbnail = this.getThumbnailLink(`${this.course.permaLink}-${this.course.id}`, firstVideoLecture.video.thumbnail);
             },
             getVideoLink(title, lecture) {
-                return `${process.env.VUE_APP_API}/${title}/videos/${lecture.video.name}.${lecture.video.extension}`;
+                return `${process.env.VUE_APP_API}/static/${title}/videos/${lecture.video.name}.${lecture.video.extension}`;
             },
             getThumbnailLink(title, videoThumbnail) {
-                return `${process.env.VUE_APP_API}/${title}/videos/${videoThumbnail}`;
+                return `${process.env.VUE_APP_API}/static/${title}/videos/${videoThumbnail}`;
             },
             getFileLink(title, fileName, fileFormat) {
-                return `${process.env.VUE_APP_API}/${title}/files/${fileName}.${fileFormat}`;
+                return `${process.env.VUE_APP_API}/static/${title}/files/${fileName}.${fileFormat}`;
             },
             getVideoDuration(duration) {
                 // let duration = this.$refs.player.player.media.duration;
@@ -564,7 +564,7 @@
         text-decoration: none;
     }
     .cert-wrapper h2 {
-        margin-bottom: 20px;
+        margin-bottom: 30px;
     }
     .cert-link-2 {
         border: 1px solid #039BE5;  /*  #8e9e9b;  */
@@ -575,7 +575,7 @@
     }
     .cert-link-2:hover {
         color: #0e356f;
-        background-color: #f1f1f1;
+        background-color: #fff0f0;
         transition: .1s;
     }
 

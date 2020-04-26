@@ -26,7 +26,7 @@
                 return this.course.imageName;
             },
             imagePath() {
-                return `${process.env.VUE_APP_API}/${this.course.title}/logo/${this.course.imageName}.${this.course.imageFormat}`;
+                return `${process.env.VUE_APP_API}/static/${this.course.permaLink}-${this.course.id}/logo/${this.course.imageName}.${this.course.imageFormat}`;
             }
         }
     }
