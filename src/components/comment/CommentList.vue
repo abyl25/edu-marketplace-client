@@ -1,6 +1,6 @@
 <template>
     <div class="comment-list">
-        <Comment :key="post.id" v-for="post in posts" :post="post" @reply-to-comment="replyToComment"/>
+        <Comment :key="post.id" v-for="post in posts" :post="post" :parent="null" @reply-to-comment="replyToComment" @delete-comment="onDeleteComment" @edit-comment="editComment"/>
     </div>
 </template>
 
@@ -25,6 +25,12 @@
         methods: {
             replyToComment(newComment, parentComment) {
                 this.$emit('reply-to-comment', newComment, parentComment);
+            },
+            onDeleteComment(comment) {
+                this.$emit('delete-comment', comment);
+            },
+            editComment(comment) {
+                this.$emit('edit-comment', comment);
             }
         }
     }

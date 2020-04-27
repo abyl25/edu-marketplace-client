@@ -139,6 +139,14 @@
                 return this.nestedLectures.flat();
             }
         },
+        notifications: {
+            showToast: {
+                title: 'Success',
+                message: 'Success',
+                type: 'success',
+                timeout: 2000
+            }
+        },
         created() {
             this.activeSectionId = parseInt(localStorage.getItem("activeSectionId"));
             this.activeLectureId = parseInt(localStorage.getItem("activeLectureId"));
@@ -160,6 +168,12 @@
                     .catch(err => {
                         console.log(err);
                         console.log(err.response.data);
+                        if (err.response.status === 422 && err.response.data == 'Student haven\'t purchased this course') {
+                            this.$router.push('/403');
+                            this.showToast({
+                                title: 'Error', message: 'You don\'t have an access to this course', type: 'error', timeout: 2000
+                            });
+                        }
                     });
             },
             isSectionActive(sectionId) {

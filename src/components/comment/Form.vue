@@ -1,8 +1,13 @@
 <template>
     <div class="form-container">
-        <textarea name="" id="" :placeholder="placeholder" v-model="content" :class="setTextAreaWH ? 'reply-wh' : ''"></textarea>
-        <button class="btn comment-btn green" @click="onClick">Submit</button>
-<!--        <v-button myClass="comment-btn green">Submit</v-button>-->
+        <template v-if="editComment">
+            <textarea name="" :placeholder="placeholder" v-model="editComment.content" :class="setTextAreaWH ? 'reply-wh' : ''"></textarea>
+            <button class="btn comment-btn green" @click="onEdit(editComment)">Edit</button>
+        </template>
+        <template v-else>
+            <textarea name="" :placeholder="placeholder" v-model="content" :class="setTextAreaWH ? 'reply-wh' : ''"></textarea>
+            <button class="btn comment-btn green" @click="onClick">Submit</button>
+        </template>
     </div>
 </template>
 
@@ -14,7 +19,7 @@
         components: {
             'v-button': Button
         },
-        props: ['placeholder', 'setTextAreaWH'],
+        props: ['placeholder', 'setTextAreaWH', 'editComment'],
         data() {
             return {
                 content: '',
@@ -29,6 +34,10 @@
                 }
                 this.$emit('add-comment', comment);
                 this.content = '';
+            },
+            onEdit(editComment) {
+                if (!editComment.content.trim()) return;
+                this.$emit('edit-comment', editComment);
             }
         }
     }

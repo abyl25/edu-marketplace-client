@@ -2,7 +2,7 @@
     <div class="qa-container">
         <Form placeholder="Leave comment" @add-comment="comment"/>
         <div class="comment-container">
-            <CommentList :posts="comments" @reply-to-comment="comment"/>
+            <CommentList :posts="comments" @reply-to-comment="comment" @delete-comment="onDeleteComment" @edit-comment="editComment"/>
         </div>
     </div>
 </template>
@@ -30,6 +30,14 @@
         },
         computed: {
             ...mapGetters(['user']),
+        },
+        notifications: {
+            showToast: {
+                title: 'Success',
+                message: 'Success',
+                type: 'success',
+                timeout: 2000
+            }
         },
         created() {
             this.getCommentsByLecture(this.activeLectureId);
@@ -62,6 +70,43 @@
                     })
                     .catch(err => console.log(err));
             },
+            onDeleteComment(comment) {
+                this.comments = this.comments.filter(c => c.id !== comment.id);
+                axios.delete(`${process.env.VUE_APP_API}/api/comments/${comment.id}`)
+                    .then(res => {
+                        console.log(res.data);
+                        this.showToast({
+                            title: '', message: 'Comment deleted', type: 'success', timeout: 2000
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        this.showToast({
+                            title: '', message: 'Comment deletion failed', type: 'error', timeout: 2000
+                        });
+                    });
+            },
+            editComment(editComment) {
+                const comment = {
+                    parentId: editComment.parentId,
+                    userId: editComment.user.id,
+                    title: editComment.title,
+                    content: editComment.content
+                };
+                axios.put(`${process.env.VUE_APP_API}/api/comments/${editComment.id}`, comment)
+                    .then(res => {
+                        console.log(res.data);
+                        this.showToast({
+                            title: '', message: 'Comment edited', type: 'success', timeout: 2000
+                        });
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        this.showToast({
+                            title: '', message: 'Comment edit failed', type: 'error', timeout: 2000
+                        });
+                    });
+            }
         }
     }
 </script>

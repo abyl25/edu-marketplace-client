@@ -3,22 +3,22 @@
     <hr>
     <div v-scrollanimation class="imgDiv">
       <img class="categories" src="../assets/11.jpg" alt />
-      <button-b :btnType="'btn third'" :btnName="'Web-Programming'" :btnSrc="'http://localhost:8098/courses/development/web-development'" class="webButton"></button-b>
+      <button-b :btnType="'btn third'" :btnName="'Web-Programming'" :btnSrc="'/courses/development'" class="webButton"></button-b>
     </div>
     <hr>
     <div v-scrollanimation class="imgDiv">
       <img class="categories" src="../assets/12.jpg" alt />
-      <button-b :btnType="'btn sixth'" :btnName="'Design'" :btnSrc="'http://localhost:8098/courses/development/mobile-development'" class="webButton"></button-b>
+      <button-b :btnType="'btn sixth'" :btnName="'Design'" :btnSrc="'/courses/design'" class="webButton"></button-b>
     </div>
     <hr>
     <div v-scrollanimation class="imgDiv">
       <img class="categories" src="../assets/13.jpg" alt />
-      <button-b :btnType="'btn seventh'" :btnName="'Business'" :btnSrc="'http://localhost:8098/courses/development/programming-languages'" class="webButton"></button-b>
+      <button-b :btnType="'btn seventh'" :btnName="'Business'" :btnSrc="'/courses/business'" class="webButton"></button-b>
     </div>
     <hr>
     <div v-scrollanimation class="imgDiv">
       <img class="categories" src="../assets/14.jpg" alt />
-      <button-b :btnType="'btn fifth'" :btnName="'Photography'" :btnSrc="'http://localhost:8098/courses/development/web-development'" class="webButton"></button-b>
+      <button-b :btnType="'btn fifth'" :btnName="'Photography'" :btnSrc="'/courses/photography'" class="webButton"></button-b>
     </div>
   </div>
 </template>

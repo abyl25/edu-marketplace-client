@@ -5,7 +5,7 @@
         </div>
         <transition name="fade">
             <div v-if="fetched">
-                <div v-if="courses.length === 0"><h4>No Courses</h4></div>
+                <div v-if="courses.length === 0"><h3>No Courses</h3></div>
                 <div v-if="courses.length === 1"><h4>1 Course</h4></div>
                 <div v-if="courses.length > 1" class="sort-container">
                     <select name="" id="filter" class="select" @change="applyFilter($event)">
@@ -22,14 +22,16 @@
                 <div v-bind:key="course.id" v-for="course in this.courses">
                     <CourseItem v-bind:course="course"/>
                 </div>
-                <paginate
+                <template v-if="courses.length > 0">
+                    <paginate
                         v-model="selectedPage"
                         :page-count="count"
                         :click-handler="getCoursesByPage"
                         :prev-text="'Prev'"
                         :next-text="'Next'"
                         :container-class="'pagination'">
-                </paginate>
+                    </paginate>
+                </template>
             </div>
         </transition>
     </div>

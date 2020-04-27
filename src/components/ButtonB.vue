@@ -1,12 +1,12 @@
 <template>
   <div id="container">
-    <a :href="btnSrc">
-    <button :class=btnType>
-            <span>
-                {{ btnName }}
-            </span>
-    </button>
-    </a>
+    <router-link :to="btnSrc">
+      <button :class=btnType>
+        <span>
+          {{ btnName }}
+        </span>
+      </button>
+    </router-link>
   </div>
 </template>
 
