@@ -70,7 +70,7 @@
                     });
             },
             imagePath(course) {
-                return `${process.env.VUE_APP_API}/${course.title}/logo/${course.imageName}.${course.imageFormat}`;
+                return `${process.env.VUE_APP_API}/static/${course.permaLink}-${course.id}/logo/${course.imageName}.${course.imageFormat}`;
             }
         },
     }

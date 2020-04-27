@@ -44,6 +44,8 @@
                     .catch(err => console.log(err));
             },
             comment(newComment, parentComment) {
+                console.log(newComment);
+                console.log(parentComment);
                 if (!newComment.hasOwnProperty('parentId')) {
                     newComment.parentId = null;
                 }
@@ -52,7 +54,11 @@
                 axios.post(`${process.env.VUE_APP_API}/api/lecture/${this.activeLectureId}/comments`, newComment)
                     .then(res => {
                         console.log(res.data);
-                        parentComment.children.push(res.data);
+                        if (parentComment) {
+                            parentComment.children.push(res.data);
+                        } else {
+                            this.comments.push(res.data);
+                        }
                     })
                     .catch(err => console.log(err));
             },
