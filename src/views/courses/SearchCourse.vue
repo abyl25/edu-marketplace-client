@@ -1,12 +1,15 @@
 <template>
     <div class="course-container">
+        <div v-if="!fetched">
+            <img src="../../assets/load-dribbble.gif" alt="" width="250" height="187.5">
+        </div>
         <div v-if="fetched && courses.length === 0">
             <p>No course: {{ this.$route.query.q }}</p>
         </div>
         <div v-if="message">
             <p>{{ message }}</p>
         </div>
-        <div v-bind:key="course.id" v-for = "course in courses">
+        <div v-bind:key="course.id" v-for="course in courses">
             <CourseItem v-bind:course="course"/>
         </div>
     </div>

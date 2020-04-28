@@ -5,6 +5,13 @@
 				<a class="catSt">Categories</a>
 				<menu>
                     <menuitem>
+                        <a href="/courses/computer science">Computer Science</a>
+                        <menu>
+                            <menuitem><a href="/courses/computer-science/algorithms">Algorithms</a></menuitem>
+<!--                            <menuitem><a href="/courses/computer-science/computer-networks">Computer Networks</a></menuitem>-->
+                        </menu>
+                    </menuitem>
+                    <menuitem>
                         <a href="/courses/development">Development</a>
                         <menu>
                             <menuitem><a href="/courses/development/web-development">Web Development</a></menuitem>

@@ -177,14 +177,15 @@
                 // subcategoryOptions: ['Web Development', 'Mobile App', 'Programming Language', 'Databases', 'Finance', 'Management',
                 //     'Strategy', 'Project Management', 'Web Design', 'Graphic Design', 'Game Design', 'Fashion'],
                 categories: {
-                    Development: ['Web Development', 'Mobile App', 'Programming Language', 'Databases'],
+                    'Computer Science' : ['Algorithms'],
+                    Development: ['Web Development', 'Mobile App', 'Programming Languages', 'Databases'],
                     Business: ['Finance', 'Management', 'Strategy', 'Project Management'],
                     Design: ['Web Design', 'Graphic Design', 'Game Design', 'Fashion']
                 },
                 subcategories: {
                     'Web Development': ['Angular', 'React', 'Vue', 'HTML', 'CSS', 'JS', 'PHP', 'Spring'],
                     'Mobile App': ['Flutter', 'React Native', 'Android', 'iOS'],
-                    'Programming Language': ['Java', 'C', 'C#', 'C++', 'Python', 'Go'],
+                    'Programming Languages': ['Java', 'C', 'C#', 'C++', 'Python', 'Go'],
                     'Databases': ['PostgreSQL', 'MySQL', 'MS Server', 'SQLite', 'Oracle', 'MongoDB', 'Redis', 'Neo4j', 'Cassandra'],
                     'Finance': ['Finance 1', 'Finance 2'],
                     'Management': ['Management 1', 'Management 2'],

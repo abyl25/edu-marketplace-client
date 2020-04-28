@@ -1,5 +1,5 @@
 <template>
-    <div class="coursePage">
+    <div class="coursePage" v-if="courseFetched">
         <div class="aboutCourse">
             <div class="leftItems">
                 <div class="title"><h1>{{ this.course.title }}</h1></div>
@@ -70,6 +70,7 @@ export default {
     data() {
         return {
             course: {},
+            courseFetched: false,
             alreadyAddedToCart: false
         }
     },
@@ -104,11 +105,13 @@ export default {
                     .then(res => {
                         console.log(res.data);
                         this.course = res.data;
+                        this.courseFetched = true;
                         resolve(res);
                     })
                     .catch(err => {
                         console.log(err);
                         console.log(err.response.data);
+                        this.courseFetched = true;
                         reject(err);
                     });
             });
