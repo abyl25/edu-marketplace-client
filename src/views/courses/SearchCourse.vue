@@ -1,7 +1,7 @@
 <template>
     <div class="course-container">
         <div v-if="fetched && courses.length === 0">
-            <p>No courses</p>
+            <p>No course: {{ this.$route.query.q }}</p>
         </div>
         <div v-if="message">
             <p>{{ message }}</p>
@@ -23,13 +23,23 @@
             CourseItem
         },
         computed: {
-            ...mapGetters(['courses' , 'courseStatus', 'fetched', 'message'])
+            ...mapGetters(['courses' , 'courseStatus', 'message'])
+        },
+        data() {
+            return {
+                fetched: false
+            }
         },
         created() {
             let searchText = this.$route.query.q;
             this.$store.dispatch(SEARCH_COURSES_REQUEST, searchText)
-                .then()
-                .catch(err => console.log(err));
+                .then(res => {
+                    this.fetched = true;
+                })
+                .catch(err => {
+                    console.log(err);
+                    this.fetched = true;
+                });
         },
         watch: {
             $route(to, from) {

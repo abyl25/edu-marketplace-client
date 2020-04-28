@@ -122,7 +122,7 @@ const router = new Router({
       name: 'LearnPage',
       component: LearnPage,
       meta: {
-        guest: true
+        requiresAuth: true
       }
     },
     {
@@ -273,7 +273,11 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else if (to.matched.some(record => record.meta.guest)) {
-    next();
+      if (to.path === '/auth' && store.getters.isAuthenticated) {
+        next('/' );
+      } else {
+        next();
+      }
   }
 });
 

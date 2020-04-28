@@ -36,8 +36,8 @@
 <!--                            </svg>-->
 <!--                        </router-link>-->
 <!--                    </li>-->
-                    <li><router-link to="/auth" @click.native="setAuthIndex(2)">Log in</router-link></li>
-                    <!-- {{ $t('message.signup') }}  -->
+                    <li><router-link to="/auth">Log in</router-link></li>
+                    <!-- {{ $t('message.signup') }}   @click.native="setAuthIndex(2)"  -->
                 </template>
                 <template v-if="this.isAuthenticated">
                     <template v-if="isStudent"> <!--  -->
@@ -87,19 +87,22 @@ export default {
             languages: ['en', 'kz', 'ru'],
             searchText: '',
             studentItems: [
+                // {
+                //     text: 'Home',
+                //     link: '/home'
+                // }, {
+                //     text: 'Profile',
+                //     link: '/profile'
+                // },
                 {
-                    text: 'Home',
-                    link: '/home'
-                }, {
-                    text: 'Profile',
-                    link: '/profile'
-                }, {
                     text: 'My Courses',
                     link: '/home/my-courses'
-                }, {
+                },
+                {
                     text: 'Cart',
                     link: '/cart'
-                }, {
+                },
+                {
                     text: 'Log out',
                     // text: $t('message.logout'),
                     link: '/logout'
@@ -109,10 +112,12 @@ export default {
                 {
                     text: 'Home',
                     link: '/instructor/home'
-                }, {
-                    text: 'Profile',
-                    link: '/instructor/profile'
-                }, {
+                },
+                // {
+                //     text: 'Profile',
+                //     link: '/instructor/profile'
+                // },
+                {
                     text: 'Log out',
                     link: '/logout'
                 }

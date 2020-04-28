@@ -134,7 +134,6 @@
                 this.resetErrorFields();
             },
             login(e) {
-                console.log('logging');
                 e.preventDefault();
                 this.logging = true;
                 const credentials = {
@@ -158,7 +157,7 @@
                     if (role.name === 'Instructor') {
                         this.$router.push('/instructor/home');
                     } else if (role.name === 'Student') {
-                        this.$router.push('/home');
+                        this.$router.push('/');
                     } else if (role.name === 'Admin'){
                         this.$router.push('/admin/home');
                     }
