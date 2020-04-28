@@ -122,7 +122,8 @@ const router = new Router({
       name: 'LearnPage',
       component: LearnPage,
       meta: {
-        requiresAuth: true
+        requiresAuth: true,
+        isStudent: true
       }
     },
     {
