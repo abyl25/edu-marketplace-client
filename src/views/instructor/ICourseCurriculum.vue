@@ -131,6 +131,7 @@
                                                     :files="myFiles"
                                                     :server="{process}"
                                                     @init="handleFilePondInit"
+                                                    @addfilestart="onAddFileStart(lecture.id, 'videos')"
                                                     @addfile="onAddFile"
                                                     @processfile="processFileFinish"
                                                     @click.native="setCurrentUploadFile(lecture.id, 'videos')"/>
@@ -144,6 +145,7 @@
                                                     :files="myFiles"
                                                     :server="{process}"
                                                     @init="handleFilePondInit"
+                                                    @addfilestart="onAddFileStart(lecture.id, 'files')"
                                                     @addfile="onAddFile"
                                                     @processfile="processFileFinish"
                                                     @click.native="setCurrentUploadFile(lecture.id, 'files')"/>
@@ -307,6 +309,9 @@
             handleFilePondInit() {
                 // console.log('FilePond has initialized');
                 // this.$refs.pond.getFiles();
+            },
+            onAddFileStart(lectureId, type) {
+                this.setCurrentUploadFile(lectureId, type);
             },
             onAddFile(error, file) {
                 // console.log('onAddFile');
