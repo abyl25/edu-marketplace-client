@@ -10,7 +10,7 @@
 <!--        </transition>-->
         <transition name="fade">
             <div class="form-container" v-if="fetched">
-                <form @submit="saveCourseTarget">
+                <form> <!-- @submit="saveCourseTarget" -->
                     <div class="form-group">
                         <p>What will students learn in your course?</p>
                         <div class="input-wrapper" v-for="(input,k) in goalInputs" :key="k" style="height: 46px;">
@@ -21,7 +21,7 @@
                             </span>
                         </div>
                         <v-button id="1" class="add-answer-btn" :on-click="addAnswerInput">
-                            <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer1
+                            <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer
                         </v-button>
                     </div>
 
@@ -35,7 +35,7 @@
                             </span>
                         </div>
                         <v-button id="2" class="add-answer-btn" :on-click="addAnswerInput">
-                            <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer1
+                            <span class="plus-sign"><i class="fas fa-plus"></i></span>Add answer
                         </v-button>
                     </div>
                     <v-button class="save-target-btn green" :on-click="saveCourseTarget">Save</v-button>

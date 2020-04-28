@@ -1,5 +1,5 @@
 <template>
-    <button class="btn" v-bind:class="myClass" @click="onClick">  <!--  @click="onClick";  this.$emit('click'); -->
+    <button type="button" class="btn" v-bind:class="myClass" @click="onClick">  <!--  @click="onClick";  this.$emit('click'); -->
         <slot>Button</slot>
     </button>
 </template>
