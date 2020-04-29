@@ -72,7 +72,7 @@
                         </div>
                         <div class="group">
 <!--                            <input type="button" class="button" value="Sign Up" @click="signUp"> -->
-                            <button type="button" class="button" :class="logging?'logging':''" @click="login">
+                            <button type="button" class="button" :class="logging?'logging':''" @click="signUp">
                                 <span v-if="!logging">Sign Up</span>
                                 <span class="lds-dual-ring" v-if="logging"></span>
                             </button>

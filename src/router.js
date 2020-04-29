@@ -84,6 +84,9 @@ const router = new Router({
       path: '/confirm',
       name: 'AccountConfirmation',
       component: AccountConfirmation,
+      meta: {
+        guest: true
+      },
     },
     {
       path: '/courses/search',
