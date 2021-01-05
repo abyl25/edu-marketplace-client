@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "ant-design-vue": "^1.4.10",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "core-js": "^2.6.5",
     "express": "^4.17.1",
     "filepond": "^4.12.2",
